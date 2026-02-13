@@ -14,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { GoogleAuthButton } from "./google-auth-button";
 import { CountdownTimer } from "./countdown-timer";
 
 export function RegisterForm() {
@@ -200,17 +199,6 @@ export function RegisterForm() {
             {isLoading ? "Creating account..." : "Sign up"}
           </Button>
         </form>
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Or continue with
-            </span>
-          </div>
-        </div>
-        <GoogleAuthButton />
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
