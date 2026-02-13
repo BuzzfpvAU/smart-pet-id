@@ -14,18 +14,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CountdownTimer } from "./countdown-timer";
 
 export function RegisterForm() {
   const router = useRouter();
-  const [step, setStep] = useState<"register" | "verify">("register");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [codeSent, setCodeSent] = useState(false);
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -46,97 +42,12 @@ export function RegisterForm() {
         return;
       }
 
-      setCodeSent(true);
-      setStep("verify");
+      router.push("/login?registered=true");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  }
-
-  async function handleVerify(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/verify-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Verification failed");
-        return;
-      }
-
-      router.push("/login?verified=true");
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function resendCode() {
-    const res = await fetch("/api/auth/send-code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, type: "email_verify" }),
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || "Failed to resend code");
-    }
-  }
-
-  if (step === "verify") {
-    return (
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Verify your email</CardTitle>
-          <CardDescription>
-            We sent a 6-digit code to {email}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleVerify} className="space-y-4">
-            {error && (
-              <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
-                {error}
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="code">Verification code</Label>
-              <Input
-                id="code"
-                type="text"
-                placeholder="123456"
-                maxLength={6}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                required
-                className="text-center text-2xl tracking-widest"
-              />
-              <p className="text-xs text-muted-foreground">
-                Check your spam/promotions folder if you don&apos;t see it.
-              </p>
-            </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Verifying..." : "Verify email"}
-            </Button>
-            <div className="text-center">
-              {codeSent && <CountdownTimer onResend={resendCode} />}
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    );
   }
 
   return (
