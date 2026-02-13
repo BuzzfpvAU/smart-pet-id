@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,19 +16,23 @@ import {
 } from "@/components/ui/card";
 import { loginAction } from "@/app/(public)/login/actions";
 
-export function LoginForm() {
-  const [error, setError] = useState("");
-  const [isPending, startTransition] = useTransition();
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? "Signing in..." : "Sign in"}
+    </Button>
+  );
+}
 
-  async function handleSubmit(formData: FormData) {
-    setError("");
-    startTransition(async () => {
+export function LoginForm() {
+  const [state, formAction] = useActionState(
+    async (_prev: { error: string } | undefined, formData: FormData) => {
       const result = await loginAction(formData);
-      if (result?.error) {
-        setError(result.error);
-      }
-    });
-  }
+      return result;
+    },
+    undefined
+  );
 
   return (
     <Card className="w-full max-w-md">
@@ -36,10 +41,10 @@ export function LoginForm() {
         <CardDescription>Sign in to your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={handleSubmit} className="space-y-4">
-          {error && (
+        <form action={formAction} className="space-y-4">
+          {state?.error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
-              {error}
+              {state.error}
             </div>
           )}
           <div className="space-y-2">
@@ -69,9 +74,7 @@ export function LoginForm() {
               required
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Signing in..." : "Sign in"}
-          </Button>
+          <SubmitButton />
         </form>
       </CardContent>
       <CardFooter className="justify-center">
