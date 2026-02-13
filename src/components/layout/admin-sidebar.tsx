@@ -2,35 +2,49 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
-import { PawPrint, Home, Dog, Tag, Settings, LogOut, Shield } from "lucide-react";
+import {
+  PawPrint,
+  LayoutDashboard,
+  Tag,
+  Dog,
+  Users,
+  ArrowLeft,
+  LogOut,
+} from "lucide-react";
+import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/dashboard/pets/new", label: "Add Pet", icon: Dog },
-  { href: "/dashboard/tags", label: "My Tags", icon: Tag },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
+  { href: "/admin", label: "Overview", icon: LayoutDashboard },
+  { href: "/admin/tags", label: "Tag Codes", icon: Tag },
+  { href: "/admin/pets", label: "All Pets", icon: Dog },
+  { href: "/admin/users", label: "Users", icon: Users },
 ];
 
-export function DashboardSidebar() {
+export function AdminSidebar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "admin";
 
   return (
     <aside className="hidden md:flex w-64 flex-col border-r bg-muted/30 p-4">
-      <Link href="/dashboard" className="flex items-center gap-2 mb-8 px-2">
+      <Link href="/admin" className="flex items-center gap-2 mb-2 px-2">
         <PawPrint className="h-6 w-6 text-primary" />
-        <span className="font-bold text-xl">Smart Pet ID</span>
+        <span className="font-bold text-xl">Admin Console</span>
+      </Link>
+
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-2 px-3 py-1.5 mb-6 text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Back to Dashboard
       </Link>
 
       <nav className="flex-1 space-y-1">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
-            (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            (item.href !== "/admin" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}
@@ -47,19 +61,6 @@ export function DashboardSidebar() {
             </Link>
           );
         })}
-
-        {isAdmin && (
-          <>
-            <div className="my-3 border-t" />
-            <Link
-              href="/admin"
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-amber-600 hover:bg-amber-50 hover:text-amber-700 dark:text-amber-400 dark:hover:bg-amber-950 dark:hover:text-amber-300"
-            >
-              <Shield className="h-4 w-4" />
-              Admin Console
-            </Link>
-          </>
-        )}
       </nav>
 
       <Button

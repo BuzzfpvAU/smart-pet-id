@@ -25,6 +25,7 @@ export function ForgotPasswordForm() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [codeSent, setCodeSent] = useState(false);
+  const [codeAutoFilled, setCodeAutoFilled] = useState(false);
 
   async function handleSendCode(e: React.FormEvent) {
     e.preventDefault();
@@ -43,6 +44,12 @@ export function ForgotPasswordForm() {
       if (!res.ok) {
         setError(data.error || "Failed to send reset code");
         return;
+      }
+
+      // If email failed to send, auto-fill the code
+      if (data.code) {
+        setCode(data.code);
+        setCodeAutoFilled(true);
       }
 
       setCodeSent(true);
@@ -105,6 +112,11 @@ export function ForgotPasswordForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleReset} className="space-y-4">
+            {codeAutoFilled && (
+              <div className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 text-sm p-3 rounded-md">
+                Your reset code has been auto-filled. Just enter your new password below.
+              </div>
+            )}
             {error && (
               <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
                 {error}

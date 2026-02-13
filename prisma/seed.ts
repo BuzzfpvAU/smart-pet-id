@@ -30,6 +30,7 @@ async function main() {
       email: "admin@smartpetid.com",
       passwordHash,
       emailVerified: new Date(),
+      role: "admin",
     },
   });
   console.log(`Test user: admin@smartpetid.com / password123`);
