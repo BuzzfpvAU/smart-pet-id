@@ -54,18 +54,15 @@ export async function POST(req: Request) {
       },
     });
 
-    try {
-      await sendVerificationCode(email, code);
-    } catch {
-      // Email sending might fail in dev without RESEND_API_KEY
-      console.error("Failed to send verification email");
-    }
+    await sendVerificationCode(email, code);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: error instanceof Error ? error.message : "Internal server error",
+      },
       { status: 500 }
     );
   }
