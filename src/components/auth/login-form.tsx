@@ -26,13 +26,7 @@ function SubmitButton() {
 }
 
 export function LoginForm() {
-  const [state, formAction] = useActionState(
-    async (_prev: { error: string } | undefined, formData: FormData) => {
-      const result = await loginAction(formData);
-      return result;
-    },
-    undefined
-  );
+  const [state, formAction] = useActionState(loginAction, undefined);
 
   return (
     <Card className="w-full max-w-md">
