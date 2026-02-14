@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { QrCode, Home, Dog, Tag, Settings, LogOut, Shield, Package, Plus } from "lucide-react";
+import { QrCode, Home, Tag, Settings, LogOut, Shield, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/dashboard/items/new", label: "Add Item", icon: Plus },
-  { href: "/dashboard/pets/new", label: "Add Pet", icon: Dog },
   { href: "/dashboard/tags", label: "My Tags", icon: Tag },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
