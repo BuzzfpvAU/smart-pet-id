@@ -31,8 +31,8 @@ export function TagActivationForm() {
         return;
       }
 
-      toast.success("Tag activated successfully!");
-      router.push("/dashboard/tags");
+      toast.success("Tag activated! Now let's set it up.");
+      router.push(`/dashboard/items/new?tagId=${data.id}`);
       router.refresh();
     } catch {
       toast.error("Something went wrong");

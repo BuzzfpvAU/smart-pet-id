@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { TypeSelector } from "@/components/items/type-selector";
 import { ItemForm } from "@/components/items/item-form";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Tag } from "lucide-react";
 import type { FieldGroupDefinition } from "@/lib/tag-types";
 
 interface TagType {
@@ -25,12 +26,17 @@ interface UserProfile {
 }
 
 export default function NewItemPage() {
+  const searchParams = useSearchParams();
   const [tagTypes, setTagTypes] = useState<TagType[]>([]);
   const [selectedType, setSelectedType] = useState<TagType | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | undefined>(undefined);
+  const [tagId, setTagId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const tagIdParam = searchParams.get("tagId");
+    if (tagIdParam) setTagId(tagIdParam);
+
     Promise.all([
       fetch("/api/tag-types").then((res) => res.json()),
       fetch("/api/user/profile").then((res) => res.ok ? res.json() : null),
@@ -41,7 +47,7 @@ export default function NewItemPage() {
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
-  }, []);
+  }, [searchParams]);
 
   if (isLoading) {
     return (
@@ -54,6 +60,19 @@ export default function NewItemPage() {
   if (!selectedType) {
     return (
       <div>
+        {tagId && (
+          <div className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg flex items-center gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+              <Tag className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-sm">Tag activated successfully</p>
+              <p className="text-xs text-muted-foreground">
+                Choose a type below — your tag will be automatically linked to the item you create.
+              </p>
+            </div>
+          </div>
+        )}
         <div className="mb-8">
           <h1 className="text-2xl font-bold">Add New Item</h1>
           <p className="text-muted-foreground text-sm">
@@ -98,6 +117,7 @@ export default function NewItemPage() {
           defaultVisibility: selectedType.defaultVisibility as Record<string, boolean>,
         }}
         userProfile={userProfile}
+        tagId={tagId}
       />
     </div>
   );

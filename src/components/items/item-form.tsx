@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Trash2, Upload, X, ImageIcon } from "lucide-react";
+import { Plus, Trash2, Upload, X, ImageIcon, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { FieldVisibilityToggles } from "./field-visibility-toggles";
 import type { FieldGroupDefinition, FieldDefinition } from "@/lib/tag-types";
@@ -55,14 +55,20 @@ interface UserProfile {
   ownerAddress?: string | null;
 }
 
+interface UnlinkedTag {
+  id: string;
+  activationCode: string;
+}
+
 interface ItemFormProps {
   tagType: TagTypeInfo;
   initialData?: Partial<ItemFormData>;
   itemId?: string;
   userProfile?: UserProfile;
+  tagId?: string | null;
 }
 
-export function ItemForm({ tagType, initialData, itemId, userProfile }: ItemFormProps) {
+export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: ItemFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<ItemFormData>({
@@ -79,6 +85,39 @@ export function ItemForm({ tagType, initialData, itemId, userProfile }: ItemForm
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [tagActivationCode, setTagActivationCode] = useState<string | null>(null);
+  const [unlinkedTags, setUnlinkedTags] = useState<UnlinkedTag[]>([]);
+  const [selectedTagToLink, setSelectedTagToLink] = useState<string>("");
+
+  // Fetch tag info if tagId provided (from activation flow)
+  useEffect(() => {
+    if (tagId) {
+      fetch("/api/tags")
+        .then((res) => (res.ok ? res.json() : []))
+        .then((tags: Array<{ id: string; activationCode: string }>) => {
+          const tag = tags.find((t) => t.id === tagId);
+          if (tag) setTagActivationCode(tag.activationCode);
+        })
+        .catch(() => {});
+    }
+  }, [tagId]);
+
+  // Fetch unlinked tags for manual selector (only when creating without tagId)
+  useEffect(() => {
+    if (!itemId && !tagId) {
+      fetch("/api/tags")
+        .then((res) => (res.ok ? res.json() : []))
+        .then((tags: Array<{ id: string; activationCode: string; status: string; itemId: string | null; petId: string | null }>) => {
+          const unlinked = tags.filter(
+            (t) => t.status === "active" && !t.itemId && !t.petId
+          );
+          setUnlinkedTags(
+            unlinked.map((t) => ({ id: t.id, activationCode: t.activationCode }))
+          );
+        })
+        .catch(() => {});
+    }
+  }, [itemId, tagId]);
 
   function updateField(key: string, value: unknown) {
     setData((prev) => ({ ...prev, data: { ...prev.data, [key]: value } }));
@@ -217,7 +256,31 @@ export function ItemForm({ tagType, initialData, itemId, userProfile }: ItemForm
       }
 
       const item = await res.json();
-      toast.success(itemId ? "Item updated" : "Item created");
+
+      // Auto-link tag if provided (from activation flow or manual selector)
+      const tagToLink = tagId || (selectedTagToLink && selectedTagToLink !== "none" ? selectedTagToLink : null);
+      if (tagToLink && !itemId) {
+        try {
+          const linkRes = await fetch(`/api/tags/${tagToLink}/link`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ itemId: item.id }),
+          });
+
+          if (linkRes.ok) {
+            toast.success("Item created and tag linked!");
+          } else {
+            toast.success("Item created");
+            toast.warning("Tag couldn't be linked — you can link it from My Tags");
+          }
+        } catch {
+          toast.success("Item created");
+          toast.warning("Tag couldn't be linked — you can link it from My Tags");
+        }
+      } else {
+        toast.success(itemId ? "Item updated" : "Item created");
+      }
+
       router.push(`/dashboard/items/${item.id}`);
       router.refresh();
     } catch {
@@ -353,6 +416,23 @@ export function ItemForm({ tagType, initialData, itemId, userProfile }: ItemForm
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
+      {/* Tag auto-link banner */}
+      {tagId && (
+        <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg flex items-center gap-3">
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+            <Tag className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <p className="font-medium text-sm">Tag will be automatically linked</p>
+            <p className="text-xs text-muted-foreground">
+              {tagActivationCode
+                ? `Activation code: ${tagActivationCode}`
+                : "Your tag will be linked when you save this item."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Photo */}
       <Card>
         <CardHeader>
@@ -545,6 +625,37 @@ export function ItemForm({ tagType, initialData, itemId, userProfile }: ItemForm
         defaultVisibility={tagType.defaultVisibility}
         onChange={(v) => updateTop("visibility", v)}
       />
+
+      {/* Link a Tag (shown when creating without tagId and unlinked tags exist) */}
+      {!itemId && !tagId && unlinkedTags.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Tag className="h-5 w-5" />
+              Link a Tag
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Label>Select an activated tag to link (optional)</Label>
+            <Select value={selectedTagToLink} onValueChange={setSelectedTagToLink}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a tag..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No tag</SelectItem>
+                {unlinkedTags.map((tag) => (
+                  <SelectItem key={tag.id} value={tag.id}>
+                    {tag.activationCode}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Link one of your activated tags to this item. You can also do this later from My Tags.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex gap-3">
         <Button type="submit" disabled={isLoading}>

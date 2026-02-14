@@ -12,6 +12,7 @@ export async function GET() {
     where: { userId: session.user.id },
     include: {
       pet: { select: { id: true, name: true, species: true } },
+      item: { select: { id: true, name: true } },
       _count: { select: { scans: true } },
     },
     orderBy: { createdAt: "desc" },
