@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendB2BNotification } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -30,6 +31,17 @@ export async function POST(req: Request) {
         priority: priority || null,
       },
     });
+
+    // Send admin notification email (don't fail request if email fails)
+    try {
+      await sendB2BNotification({
+        name, email, phone, message, website, address,
+        currentProducts, neededProducts, salesMethods,
+        targetArea, orderVolume, priority,
+      });
+    } catch (emailError) {
+      console.error("Failed to send B2B notification email:", emailError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

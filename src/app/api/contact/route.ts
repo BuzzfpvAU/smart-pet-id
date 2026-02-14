@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendContactNotification } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -21,6 +22,13 @@ export async function POST(req: Request) {
         type: "support",
       },
     });
+
+    // Send admin notification email (don't fail request if email fails)
+    try {
+      await sendContactNotification(name, email, phone || null, message);
+    } catch (emailError) {
+      console.error("Failed to send contact notification email:", emailError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
