@@ -11,12 +11,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { QRCodeSVG } from "qrcode.react";
 import { GenerateTagsDialog } from "@/components/admin/generate-tags-dialog";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, QrCode, ScanLine } from "lucide-react";
 
 interface TagData {
   id: string;
   activationCode: string;
+  shortCode: string | null;
   status: string;
   batchId: string | null;
   createdAt: string;
@@ -29,6 +37,8 @@ export default function AdminTagsPage() {
   const [tags, setTags] = useState<TagData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showGenerate, setShowGenerate] = useState(false);
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const [qrTag, setQrTag] = useState<TagData | null>(null);
 
   const fetchTags = useCallback(async () => {
     setIsLoading(true);
@@ -86,6 +96,7 @@ export default function AdminTagsPage() {
             <TableRow>
               <TableHead>Activation Code</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>QR</TableHead>
               <TableHead>Assigned To</TableHead>
               <TableHead>Pet</TableHead>
               <TableHead>Scans</TableHead>
@@ -96,13 +107,13 @@ export default function AdminTagsPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : tags.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   No tags found. Generate some!
                 </TableCell>
               </TableRow>
@@ -113,6 +124,22 @@ export default function AdminTagsPage() {
                     {tag.activationCode}
                   </TableCell>
                   <TableCell>{statusBadge(tag.status)}</TableCell>
+                  <TableCell>
+                    {tag.shortCode ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setQrTag(tag);
+                          setQrDialogOpen(true);
+                        }}
+                      >
+                        <QrCode className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">-</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     {tag.user ? (
                       <span className="text-sm">{tag.user.name}</span>
@@ -152,6 +179,43 @@ export default function AdminTagsPage() {
         onOpenChange={setShowGenerate}
         onGenerated={fetchTags}
       />
+
+      {/* QR Code Dialog */}
+      <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ScanLine className="h-5 w-5" />
+              QR Code
+            </DialogTitle>
+          </DialogHeader>
+          {qrTag && (
+            <div className="flex flex-col items-center gap-4 py-4">
+              <QRCodeSVG
+                value={
+                  qrTag.shortCode
+                    ? `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/s/${qrTag.shortCode}`
+                    : `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/scan/${qrTag.id}`
+                }
+                size={220}
+                level="M"
+                includeMargin
+              />
+              <p className="text-sm text-muted-foreground text-center">
+                Scan this QR code to view the pet profile
+              </p>
+              <code className="text-xs text-muted-foreground">
+                {qrTag.activationCode}
+              </code>
+              <code className="text-xs text-blue-600">
+                {qrTag.shortCode
+                  ? `${process.env.NEXT_PUBLIC_BASE_URL || ""}/s/${qrTag.shortCode}`
+                  : `${process.env.NEXT_PUBLIC_BASE_URL || ""}/scan/${qrTag.id}`}
+              </code>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

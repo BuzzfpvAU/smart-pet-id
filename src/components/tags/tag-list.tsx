@@ -138,19 +138,17 @@ export function TagList({
 
                 {tag.status === "active" && (
                   <div className="flex items-center gap-2">
-                    {tag.qrCodeUrl && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setQrTag(tag);
-                          setQrDialogOpen(true);
-                        }}
-                      >
-                        <QrCode className="h-4 w-4 mr-1" />
-                        QR
-                      </Button>
-                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setQrTag(tag);
+                        setQrDialogOpen(true);
+                      }}
+                    >
+                      <QrCode className="h-4 w-4 mr-1" />
+                      QR
+                    </Button>
                     {tag.pet ? (
                       <Button
                         variant="outline"
