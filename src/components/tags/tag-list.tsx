@@ -235,10 +235,10 @@ export function TagList({
               QR Code
             </DialogTitle>
           </DialogHeader>
-          {qrTag?.qrCodeUrl && (
+          {qrTag && (
             <div className="flex flex-col items-center gap-4 py-4">
               <QRCodeSVG
-                value={qrTag.qrCodeUrl}
+                value={`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/scan/${qrTag.id}`}
                 size={220}
                 level="M"
                 includeMargin
