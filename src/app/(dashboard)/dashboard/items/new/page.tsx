@@ -18,16 +18,26 @@ interface TagType {
   defaultVisibility: Record<string, boolean>;
 }
 
+interface UserProfile {
+  ownerPhone?: string | null;
+  ownerEmail?: string | null;
+  ownerAddress?: string | null;
+}
+
 export default function NewItemPage() {
   const [tagTypes, setTagTypes] = useState<TagType[]>([]);
   const [selectedType, setSelectedType] = useState<TagType | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/tag-types")
-      .then((res) => res.json())
-      .then((data) => {
-        setTagTypes(data);
+    Promise.all([
+      fetch("/api/tag-types").then((res) => res.json()),
+      fetch("/api/user/profile").then((res) => res.ok ? res.json() : null),
+    ])
+      .then(([types, profile]) => {
+        setTagTypes(types);
+        if (profile) setUserProfile(profile);
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
@@ -87,6 +97,7 @@ export default function NewItemPage() {
           fieldGroups: selectedType.fieldGroups as unknown as FieldGroupDefinition[],
           defaultVisibility: selectedType.defaultVisibility as Record<string, boolean>,
         }}
+        userProfile={userProfile}
       />
     </div>
   );

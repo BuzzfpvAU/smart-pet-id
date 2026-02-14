@@ -49,13 +49,20 @@ interface ItemFormData {
   visibility: Record<string, boolean>;
 }
 
+interface UserProfile {
+  ownerPhone?: string | null;
+  ownerEmail?: string | null;
+  ownerAddress?: string | null;
+}
+
 interface ItemFormProps {
   tagType: TagTypeInfo;
   initialData?: Partial<ItemFormData>;
   itemId?: string;
+  userProfile?: UserProfile;
 }
 
-export function ItemForm({ tagType, initialData, itemId }: ItemFormProps) {
+export function ItemForm({ tagType, initialData, itemId, userProfile }: ItemFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<ItemFormData>({
@@ -63,9 +70,9 @@ export function ItemForm({ tagType, initialData, itemId }: ItemFormProps) {
     data: (initialData?.data as Record<string, unknown>) || {},
     photoUrls: initialData?.photoUrls || [],
     primaryPhotoUrl: initialData?.primaryPhotoUrl || "",
-    ownerPhone: initialData?.ownerPhone || "",
-    ownerEmail: initialData?.ownerEmail || "",
-    ownerAddress: initialData?.ownerAddress || "",
+    ownerPhone: initialData?.ownerPhone || userProfile?.ownerPhone || "",
+    ownerEmail: initialData?.ownerEmail || userProfile?.ownerEmail || "",
+    ownerAddress: initialData?.ownerAddress || userProfile?.ownerAddress || "",
     rewardOffered: initialData?.rewardOffered || false,
     rewardDetails: initialData?.rewardDetails || "",
     visibility: initialData?.visibility || tagType.defaultVisibility || {},
@@ -461,6 +468,11 @@ export function ItemForm({ tagType, initialData, itemId }: ItemFormProps) {
       <Card>
         <CardHeader>
           <CardTitle>Owner Contact Information</CardTitle>
+          {!itemId && userProfile && (userProfile.ownerPhone || userProfile.ownerEmail || userProfile.ownerAddress) && (
+            <p className="text-xs text-muted-foreground">
+              Pre-filled from your settings. You can override for this item.
+            </p>
+          )}
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

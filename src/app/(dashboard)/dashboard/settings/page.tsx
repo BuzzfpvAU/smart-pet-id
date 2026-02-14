@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
@@ -14,10 +13,35 @@ export default function SettingsPage() {
   const [name, setName] = useState(session?.user?.name || "");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Owner contact details
+  const [ownerPhone, setOwnerPhone] = useState("");
+  const [ownerEmail, setOwnerEmail] = useState("");
+  const [ownerAddress, setOwnerAddress] = useState("");
+  const [isSavingContact, setIsSavingContact] = useState(false);
+
   // Password change
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  // Fetch profile on mount
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const res = await fetch("/api/user/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setOwnerPhone(data.ownerPhone || "");
+          setOwnerEmail(data.ownerEmail || "");
+          setOwnerAddress(data.ownerAddress || "");
+          if (data.name) setName(data.name);
+        }
+      } catch {
+        // Silently fail - fields will just be empty
+      }
+    }
+    fetchProfile();
+  }, []);
 
   async function handleUpdateProfile(e: React.FormEvent) {
     e.preventDefault();
@@ -27,7 +51,7 @@ export default function SettingsPage() {
       const res = await fetch("/api/user/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, ownerPhone, ownerEmail, ownerAddress }),
       });
 
       if (res.ok) {
@@ -40,6 +64,29 @@ export default function SettingsPage() {
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleSaveContact(e: React.FormEvent) {
+    e.preventDefault();
+    setIsSavingContact(true);
+
+    try {
+      const res = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, ownerPhone, ownerEmail, ownerAddress }),
+      });
+
+      if (res.ok) {
+        toast.success("Contact details saved");
+      } else {
+        toast.error("Failed to save contact details");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setIsSavingContact(false);
     }
   }
 
@@ -103,6 +150,54 @@ export default function SettingsPage() {
               </div>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? "Saving..." : "Save Changes"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Owner Contact Details</CardTitle>
+            <CardDescription>
+              These details will be pre-filled when creating new items.
+              You can still override them per item.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSaveContact} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="ownerPhone">Phone</Label>
+                  <Input
+                    id="ownerPhone"
+                    type="tel"
+                    placeholder="Your phone number"
+                    value={ownerPhone}
+                    onChange={(e) => setOwnerPhone(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ownerEmail">Contact Email</Label>
+                  <Input
+                    id="ownerEmail"
+                    type="email"
+                    placeholder="Email shown on scanned tags"
+                    value={ownerEmail}
+                    onChange={(e) => setOwnerEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ownerAddress">Address</Label>
+                <Input
+                  id="ownerAddress"
+                  placeholder="Your address"
+                  value={ownerAddress}
+                  onChange={(e) => setOwnerAddress(e.target.value)}
+                />
+              </div>
+              <Button type="submit" disabled={isSavingContact}>
+                {isSavingContact ? "Saving..." : "Save Contact Details"}
               </Button>
             </form>
           </CardContent>
