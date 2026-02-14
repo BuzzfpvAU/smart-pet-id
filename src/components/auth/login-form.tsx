@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,8 @@ function SubmitButton() {
 
 export function LoginForm() {
   const [state, formAction] = useActionState(loginAction, undefined);
+  const searchParams = useSearchParams();
+  const verified = searchParams.get("verified") === "true";
 
   return (
     <Card className="w-full max-w-md">
@@ -36,6 +39,11 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
+          {verified && (
+            <div className="bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-400 text-sm p-3 rounded-md">
+              Email verified successfully! You can now sign in.
+            </div>
+          )}
           {state?.error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
               {state.error}

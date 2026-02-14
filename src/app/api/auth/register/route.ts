@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hashPassword } from "@/lib/auth-helpers";
+import { hashPassword, generateVerificationCode } from "@/lib/auth-helpers";
+import { sendVerificationCode } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -33,14 +34,33 @@ export async function POST(req: Request) {
 
     const passwordHash = await hashPassword(password);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email,
         passwordHash,
-        emailVerified: new Date(),
+        // emailVerified is left null — user must verify via code
       },
     });
+
+    // Generate and send verification code
+    const code = generateVerificationCode();
+
+    await prisma.verificationCode.create({
+      data: {
+        userId: user.id,
+        email,
+        code,
+        type: "email_verify",
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+      },
+    });
+
+    try {
+      await sendVerificationCode(email, code);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
