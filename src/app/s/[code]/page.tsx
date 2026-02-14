@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ScanPageClient } from "@/components/scan/scan-page-client";
+import { InactiveTagPage } from "@/components/scan/inactive-tag-page";
 
 interface Props {
   params: Promise<{ code: string }>;
@@ -11,12 +12,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { code } = await params;
 
   const tag = await prisma.tag.findFirst({
-    where: { shortCode: code, status: "active" },
+    where: { shortCode: code },
     include: { pet: { select: { name: true, species: true, primaryPhotoUrl: true } } },
   });
 
-  if (!tag?.pet) {
-    return { title: "Pet Not Found - Smart Pet ID" };
+  if (!tag) {
+    return { title: "Tag Not Found - Smart Pet ID" };
+  }
+
+  if (tag.status !== "active" || !tag.pet) {
+    return { title: "Activate Your Tag - Smart Pet ID" };
   }
 
   return {
@@ -34,12 +39,18 @@ export default async function ShortScanPage({ params }: Props) {
   const { code } = await params;
 
   const tag = await prisma.tag.findFirst({
-    where: { shortCode: code, status: "active" },
+    where: { shortCode: code },
     include: { pet: true },
   });
 
-  if (!tag || !tag.pet) {
+  // Tag doesn't exist at all — true 404
+  if (!tag) {
     notFound();
+  }
+
+  // Tag exists but is not active or has no pet linked — show activation page
+  if (tag.status !== "active" || !tag.pet) {
+    return <InactiveTagPage activationCode={tag.activationCode} tagStatus={tag.status} />;
   }
 
   const pet = tag.pet;
