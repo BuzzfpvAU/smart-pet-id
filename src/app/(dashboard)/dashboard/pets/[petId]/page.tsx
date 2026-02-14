@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, History } from "lucide-react";
 
 export const metadata = {
-  title: "Edit Pet - Smart Pet ID",
+  title: "Edit Pet - Tagz.au",
 };
 
 export default async function EditPetPage({

@@ -14,7 +14,7 @@ import {
   Navigation,
   AlertTriangle,
   Heart,
-  PawPrint,
+  QrCode,
   Send,
   Check,
 } from "lucide-react";
@@ -121,8 +121,8 @@ export function ScanPageClient({
       {/* Header */}
       <div className="bg-primary text-primary-foreground p-4 text-center">
         <div className="flex items-center justify-center gap-2">
-          <PawPrint className="h-5 w-5" />
-          <span className="font-semibold">Smart Pet ID</span>
+          <QrCode className="h-5 w-5" />
+          <span className="font-semibold">Tagz.au</span>
         </div>
       </div>
 
@@ -137,7 +137,7 @@ export function ScanPageClient({
             />
           ) : (
             <div className="w-32 h-32 rounded-full mx-auto bg-muted flex items-center justify-center mb-4">
-              <PawPrint className="h-12 w-12 text-muted-foreground/50" />
+              <QrCode className="h-12 w-12 text-muted-foreground/50" />
             </div>
           )}
           <h1 className="text-3xl font-bold">{pet.name}</h1>
@@ -376,7 +376,7 @@ export function ScanPageClient({
 
         {/* Footer */}
         <p className="text-center text-xs text-muted-foreground py-4">
-          Powered by Smart Pet ID
+          Powered by Tagz.au
         </p>
       </div>
     </div>

@@ -18,7 +18,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
         <div className="max-w-md mx-auto px-4 py-3 text-center">
           <div className="flex items-center justify-center gap-2">
             <QrCode className="h-5 w-5 text-orange-600" />
-            <span className="font-semibold text-gray-900">Smart Pet ID</span>
+            <span className="font-semibold text-gray-900">Tagz.au</span>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
                 Tag Deactivated
               </h1>
               <p className="text-gray-600 mb-6">
-                This Smart Pet ID tag has been deactivated by its owner.
+                This Tagz.au tag has been deactivated by its owner.
                 If you found a lost pet with this tag, the owner may have
                 already been reunited with their pet.
               </p>
@@ -48,7 +48,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
                 Activate This Tag
               </h1>
               <p className="text-gray-600 mb-6">
-                This Smart Pet ID tag hasn&apos;t been activated yet. If this is your tag,
+                This Tagz.au tag hasn&apos;t been activated yet. If this is your tag,
                 sign up or sign in to link it to your pet&apos;s profile.
               </p>
             </>
@@ -86,7 +86,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
               href="/"
               className="flex items-center justify-center gap-2 w-full bg-black text-white rounded-lg py-3 px-4 font-medium hover:bg-gray-800 transition-colors"
             >
-              Learn About Smart Pet ID
+              Learn About Tagz.au
             </Link>
           )}
         </div>
@@ -140,7 +140,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
           <p className="text-xs text-gray-400">
             Powered by{" "}
             <Link href="/" className="text-orange-600 hover:underline">
-              Smart Pet ID
+              Tagz.au
             </Link>
           </p>
         </div>

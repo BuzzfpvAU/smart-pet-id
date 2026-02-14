@@ -1,7 +1,7 @@
 import { TagActivationForm } from "@/components/tags/tag-activation-form";
 
 export const metadata = {
-  title: "Activate Tag - Smart Pet ID",
+  title: "Activate Tag - Tagz.au",
 };
 
 export default function ActivateTagPage() {

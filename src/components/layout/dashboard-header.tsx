@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { PawPrint, Home, Dog, Tag, Settings, LogOut, Menu, Shield } from "lucide-react";
+import { QrCode, Home, Dog, Tag, Settings, LogOut, Menu, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -51,8 +51,8 @@ export function DashboardHeader() {
             className="flex items-center gap-2 mb-8"
             onClick={() => setOpen(false)}
           >
-            <PawPrint className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">Smart Pet ID</span>
+            <QrCode className="h-6 w-6 text-primary" />
+            <span className="font-bold text-xl">Tagz.au</span>
           </Link>
           <nav className="space-y-1">
             {navItems.map((item) => {

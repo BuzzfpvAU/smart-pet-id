@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Terms of Service - Smart Pet ID",
+  title: "Terms of Service - Tagz.au",
 };
 
 export default function TermsPage() {
@@ -12,14 +12,14 @@ export default function TermsPage() {
 
       <h2>1. Acceptance of Terms</h2>
       <p>
-        By accessing and using Smart Pet ID, you agree to be bound by these
+        By accessing and using Tagz.au, you agree to be bound by these
         Terms of Service. If you do not agree to these terms, please do not use
         our service.
       </p>
 
       <h2>2. Service Description</h2>
       <p>
-        Smart Pet ID provides a digital pet identification service using QR code
+        Tagz.au provides a digital pet identification service using QR code
         and NFC-enabled tags. The service allows pet owners to create online
         profiles for their pets and receive notifications when their pet&apos;s
         tag is scanned.
@@ -35,7 +35,7 @@ export default function TermsPage() {
       <h2>4. Privacy</h2>
       <p>
         We take your privacy seriously. Personal information you provide is used
-        solely for the purpose of operating the Smart Pet ID service. We use
+        solely for the purpose of operating the Tagz.au service. We use
         encryption to protect your data. You have control over what information
         is displayed on your pet&apos;s public profile through the privacy
         toggle feature.
@@ -58,14 +58,14 @@ export default function TermsPage() {
 
       <h2>7. Prohibited Use</h2>
       <p>
-        You may not use Smart Pet ID for any unlawful purpose, to harass or harm
+        You may not use Tagz.au for any unlawful purpose, to harass or harm
         others, to distribute malware, or to attempt to gain unauthorized access
         to other accounts or systems.
       </p>
 
       <h2>8. Limitation of Liability</h2>
       <p>
-        Smart Pet ID is provided &quot;as is&quot; without warranty of any kind.
+        Tagz.au is provided &quot;as is&quot; without warranty of any kind.
         While we strive to maintain reliable service, we are not liable for any
         damages arising from the use or inability to use our service.
       </p>

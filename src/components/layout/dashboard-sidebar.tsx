@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { PawPrint, Home, Dog, Tag, Settings, LogOut, Shield } from "lucide-react";
+import { QrCode, Home, Dog, Tag, Settings, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -22,8 +22,8 @@ export function DashboardSidebar() {
   return (
     <aside className="hidden md:flex w-64 flex-col border-r bg-muted/30 p-4">
       <Link href="/dashboard" className="flex items-center gap-2 mb-8 px-2">
-        <PawPrint className="h-6 w-6 text-primary" />
-        <span className="font-bold text-xl">Smart Pet ID</span>
+        <QrCode className="h-6 w-6 text-primary" />
+        <span className="font-bold text-xl">Tagz.au</span>
       </Link>
 
       <nav className="flex-1 space-y-1">

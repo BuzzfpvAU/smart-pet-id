@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Phone, Clock } from "lucide-react";
 
 export const metadata = {
-  title: "Scan History - Smart Pet ID",
+  title: "Scan History - Tagz.au",
 };
 
 export default async function ScanHistoryPage({

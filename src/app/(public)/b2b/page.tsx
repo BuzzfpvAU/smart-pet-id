@@ -72,7 +72,7 @@ export default function B2BPage() {
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold">B2B / Wholesale</h1>
         <p className="text-muted-foreground mt-2">
-          Interested in selling Smart Pet ID tags? Tell us about your business.
+          Interested in selling Tagz.au tags? Tell us about your business.
         </p>
       </div>
 

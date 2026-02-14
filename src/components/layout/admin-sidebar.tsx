@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  PawPrint,
+  QrCode,
   LayoutDashboard,
   Tag,
   Dog,
@@ -28,7 +28,7 @@ export function AdminSidebar() {
   return (
     <aside className="hidden md:flex w-64 flex-col border-r bg-muted/30 p-4">
       <Link href="/admin" className="flex items-center gap-2 mb-2 px-2">
-        <PawPrint className="h-6 w-6 text-primary" />
+        <QrCode className="h-6 w-6 text-primary" />
         <span className="font-bold text-xl">Admin Console</span>
       </Link>
 

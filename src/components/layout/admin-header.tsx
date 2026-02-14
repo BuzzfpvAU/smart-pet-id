@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
-  PawPrint,
+  QrCode,
   Menu,
   X,
   LayoutDashboard,
@@ -33,7 +33,7 @@ export function AdminHeader() {
     <header className="md:hidden border-b bg-background">
       <div className="flex items-center justify-between p-4">
         <Link href="/admin" className="flex items-center gap-2">
-          <PawPrint className="h-5 w-5 text-primary" />
+          <QrCode className="h-5 w-5 text-primary" />
           <span className="font-bold">Admin Console</span>
         </Link>
         <Button

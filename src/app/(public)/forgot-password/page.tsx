@@ -1,7 +1,7 @@
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
 export const metadata = {
-  title: "Forgot Password - Smart Pet ID",
+  title: "Forgot Password - Tagz.au",
 };
 
 export default function ForgotPasswordPage() {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PawPrint, QrCode, Bell, Shield } from "lucide-react";
+import { QrCode, Bell, Shield } from "lucide-react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { Footer } from "@/components/layout/footer";
 
@@ -14,11 +14,11 @@ export default function HomePage() {
           <div className="container max-w-3xl">
             <div className="flex justify-center mb-6">
               <div className="rounded-full bg-primary/10 p-4">
-                <PawPrint className="h-12 w-12 text-primary" />
+                <QrCode className="h-12 w-12 text-primary" />
               </div>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Smart Pet ID Tags
+              Tagz.au
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               QR code and NFC-enabled pet tags that link to detailed pet

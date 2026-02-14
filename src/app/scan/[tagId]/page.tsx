@@ -17,19 +17,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   if (!tag) {
-    return { title: "Tag Not Found - Smart Pet ID" };
+    return { title: "Tag Not Found - Tagz.au" };
   }
 
   if (tag.status !== "active" || !tag.pet) {
-    return { title: "Activate Your Tag - Smart Pet ID" };
+    return { title: "Activate Your Tag - Tagz.au" };
   }
 
   return {
-    title: `${tag.pet.name} - Smart Pet ID`,
-    description: `Found a ${tag.pet.species}? This is ${tag.pet.name}'s Smart Pet ID profile. Scan to contact the owner.`,
+    title: `${tag.pet.name} - Tagz.au`,
+    description: `Found a ${tag.pet.species}? This is ${tag.pet.name}'s Tagz.au profile. Scan to contact the owner.`,
     openGraph: {
-      title: `${tag.pet.name} - Smart Pet ID`,
-      description: `Found a ${tag.pet.species}? Contact the owner through Smart Pet ID.`,
+      title: `${tag.pet.name} - Tagz.au`,
+      description: `Found a ${tag.pet.species}? Contact the owner through Tagz.au.`,
       images: tag.pet.primaryPhotoUrl ? [tag.pet.primaryPhotoUrl] : [],
     },
   };

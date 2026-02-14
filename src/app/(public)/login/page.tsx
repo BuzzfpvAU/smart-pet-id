@@ -1,7 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Sign In - Smart Pet ID",
+  title: "Sign In - Tagz.au",
 };
 
 export default function LoginPage() {

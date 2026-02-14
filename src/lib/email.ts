@@ -7,7 +7,7 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
 }
 
-const FROM_EMAIL = process.env.FROM_EMAIL || "Smart Pet ID <onboarding@resend.dev>";
+const FROM_EMAIL = process.env.FROM_EMAIL || "Tagz.au <onboarding@resend.dev>";
 
 export async function sendVerificationCode(email: string, code: string) {
   await getResend().emails.send({

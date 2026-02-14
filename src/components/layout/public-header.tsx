@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, PawPrint } from "lucide-react";
+import { Menu, QrCode } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
@@ -21,8 +21,8 @@ export function PublicHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <PawPrint className="h-6 w-6 text-primary" />
-          <span className="font-bold text-xl">Smart Pet ID</span>
+          <QrCode className="h-6 w-6 text-primary" />
+          <span className="font-bold text-xl">Tagz.au</span>
         </Link>
 
         {/* Desktop nav */}

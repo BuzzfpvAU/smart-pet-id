@@ -1,7 +1,7 @@
 import { PetProfileForm } from "@/components/pets/pet-profile-form";
 
 export const metadata = {
-  title: "Add Pet - Smart Pet ID",
+  title: "Add Pet - Tagz.au",
 };
 
 export default function NewPetPage() {

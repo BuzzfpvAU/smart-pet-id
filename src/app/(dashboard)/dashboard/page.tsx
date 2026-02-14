@@ -5,10 +5,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PetCard } from "@/components/pets/pet-card";
-import { Plus, PawPrint, Tag, ScanLine, MapPin } from "lucide-react";
+import { Plus, QrCode, Tag, ScanLine, MapPin } from "lucide-react";
 
 export const metadata = {
-  title: "Dashboard - Smart Pet ID",
+  title: "Dashboard - Tagz.au",
 };
 
 export default async function DashboardPage() {
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         <Card>
           <CardContent className="p-4 flex items-center gap-4">
             <div className="rounded-full bg-primary/10 p-3">
-              <PawPrint className="h-5 w-5 text-primary" />
+              <QrCode className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="text-2xl font-bold">{pets.length}</p>
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
 
       {pets.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <PawPrint className="h-16 w-16 text-muted-foreground/30 mb-4" />
+          <QrCode className="h-16 w-16 text-muted-foreground/30 mb-4" />
           <h2 className="text-xl font-semibold mb-2">No pets yet</h2>
           <p className="text-muted-foreground mb-6 max-w-md">
             Add your first pet to create a profile and link it to a smart tag.

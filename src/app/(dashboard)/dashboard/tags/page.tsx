@@ -7,7 +7,7 @@ import { TagList } from "@/components/tags/tag-list";
 import { Plus, Tag } from "lucide-react";
 
 export const metadata = {
-  title: "My Tags - Smart Pet ID",
+  title: "My Tags - Tagz.au",
 };
 
 export default async function TagsPage() {

@@ -68,9 +68,9 @@ async function main() {
   // Create FAQ items
   const faqs = [
     {
-      question: "What is a Smart Pet ID Tag?",
+      question: "What is a Tagz.au Tag?",
       answer:
-        "A Smart Pet ID Tag is a digital pet identification tag with a QR code and NFC chip that links to a detailed online pet profile.",
+        "A Tagz.au Tag is a digital pet identification tag with a QR code and NFC chip that links to a detailed online pet profile.",
       sortOrder: 1,
     },
     {

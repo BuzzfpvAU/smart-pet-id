@@ -1,7 +1,7 @@
 import { RegisterForm } from "@/components/auth/register-form";
 
 export const metadata = {
-  title: "Sign Up - Smart Pet ID",
+  title: "Sign Up - Tagz.au",
 };
 
 export default function RegisterPage() {

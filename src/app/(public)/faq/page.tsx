@@ -6,13 +6,13 @@ import {
 } from "@/components/ui/accordion";
 
 export const metadata = {
-  title: "FAQ - Smart Pet ID",
+  title: "FAQ - Tagz.au",
 };
 
 const faqs = [
   {
-    q: "What is a Smart Pet ID Tag?",
-    a: "A Smart Pet ID Tag is a digital pet identification tag. Instead of a printed name and phone number, each tag has a QR code and NFC chip that links to a detailed online pet profile containing your contact details, your pet's medical information, and more.",
+    q: "What is a Tagz.au Tag?",
+    a: "A Tagz.au Tag is a digital pet identification tag. Instead of a printed name and phone number, each tag has a QR code and NFC chip that links to a detailed online pet profile containing your contact details, your pet's medical information, and more.",
   },
   {
     q: "How do I create a pet profile?",
@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: "Do I need to download an app?",
-    a: "No. Smart Pet ID works entirely through a web browser. The person who finds your pet doesn't need any app — they simply scan the QR code with their phone's camera.",
+    a: "No. Tagz.au works entirely through a web browser. The person who finds your pet doesn't need any app — they simply scan the QR code with their phone's camera.",
   },
   {
     q: "Is there a subscription fee?",
@@ -52,11 +52,11 @@ const faqs = [
   },
   {
     q: "How is this better than a traditional pet tag?",
-    a: "Traditional tags contain limited, static information that can become outdated. Smart Pet ID tags link to a detailed, updatable profile with medical info, multiple contacts, photos, and GPS location alerts when scanned. Anyone with a smartphone can access it instantly.",
+    a: "Traditional tags contain limited, static information that can become outdated. Tagz.au tags link to a detailed, updatable profile with medical info, multiple contacts, photos, and GPS location alerts when scanned. Anyone with a smartphone can access it instantly.",
   },
   {
     q: "How is this different from a microchip?",
-    a: "Microchips require a special scanner only available at vet clinics and shelters, which may have limited hours. Smart Pet ID tags can be scanned by anyone with a smartphone, anywhere, at any time — making it much faster to reunite with your pet.",
+    a: "Microchips require a special scanner only available at vet clinics and shelters, which may have limited hours. Tagz.au tags can be scanned by anyone with a smartphone, anywhere, at any time — making it much faster to reunite with your pet.",
   },
 ];
 
@@ -66,7 +66,7 @@ export default function FaqPage() {
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold">Frequently Asked Questions</h1>
         <p className="text-muted-foreground mt-2">
-          Everything you need to know about Smart Pet ID
+          Everything you need to know about Tagz.au
         </p>
       </div>
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PawPrint } from "lucide-react";
+import { QrCode } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,8 +8,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <PawPrint className="h-5 w-5 text-primary" />
-              <span className="font-bold">Smart Pet ID</span>
+              <QrCode className="h-5 w-5 text-primary" />
+              <span className="font-bold">Tagz.au</span>
             </Link>
             <p className="text-sm text-muted-foreground">
               Keep your pets safe with smart QR and NFC ID tags. Instant
@@ -64,7 +64,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-4 border-t text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} Smart Pet ID. All rights reserved.
+          &copy; {new Date().getFullYear()} Tagz.au. All rights reserved.
         </div>
       </div>
     </footer>
