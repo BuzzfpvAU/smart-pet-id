@@ -38,8 +38,8 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
               </h1>
               <p className="text-gray-600 mb-6">
                 This Tagz.au tag has been deactivated by its owner.
-                If you found a lost pet with this tag, the owner may have
-                already been reunited with their pet.
+                If you found an item with this tag, the owner may have
+                already recovered it.
               </p>
             </>
           ) : (
@@ -49,7 +49,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
               </h1>
               <p className="text-gray-600 mb-6">
                 This Tagz.au tag hasn&apos;t been activated yet. If this is your tag,
-                sign up or sign in to link it to your pet&apos;s profile.
+                sign up or sign in to activate and link it to your profile.
               </p>
             </>
           )}
@@ -103,9 +103,9 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
                   <ShieldCheck className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">Protect Your Pet</p>
+                  <p className="font-medium text-gray-900 text-sm">Protect What Matters</p>
                   <p className="text-gray-500 text-sm">
-                    Create a detailed profile with medical info, photos, and your contact details.
+                    Create a detailed profile with photos, descriptions, and your contact details.
                   </p>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
                 <div>
                   <p className="font-medium text-gray-900 text-sm">Instant Scan Alerts</p>
                   <p className="text-gray-500 text-sm">
-                    Get notified immediately when someone scans your pet&apos;s tag, including their GPS location.
+                    Get notified immediately when someone scans your tag, including their GPS location.
                   </p>
                 </div>
               </div>

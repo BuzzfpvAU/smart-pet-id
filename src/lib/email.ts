@@ -48,7 +48,7 @@ export async function sendPasswordResetCode(email: string, code: string) {
 
 export async function sendScanAlert(
   ownerEmail: string,
-  petName: string,
+  itemName: string,
   latitude: number | null,
   longitude: number | null,
   finderPhone: string | null,
@@ -81,12 +81,12 @@ export async function sendScanAlert(
   await getResend().emails.send({
     from: FROM_EMAIL,
     to: ownerEmail,
-    subject: `Alert: ${petName}'s tag was scanned!`,
+    subject: `Alert: ${itemName}'s tag was scanned!`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
           <h2 style="color: #dc2626; margin: 0 0 8px 0;">Tag Scanned!</h2>
-          <p style="margin: 0;">Someone scanned <strong>${petName}</strong>'s tag at ${scanTime.toLocaleString()}.</p>
+          <p style="margin: 0;">Someone scanned <strong>${itemName}</strong>'s tag at ${scanTime.toLocaleString()}.</p>
         </div>
         ${locationHtml}
         ${finderHtml}

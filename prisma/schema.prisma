@@ -19,6 +19,7 @@ model User {
   updatedAt         DateTime  @updatedAt
 
   pets              Pet[]
+  items             Item[]
   tags              Tag[]
   accounts          Account[]
   sessions          Session[]
@@ -118,6 +119,7 @@ model Tag {
 
   userId          String?
   petId           String?
+  itemId          String?
 
   activatedAt     DateTime?
   deactivatedAt   DateTime?
@@ -126,11 +128,13 @@ model Tag {
 
   user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   pet             Pet?      @relation(fields: [petId], references: [id], onDelete: SetNull)
+  item            Item?     @relation(fields: [itemId], references: [id], onDelete: SetNull)
   scans           Scan[]
 
   @@index([activationCode])
   @@index([userId])
   @@index([petId])
+  @@index([itemId])
   @@map("tags")
 }
 
@@ -184,4 +188,50 @@ model FaqItem {
   updatedAt DateTime @updatedAt
 
   @@map("faq_items")
+}
+
+model TagType {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  name              String
+  description       String?
+  icon              String   @default("tag")
+  color             String   @default("#6366f1")
+  isActive          Boolean  @default(true)
+  sortOrder         Int      @default(0)
+  fieldGroups       Json
+  defaultVisibility Json     @default("{}")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  items             Item[]
+
+  @@map("tag_types")
+}
+
+model Item {
+  id              String   @id @default(cuid())
+  userId          String
+  tagTypeId       String
+  name            String
+  data            Json     @default("{}")
+  photoUrls       String[]
+  primaryPhotoUrl String?
+  ownerPhone      String?
+  ownerEmail      String?
+  ownerAddress    String?
+  rewardOffered   Boolean  @default(false)
+  rewardDetails   String?
+  visibility      Json     @default("{}")
+  legacyPetId     String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tagType         TagType  @relation(fields: [tagTypeId], references: [id])
+  tags            Tag[]
+
+  @@index([userId])
+  @@index([tagTypeId])
+  @@map("items")
 }

@@ -23,13 +23,14 @@ import { QRCodeSVG } from "qrcode.react";
 import { Link2, Unlink, XCircle, QrCode, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 
-interface TagItem {
+interface TagData {
   id: string;
   activationCode: string;
   shortCode: string | null;
   status: string;
   qrCodeUrl: string | null;
   pet: { id: string; name: string; species: string } | null;
+  item: { id: string; name: string; tagType: { name: string } } | null;
   _count: { scans: number };
 }
 
@@ -39,31 +40,44 @@ interface PetOption {
   species: string;
 }
 
+interface ItemOption {
+  id: string;
+  name: string;
+  tagType: { name: string };
+}
+
 export function TagList({
   tags,
   pets,
+  items = [],
 }: {
-  tags: TagItem[];
+  tags: TagData[];
   pets: PetOption[];
+  items?: ItemOption[];
 }) {
   const router = useRouter();
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [selectedPet, setSelectedPet] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<string>("");
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
-  const [qrTag, setQrTag] = useState<TagItem | null>(null);
+  const [qrTag, setQrTag] = useState<TagData | null>(null);
 
   async function linkTag() {
-    if (!selectedTag || !selectedPet) return;
+    if (!selectedTag || !selectedItem) return;
+
+    const isPet = pets.some((p) => p.id === selectedItem);
+    const body = isPet
+      ? { petId: selectedItem }
+      : { itemId: selectedItem };
 
     const res = await fetch(`/api/tags/${selectedTag}/link`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ petId: selectedPet }),
+      body: JSON.stringify(body),
     });
 
     if (res.ok) {
-      toast.success("Tag linked to pet");
+      toast.success("Tag linked");
       setLinkDialogOpen(false);
       router.refresh();
     } else {
@@ -111,6 +125,23 @@ export function TagList({
     }
   };
 
+  function getLinkedName(tag: TagData) {
+    if (tag.item) return `Linked to ${tag.item.name} (${tag.item.tagType.name})`;
+    if (tag.pet) return `Linked to ${tag.pet.name} (Pet)`;
+    return "Not linked";
+  }
+
+  const linkOptions = [
+    ...items.map((i) => ({
+      id: i.id,
+      label: `${i.name} (${i.tagType.name})`,
+    })),
+    ...pets.map((p) => ({
+      id: p.id,
+      label: `${p.name} (${p.species} - Legacy Pet)`,
+    })),
+  ];
+
   return (
     <>
       <div className="space-y-4">
@@ -128,9 +159,7 @@ export function TagList({
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {tag.pet
-                      ? `Linked to ${tag.pet.name}`
-                      : "Not linked to a pet"}
+                    {getLinkedName(tag)}
                     {" · "}
                     {tag._count.scans} scan{tag._count.scans !== 1 ? "s" : ""}
                   </p>
@@ -149,7 +178,7 @@ export function TagList({
                       <QrCode className="h-4 w-4 mr-1" />
                       QR
                     </Button>
-                    {tag.pet ? (
+                    {tag.pet || tag.item ? (
                       <Button
                         variant="outline"
                         size="sm"
@@ -164,12 +193,12 @@ export function TagList({
                         size="sm"
                         onClick={() => {
                           setSelectedTag(tag.id);
-                          setSelectedPet("");
+                          setSelectedItem("");
                           setLinkDialogOpen(true);
                         }}
                       >
                         <Link2 className="h-4 w-4 mr-1" />
-                        Link Pet
+                        Link
                       </Button>
                     )}
                     <Button
@@ -191,21 +220,21 @@ export function TagList({
       <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Link Tag to Pet</DialogTitle>
+            <DialogTitle>Link Tag to Item</DialogTitle>
           </DialogHeader>
-          {pets.length === 0 ? (
+          {linkOptions.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              You haven&apos;t created any pet profiles yet. Create a pet first.
+              You haven&apos;t created any items yet. Create an item first.
             </p>
           ) : (
-            <Select value={selectedPet} onValueChange={setSelectedPet}>
+            <Select value={selectedItem} onValueChange={setSelectedItem}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a pet" />
+                <SelectValue placeholder="Select an item" />
               </SelectTrigger>
               <SelectContent>
-                {pets.map((pet) => (
-                  <SelectItem key={pet.id} value={pet.id}>
-                    {pet.name} ({pet.species})
+                {linkOptions.map((opt) => (
+                  <SelectItem key={opt.id} value={opt.id}>
+                    {opt.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -218,7 +247,7 @@ export function TagList({
             >
               Cancel
             </Button>
-            <Button onClick={linkTag} disabled={!selectedPet}>
+            <Button onClick={linkTag} disabled={!selectedItem}>
               Link
             </Button>
           </DialogFooter>
@@ -247,7 +276,7 @@ export function TagList({
                 includeMargin
               />
               <p className="text-sm text-muted-foreground text-center">
-                Scan this QR code to view the pet profile
+                Scan this QR code to view the profile
               </p>
               <code className="text-xs text-muted-foreground">
                 {qrTag.activationCode}

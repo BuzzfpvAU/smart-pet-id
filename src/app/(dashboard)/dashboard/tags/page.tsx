@@ -14,24 +14,30 @@ export default async function TagsPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const tags = await prisma.tag.findMany({
-    where: { userId: session.user.id },
-    select: {
-      id: true,
-      activationCode: true,
-      shortCode: true,
-      status: true,
-      qrCodeUrl: true,
-      pet: { select: { id: true, name: true, species: true } },
-      _count: { select: { scans: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-
-  const pets = await prisma.pet.findMany({
-    where: { userId: session.user.id },
-    select: { id: true, name: true, species: true },
-  });
+  const [tags, pets, items] = await Promise.all([
+    prisma.tag.findMany({
+      where: { userId: session.user.id },
+      select: {
+        id: true,
+        activationCode: true,
+        shortCode: true,
+        status: true,
+        qrCodeUrl: true,
+        pet: { select: { id: true, name: true, species: true } },
+        item: { select: { id: true, name: true, tagType: { select: { name: true } } } },
+        _count: { select: { scans: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.pet.findMany({
+      where: { userId: session.user.id },
+      select: { id: true, name: true, species: true },
+    }),
+    prisma.item.findMany({
+      where: { userId: session.user.id },
+      select: { id: true, name: true, tagType: { select: { name: true } } },
+    }),
+  ]);
 
   return (
     <div>
@@ -39,7 +45,7 @@ export default async function TagsPage() {
         <div>
           <h1 className="text-2xl font-bold">My Tags</h1>
           <p className="text-muted-foreground text-sm">
-            Manage your smart pet ID tags
+            Manage your smart tags
           </p>
         </div>
         <Button asChild>
@@ -66,7 +72,7 @@ export default async function TagsPage() {
           </Button>
         </div>
       ) : (
-        <TagList tags={tags} pets={pets} />
+        <TagList tags={tags} pets={pets} items={items} />
       )}
     </div>
   );

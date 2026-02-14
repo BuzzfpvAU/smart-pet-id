@@ -12,7 +12,8 @@ export async function PUT(
   }
 
   const { tagId } = await params;
-  const { petId } = await req.json();
+  const body = await req.json();
+  const { petId, itemId } = body;
 
   const tag = await prisma.tag.findFirst({
     where: { id: tagId, userId: session.user.id },
@@ -22,19 +23,48 @@ export async function PUT(
     return NextResponse.json({ error: "Tag not found" }, { status: 404 });
   }
 
-  const pet = await prisma.pet.findFirst({
-    where: { id: petId, userId: session.user.id },
-  });
+  // Link to item (new system)
+  if (itemId) {
+    const item = await prisma.item.findFirst({
+      where: { id: itemId, userId: session.user.id },
+    });
 
-  if (!pet) {
-    return NextResponse.json({ error: "Pet not found" }, { status: 404 });
+    if (!item) {
+      return NextResponse.json({ error: "Item not found" }, { status: 404 });
+    }
+
+    const updatedTag = await prisma.tag.update({
+      where: { id: tagId },
+      data: { itemId, petId: null },
+      include: {
+        item: { select: { id: true, name: true, tagType: { select: { name: true } } } },
+      },
+    });
+
+    return NextResponse.json(updatedTag);
   }
 
-  const updatedTag = await prisma.tag.update({
-    where: { id: tagId },
-    data: { petId },
-    include: { pet: { select: { id: true, name: true } } },
-  });
+  // Link to pet (legacy/backward compat)
+  if (petId) {
+    const pet = await prisma.pet.findFirst({
+      where: { id: petId, userId: session.user.id },
+    });
 
-  return NextResponse.json(updatedTag);
+    if (!pet) {
+      return NextResponse.json({ error: "Pet not found" }, { status: 404 });
+    }
+
+    const updatedTag = await prisma.tag.update({
+      where: { id: tagId },
+      data: { petId, itemId: null },
+      include: { pet: { select: { id: true, name: true } } },
+    });
+
+    return NextResponse.json(updatedTag);
+  }
+
+  return NextResponse.json(
+    { error: "Either petId or itemId is required" },
+    { status: 400 }
+  );
 }

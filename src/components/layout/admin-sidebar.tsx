@@ -10,6 +10,8 @@ import {
   Users,
   ArrowLeft,
   LogOut,
+  Layers,
+  Package,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +20,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/tags", label: "Tag Codes", icon: Tag },
+  { href: "/admin/tag-types", label: "Tag Types", icon: Layers },
+  { href: "/admin/items", label: "All Items", icon: Package },
   { href: "/admin/pets", label: "All Pets", icon: Dog },
   { href: "/admin/users", label: "Users", icon: Users },
 ];

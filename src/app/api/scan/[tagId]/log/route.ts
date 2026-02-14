@@ -19,10 +19,15 @@ export async function POST(
             user: { select: { email: true } },
           },
         },
+        item: {
+          include: {
+            user: { select: { email: true } },
+          },
+        },
       },
     });
 
-    if (!tag || !tag.pet) {
+    if (!tag || (!tag.pet && !tag.item)) {
       return NextResponse.json(
         { error: "Tag not found" },
         { status: 404 }
@@ -44,10 +49,13 @@ export async function POST(
     });
 
     // Send email notification to owner
+    const ownerEmail = tag.item?.user.email ?? tag.pet!.user.email;
+    const itemName = tag.item?.name ?? tag.pet!.name;
+
     try {
       await sendScanAlert(
-        tag.pet.user.email,
-        tag.pet.name,
+        ownerEmail,
+        itemName,
         latitude ?? null,
         longitude ?? null,
         null,

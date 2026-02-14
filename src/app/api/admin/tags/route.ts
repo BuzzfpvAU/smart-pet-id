@@ -27,6 +27,7 @@ export async function GET() {
       include: {
         user: { select: { name: true, email: true } },
         pet: { select: { name: true } },
+        item: { select: { name: true, tagType: { select: { name: true } } } },
         _count: { select: { scans: true } },
       },
     });

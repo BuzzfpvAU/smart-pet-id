@@ -106,6 +106,35 @@ async function main() {
   }
 
   console.log(`Created ${faqs.length} FAQ items`);
+
+  // Seed default tag types
+  const { defaultTagTypes } = await import("../src/lib/tag-type-defaults");
+
+  for (const tagType of defaultTagTypes) {
+    await prisma.tagType.upsert({
+      where: { slug: tagType.slug },
+      update: {
+        name: tagType.name,
+        description: tagType.description,
+        icon: tagType.icon,
+        color: tagType.color,
+        fieldGroups: tagType.fieldGroups,
+        defaultVisibility: tagType.defaultVisibility,
+      },
+      create: {
+        slug: tagType.slug,
+        name: tagType.name,
+        description: tagType.description,
+        icon: tagType.icon,
+        color: tagType.color,
+        fieldGroups: tagType.fieldGroups,
+        defaultVisibility: tagType.defaultVisibility,
+        sortOrder: defaultTagTypes.indexOf(tagType),
+      },
+    });
+  }
+
+  console.log(`Seeded ${defaultTagTypes.length} tag types`);
   console.log("Seeding complete!");
 }
 
