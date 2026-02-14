@@ -110,6 +110,7 @@ model Pet {
 model Tag {
   id              String    @id @default(cuid())
   activationCode  String    @unique
+  shortCode       String?   @unique
   qrCodeUrl       String?
   nfcId           String?   @unique
   status          String    @default("inactive") // "inactive" | "active" | "deactivated"

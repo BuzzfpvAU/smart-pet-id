@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getTagScanUrl } from "@/lib/qrcode";
+import { getTagScanUrl, getTagShortScanUrl } from "@/lib/qrcode";
+import { generateShortCode } from "@/lib/shortcode";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -44,13 +45,22 @@ export async function POST(req: Request) {
       );
     }
 
-    const qrCodeUrl = getTagScanUrl(tag.id);
+    // Generate shortCode if tag doesn't have one yet
+    let shortCode = tag.shortCode;
+    if (!shortCode) {
+      shortCode = generateShortCode();
+    }
+
+    const qrCodeUrl = shortCode
+      ? getTagShortScanUrl(shortCode)
+      : getTagScanUrl(tag.id);
 
     const updatedTag = await prisma.tag.update({
       where: { id: tag.id },
       data: {
         userId: session.user.id,
         status: "active",
+        shortCode,
         qrCodeUrl,
         activatedAt: new Date(),
       },

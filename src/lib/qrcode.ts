@@ -1,15 +1,26 @@
 import QRCode from "qrcode";
 
-export function getTagScanUrl(tagId: string): string {
-  const baseUrl =
+function getBaseUrl(): string {
+  return (
     process.env.NEXT_PUBLIC_BASE_URL ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
-    "http://localhost:3000";
-  return `${baseUrl}/scan/${tagId}`;
+    "http://localhost:3000"
+  );
 }
 
-export async function generateQrCodeDataUrl(tagId: string): Promise<string> {
-  const url = getTagScanUrl(tagId);
+export function getTagScanUrl(tagId: string): string {
+  return `${getBaseUrl()}/scan/${tagId}`;
+}
+
+export function getTagShortScanUrl(shortCode: string): string {
+  return `${getBaseUrl()}/s/${shortCode}`;
+}
+
+export async function generateQrCodeDataUrl(
+  tagId: string,
+  shortCode?: string | null
+): Promise<string> {
+  const url = shortCode ? getTagShortScanUrl(shortCode) : getTagScanUrl(tagId);
   return QRCode.toDataURL(url, {
     width: 300,
     margin: 2,
@@ -18,8 +29,11 @@ export async function generateQrCodeDataUrl(tagId: string): Promise<string> {
   });
 }
 
-export async function generateQrCodeBuffer(tagId: string): Promise<Buffer> {
-  const url = getTagScanUrl(tagId);
+export async function generateQrCodeBuffer(
+  tagId: string,
+  shortCode?: string | null
+): Promise<Buffer> {
+  const url = shortCode ? getTagShortScanUrl(shortCode) : getTagScanUrl(tagId);
   return QRCode.toBuffer(url, {
     width: 600,
     margin: 2,

@@ -7,11 +7,20 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new (PrismaClient as any)({ adapter });
 
 const CHARSET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+const SHORT_CODE_LENGTH = 8;
 
 function generateActivationCode(): string {
   let code = "";
   for (let i = 0; i < 12; i++) {
     if (i > 0 && i % 4 === 0) code += "-";
+    code += CHARSET[Math.floor(Math.random() * CHARSET.length)];
+  }
+  return code;
+}
+
+function generateShortCode(): string {
+  let code = "";
+  for (let i = 0; i < SHORT_CODE_LENGTH; i++) {
     code += CHARSET[Math.floor(Math.random() * CHARSET.length)];
   }
   return code;
@@ -47,6 +56,7 @@ async function main() {
       update: {},
       create: {
         activationCode: code,
+        shortCode: generateShortCode(),
         status: "inactive",
       },
     });

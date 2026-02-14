@@ -26,6 +26,7 @@ import { toast } from "sonner";
 interface TagItem {
   id: string;
   activationCode: string;
+  shortCode: string | null;
   status: string;
   qrCodeUrl: string | null;
   pet: { id: string; name: string; species: string } | null;
@@ -238,7 +239,11 @@ export function TagList({
           {qrTag && (
             <div className="flex flex-col items-center gap-4 py-4">
               <QRCodeSVG
-                value={`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/scan/${qrTag.id}`}
+                value={
+                  qrTag.shortCode
+                    ? `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/s/${qrTag.shortCode}`
+                    : `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/scan/${qrTag.id}`
+                }
                 size={220}
                 level="M"
                 includeMargin

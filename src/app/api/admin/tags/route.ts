@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { generateShortCode } from "@/lib/shortcode";
 import crypto from "crypto";
 
 const CHARSET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -75,6 +76,7 @@ export async function POST(req: Request) {
       await prisma.tag.create({
         data: {
           activationCode: code,
+          shortCode: generateShortCode(),
           status: "inactive",
           batchId,
         },

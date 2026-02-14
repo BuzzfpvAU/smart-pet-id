@@ -16,7 +16,12 @@ export default async function TagsPage() {
 
   const tags = await prisma.tag.findMany({
     where: { userId: session.user.id },
-    include: {
+    select: {
+      id: true,
+      activationCode: true,
+      shortCode: true,
+      status: true,
+      qrCodeUrl: true,
       pet: { select: { id: true, name: true, species: true } },
       _count: { select: { scans: true } },
     },
