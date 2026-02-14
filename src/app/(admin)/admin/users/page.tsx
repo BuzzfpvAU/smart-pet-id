@@ -12,7 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DeleteUserDialog } from "@/components/admin/delete-user-dialog";
-import { RefreshCw, Trash2 } from "lucide-react";
+import { ChangeRoleDialog } from "@/components/admin/change-role-dialog";
+import { RefreshCw, Trash2, Shield, ShieldOff } from "lucide-react";
 
 interface UserData {
   id: string;
@@ -27,6 +28,7 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteUser, setDeleteUser] = useState<UserData | null>(null);
+  const [roleChangeUser, setRoleChangeUser] = useState<UserData | null>(null);
 
   const fetchUsers = useCallback(async () => {
     setIsLoading(true);
@@ -69,7 +71,7 @@ export default function AdminUsersPage() {
               <TableHead>Pets</TableHead>
               <TableHead>Tags</TableHead>
               <TableHead>Joined</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
+              <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -103,14 +105,28 @@ export default function AdminUsersPage() {
                     {new Date(user.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive hover:text-destructive"
-                      onClick={() => setDeleteUser(user)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title={user.role === "admin" ? "Remove admin" : "Make admin"}
+                        onClick={() => setRoleChangeUser(user)}
+                      >
+                        {user.role === "admin" ? (
+                          <ShieldOff className="h-4 w-4 text-orange-600" />
+                        ) : (
+                          <Shield className="h-4 w-4 text-blue-600" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:text-destructive"
+                        onClick={() => setDeleteUser(user)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -123,6 +139,12 @@ export default function AdminUsersPage() {
         user={deleteUser}
         onClose={() => setDeleteUser(null)}
         onDeleted={fetchUsers}
+      />
+
+      <ChangeRoleDialog
+        user={roleChangeUser}
+        onClose={() => setRoleChangeUser(null)}
+        onChanged={fetchUsers}
       />
     </div>
   );

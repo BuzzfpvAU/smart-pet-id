@@ -66,14 +66,14 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
           {!isDeactivated && (
             <div className="space-y-3">
               <Link
-                href="/auth/register"
+                href="/register"
                 className="flex items-center justify-center gap-2 w-full bg-black text-white rounded-lg py-3 px-4 font-medium hover:bg-gray-800 transition-colors"
               >
                 <UserPlus className="h-5 w-5" />
                 Sign Up & Activate
               </Link>
               <Link
-                href="/auth/signin"
+                href="/login"
                 className="flex items-center justify-center gap-2 w-full bg-white text-gray-900 border-2 border-gray-200 rounded-lg py-3 px-4 font-medium hover:border-gray-300 hover:bg-gray-50 transition-colors"
               >
                 Already have an account? Sign In
