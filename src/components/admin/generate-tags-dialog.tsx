@@ -72,7 +72,7 @@ export function GenerateTagsDialog({
           </AlertDialogTitle>
           <AlertDialogDescription>
             {result
-              ? `Successfully generated ${result.length} new tag codes.`
+              ? `Successfully generated ${result.length} new tag codes. The codes and short URLs have been emailed to your account.`
               : "Create a batch of new activation codes for physical tags."}
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateShortCode } from "@/lib/shortcode";
+import { sendTagBatchEmail } from "@/lib/email";
 import crypto from "crypto";
 
 const CHARSET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -60,6 +61,7 @@ export async function POST(req: Request) {
 
     const batchId = crypto.randomUUID();
     const codes: string[] = [];
+    const shortCodes: string[] = [];
 
     for (let i = 0; i < count; i++) {
       let code: string;
@@ -74,16 +76,27 @@ export async function POST(req: Request) {
         exists = !!existing;
       } while (exists);
 
+      const shortCode = generateShortCode();
+
       await prisma.tag.create({
         data: {
           activationCode: code,
-          shortCode: generateShortCode(),
+          shortCode,
           status: "inactive",
           batchId,
         },
       });
 
       codes.push(code);
+      shortCodes.push(shortCode);
+    }
+
+    // Send email with codes to the admin who generated them (non-blocking)
+    const adminEmail = session.user.email;
+    if (adminEmail) {
+      sendTagBatchEmail(adminEmail, codes, shortCodes, batchId).catch(
+        (err) => console.error("Failed to send tag batch email:", err)
+      );
     }
 
     return NextResponse.json({ codes, batchId, count: codes.length });

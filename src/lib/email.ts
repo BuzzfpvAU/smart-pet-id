@@ -201,6 +201,69 @@ export async function sendChecklistAlert(
   });
 }
 
+export async function sendTagBatchEmail(
+  adminEmail: string,
+  codes: string[],
+  shortCodes: string[],
+  batchId: string
+) {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+
+  const tagRows = codes
+    .map((code, i) => {
+      const shortUrl = `${baseUrl}/s/${shortCodes[i]}`;
+      return `
+        <tr style="border-bottom: 1px solid #e4e4e7;">
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 14px;">${code}</td>
+          <td style="padding: 8px 12px; font-size: 13px;">
+            <a href="${shortUrl}" style="color: #2563eb; text-decoration: underline;">${shortUrl}</a>
+          </td>
+        </tr>`;
+    })
+    .join("");
+
+  await getResend().emails.send({
+    from: FROM_EMAIL,
+    to: adminEmail,
+    subject: `Tag Batch Generated: ${codes.length} codes (${batchId.slice(0, 8)})`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 640px; margin: 0 auto; padding: 24px;">
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h2 style="color: #16a34a; margin: 0 0 8px 0;">Tag Batch Generated</h2>
+          <p style="margin: 0;">You generated <strong>${codes.length}</strong> new tag codes.</p>
+        </div>
+        <div style="margin: 16px 0;">
+          <p><strong>Batch ID:</strong> <span style="font-family: monospace;">${batchId.slice(0, 8)}</span></p>
+          <p><strong>Generated at:</strong> ${new Date().toLocaleString()}</p>
+          <p><strong>Total tags:</strong> ${codes.length}</p>
+        </div>
+        <div style="margin: 16px 0;">
+          <h3 style="font-size: 14px; margin: 0 0 8px 0;">Activation Codes &amp; Short URLs</h3>
+          <p style="color: #71717a; font-size: 13px; margin: 0 0 8px 0;">Use the short URLs below to generate QR codes for each tag.</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid #e4e4e7; border-radius: 8px;">
+            <thead>
+              <tr style="background: #f4f4f5;">
+                <th style="padding: 8px 12px; text-align: left; font-size: 13px;">Activation Code</th>
+                <th style="padding: 8px 12px; text-align: left; font-size: 13px;">Short URL (for QR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tagRows}
+            </tbody>
+          </table>
+        </div>
+        <p style="color: #71717a; font-size: 14px; margin-top: 24px;">
+          This email was sent from the Tagz.au admin panel.
+        </p>
+      </div>
+    `,
+  });
+}
+
 export async function sendB2BNotification(
   data: {
     name: string;
