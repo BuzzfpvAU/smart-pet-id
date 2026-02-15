@@ -149,23 +149,6 @@ function ChoosePage({
         )}
       </div>
 
-      {/* Reward Offer */}
-      {item.rewardOffered && item.rewardDetails && (
-        <Card className="border-green-300 bg-green-50 dark:bg-green-950/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Gift className="h-5 w-5 text-green-600" />
-              <h2 className="font-semibold text-green-800 dark:text-green-200">
-                Reward Offered
-              </h2>
-            </div>
-            <p className="text-sm text-green-700 dark:text-green-300">
-              {item.rewardDetails}
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
       <Separator />
 
       {/* Two choices */}
@@ -319,6 +302,23 @@ function FoundItemPage({
           <p className="text-sm text-muted-foreground">Found this item?</p>
         </div>
       </div>
+
+      {/* Reward Offer */}
+      {item.rewardOffered && item.rewardDetails && (
+        <Card className="border-green-300 bg-green-50 dark:bg-green-950/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Gift className="h-5 w-5 text-green-600" />
+              <h2 className="font-semibold text-green-800 dark:text-green-200">
+                Reward Offered
+              </h2>
+            </div>
+            <p className="text-sm text-green-700 dark:text-green-300">
+              {item.rewardDetails}
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Owner Contact */}
       {item.ownerPhone && (
