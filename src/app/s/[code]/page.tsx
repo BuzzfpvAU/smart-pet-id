@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ScanPageClient } from "@/components/scan/scan-page-client";
 import { ItemScanPage } from "@/components/scan/item-scan-page";
+import { ChecklistScanPage } from "@/components/scan/checklist-scan-page";
 import { InactiveTagPage } from "@/components/scan/inactive-tag-page";
 import type { FieldGroupDefinition } from "@/lib/tag-types";
 
@@ -126,6 +127,19 @@ export default async function ShortScanPage({ params }: Props) {
       rewardOffered: item.rewardOffered,
       rewardDetails: item.rewardOffered ? item.rewardDetails : null,
     };
+
+    // Checklist type — render checklist form instead of standard scan page
+    if (tagType.slug === "checklist") {
+      const checklistProfile = {
+        ...publicProfile,
+        data: {
+          ...publicData,
+          checklistItems: allData.checklistItems,
+          description: allData.description,
+        },
+      };
+      return <ChecklistScanPage tagId={tag.id} item={checklistProfile} />;
+    }
 
     return <ItemScanPage tagId={tag.id} item={publicProfile} />;
   }
