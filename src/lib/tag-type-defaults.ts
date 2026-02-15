@@ -377,4 +377,44 @@ export const defaultTagTypes: TagTypeConfig[] = [
       ownerAddress: false,
     },
   },
+  {
+    slug: "checklist",
+    name: "Checklist",
+    description: "Create custom checklists for inspections, equipment checks, and more",
+    icon: "clipboard-check",
+    color: "#0ea5e9",
+    fieldGroups: [
+      {
+        key: "checklist_config",
+        label: "Checklist Items",
+        fields: [
+          {
+            key: "checklistItems",
+            label: "Checklist Items",
+            type: "checklist_builder",
+            required: true,
+          },
+        ],
+      },
+      {
+        key: "basic_info",
+        label: "Description",
+        fields: [
+          {
+            key: "description",
+            label: "Description",
+            type: "textarea",
+            placeholder: "e.g., Daily drone pre-flight inspection checklist",
+          },
+        ],
+      },
+    ],
+    defaultVisibility: {
+      checklistItems: true,
+      description: true,
+      ownerPhone: true,
+      ownerEmail: true,
+      ownerAddress: true,
+    },
+  },
 ];

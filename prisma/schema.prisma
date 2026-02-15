@@ -132,7 +132,8 @@ model Tag {
   user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   pet             Pet?      @relation(fields: [petId], references: [id], onDelete: SetNull)
   item            Item?     @relation(fields: [itemId], references: [id], onDelete: SetNull)
-  scans           Scan[]
+  scans                  Scan[]
+  checklistSubmissions   ChecklistSubmission[]
 
   @@index([activationCode])
   @@index([userId])
@@ -230,11 +231,49 @@ model Item {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tagType         TagType  @relation(fields: [tagTypeId], references: [id])
-  tags            Tag[]
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tagType                TagType  @relation(fields: [tagTypeId], references: [id])
+  tags                   Tag[]
+  checklistSubmissions   ChecklistSubmission[]
 
   @@index([userId])
   @@index([tagTypeId])
   @@map("items")
+}
+
+model ChecklistTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String   @default("clipboard-check")
+  color       String   @default("#0ea5e9")
+  items       Json     // Array of { id, label, type: "checkbox"|"number"|"text", required }
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("checklist_templates")
+}
+
+model ChecklistSubmission {
+  id           String   @id @default(cuid())
+  tagId        String
+  itemId       String
+  results      Json     // Array of { id, label, type, value }
+  latitude     Float?
+  longitude    Float?
+  scannerName  String?
+  scannerEmail String?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  tag          Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  item         Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([tagId])
+  @@index([itemId])
+  @@index([createdAt])
+  @@map("checklist_submissions")
 }

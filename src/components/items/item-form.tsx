@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { Plus, Trash2, Upload, X, ImageIcon, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { FieldVisibilityToggles } from "./field-visibility-toggles";
+import { ChecklistBuilder } from "./checklist-builder";
 import type { FieldGroupDefinition, FieldDefinition } from "@/lib/tag-types";
 
 interface EmergencyContact {
@@ -292,6 +293,17 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
 
   function renderField(field: FieldDefinition) {
     const value = data.data[field.key];
+
+    if (field.type === "checklist_builder") {
+      const items = (value as Array<{ id: string; label: string; type: "checkbox" | "number" | "text"; required: boolean }>) || [];
+      return (
+        <ChecklistBuilder
+          key={field.key}
+          value={items}
+          onChange={(newItems) => updateField(field.key, newItems)}
+        />
+      );
+    }
 
     if (field.type === "contacts_list") {
       const contacts = getContacts(field.key);

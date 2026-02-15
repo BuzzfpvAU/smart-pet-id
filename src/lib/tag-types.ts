@@ -1,7 +1,7 @@
 export interface FieldDefinition {
   key: string;
   label: string;
-  type: "text" | "textarea" | "select" | "number" | "email" | "tel" | "toggle" | "contacts_list";
+  type: "text" | "textarea" | "select" | "number" | "email" | "tel" | "toggle" | "contacts_list" | "checklist_builder";
   required?: boolean;
   placeholder?: string;
   options?: string[];

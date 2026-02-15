@@ -128,6 +128,79 @@ export async function sendContactNotification(
   });
 }
 
+export async function sendChecklistAlert(
+  ownerEmail: string,
+  itemName: string,
+  scannerName: string,
+  results: { id: string; label: string; type: string; value: boolean | number | string }[],
+  latitude: number | null,
+  longitude: number | null,
+  submittedAt: Date
+) {
+  const mapUrl =
+    latitude && longitude
+      ? `https://www.google.com/maps?q=${latitude},${longitude}`
+      : null;
+
+  const locationHtml = mapUrl
+    ? `
+      <div style="margin: 16px 0;">
+        <p><strong>Location:</strong> <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a></p>
+      </div>
+    `
+    : `<p style="color: #71717a;">Location was not captured.</p>`;
+
+  // Build results summary
+  const checkboxItems = results.filter((r) => r.type === "checkbox");
+  const checkedCount = checkboxItems.filter((r) => r.value === true).length;
+  const totalCheckboxes = checkboxItems.length;
+
+  const summaryHtml =
+    totalCheckboxes > 0
+      ? `<p style="margin: 8px 0;"><strong>Summary:</strong> ${checkedCount}/${totalCheckboxes} items checked</p>`
+      : "";
+
+  const resultsHtml = results
+    .map((r) => {
+      if (r.type === "checkbox") {
+        const icon = r.value ? "&#9989;" : "&#10060;";
+        return `<tr><td style="padding: 4px 8px;">${icon}</td><td style="padding: 4px 8px;">${r.label}</td></tr>`;
+      }
+      const displayValue = r.value !== "" && r.value !== undefined ? String(r.value) : "—";
+      return `<tr><td style="padding: 4px 8px;">&#128221;</td><td style="padding: 4px 8px;"><strong>${r.label}:</strong> ${displayValue}</td></tr>`;
+    })
+    .join("");
+
+  await getResend().emails.send({
+    from: FROM_EMAIL,
+    to: ownerEmail,
+    subject: `Checklist completed: ${itemName}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h2 style="color: #2563eb; margin: 0 0 8px 0;">Checklist Completed</h2>
+          <p style="margin: 0;">A checklist was completed for <strong>${itemName}</strong>.</p>
+        </div>
+        <div style="margin: 16px 0;">
+          <p><strong>Conducted by:</strong> ${scannerName}</p>
+          <p><strong>Time:</strong> ${submittedAt.toLocaleString()}</p>
+          ${summaryHtml}
+        </div>
+        ${locationHtml}
+        <div style="margin: 16px 0;">
+          <h3 style="font-size: 14px; margin: 0 0 8px 0;">Results</h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            ${resultsHtml}
+          </table>
+        </div>
+        <p style="color: #71717a; font-size: 14px; margin-top: 24px;">
+          Log in to your dashboard to view the full submission history.
+        </p>
+      </div>
+    `,
+  });
+}
+
 export async function sendB2BNotification(
   data: {
     name: string;

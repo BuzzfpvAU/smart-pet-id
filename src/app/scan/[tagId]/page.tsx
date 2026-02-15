@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ScanPageClient } from "@/components/scan/scan-page-client";
 import { ItemScanPage } from "@/components/scan/item-scan-page";
+import { ChecklistScanPage } from "@/components/scan/checklist-scan-page";
 import { InactiveTagPage } from "@/components/scan/inactive-tag-page";
 import type { FieldGroupDefinition } from "@/lib/tag-types";
 
@@ -130,6 +131,20 @@ export default async function ScanPage({ params }: Props) {
       rewardOffered: item.rewardOffered,
       rewardDetails: item.rewardOffered ? item.rewardDetails : null,
     };
+
+    // Checklist type — render checklist form instead of standard scan page
+    if (tagType.slug === "checklist") {
+      // For checklist, always include checklistItems (needed for the form)
+      const checklistProfile = {
+        ...publicProfile,
+        data: {
+          ...publicData,
+          checklistItems: allData.checklistItems, // Always pass checklist items regardless of visibility
+          description: allData.description,
+        },
+      };
+      return <ChecklistScanPage tagId={tagId} item={checklistProfile} />;
+    }
 
     return <ItemScanPage tagId={tagId} item={publicProfile} />;
   }
