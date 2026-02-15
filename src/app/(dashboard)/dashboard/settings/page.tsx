@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
+import { PasskeyManager } from "@/components/auth/passkey-manager";
 
 export default function SettingsPage() {
   const { data: session, update: updateSession } = useSession();
@@ -202,6 +203,8 @@ export default function SettingsPage() {
             </form>
           </CardContent>
         </Card>
+
+        <PasskeyManager />
 
         <Card>
           <CardHeader>

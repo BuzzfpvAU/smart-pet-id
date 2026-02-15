@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth-helpers";
+import { consumePasskeyToken } from "@/lib/passkey-tokens";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
@@ -11,8 +12,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        passkeyToken: { label: "Passkey Token", type: "text" },
       },
       async authorize(credentials) {
+        // Passkey token flow - exchange one-time token for session
+        if (credentials?.passkeyToken) {
+          const userId = consumePasskeyToken(credentials.passkeyToken as string);
+          if (!userId) return null;
+
+          const user = await prisma.user.findUnique({
+            where: { id: userId },
+          });
+
+          if (!user || !user.emailVerified) return null;
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            role: user.role,
+          };
+        }
+
+        // Standard email/password flow
         if (!credentials?.email || !credentials?.password) return null;
 
         const user = await prisma.user.findUnique({

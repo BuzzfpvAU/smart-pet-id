@@ -27,6 +27,7 @@ model User {
   accounts          Account[]
   sessions          Session[]
   verificationCodes VerificationCode[]
+  passkeys          Passkey[]
 
   @@map("users")
 }
@@ -239,6 +240,24 @@ model Item {
   @@index([userId])
   @@index([tagTypeId])
   @@map("items")
+}
+
+model Passkey {
+  id                    String   @id @default(cuid())
+  userId                String
+  credentialID          String   @unique
+  credentialPublicKey   Bytes
+  counter               BigInt   @default(0)
+  credentialDeviceType  String   // "singleDevice" | "multiDevice"
+  credentialBackedUp    Boolean  @default(false)
+  transports            String[] // "ble" | "cable" | "hybrid" | "internal" | "nfc" | "smart-card" | "usb"
+  deviceName            String   @default("Passkey")
+  createdAt             DateTime @default(now())
+
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("passkeys")
 }
 
 model ChecklistTemplate {
