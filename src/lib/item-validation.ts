@@ -18,6 +18,19 @@ export function buildItemDataSchema(fieldGroups: FieldGroupDefinition[]) {
         continue;
       }
 
+      if (field.type === "checklist_builder") {
+        const checklistSchema = z.array(
+          z.object({
+            id: z.string(),
+            label: z.string(),
+            type: z.enum(["checkbox", "number", "text"]),
+            required: z.boolean(),
+          })
+        );
+        shape[field.key] = field.required ? checklistSchema : checklistSchema.optional();
+        continue;
+      }
+
       let fieldSchema: z.ZodTypeAny;
       switch (field.type) {
         case "number":
