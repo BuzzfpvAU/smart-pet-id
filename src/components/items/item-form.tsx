@@ -16,7 +16,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Trash2, Upload, X, ImageIcon, Tag } from "lucide-react";
+import { Plus, Trash2, Upload, X, ImageIcon, Tag, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { FieldVisibilityToggles } from "./field-visibility-toggles";
 import { ChecklistBuilder } from "./checklist-builder";
@@ -72,6 +72,7 @@ interface ItemFormProps {
 export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: ItemFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<ItemFormData>({
     name: initialData?.name || "",
     data: (initialData?.data as Record<string, unknown>) || {},
@@ -197,6 +198,9 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       setIsUploading(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
+      }
+      if (cameraInputRef.current) {
+        cameraInputRef.current.value = "";
       }
     }
   }
@@ -500,15 +504,34 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
                 onChange={handlePhotoUpload}
                 className="hidden"
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                {isUploading ? "Uploading..." : "Upload Photo"}
-              </Button>
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                capture="environment"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => cameraInputRef.current?.click()}
+                  disabled={isUploading}
+                >
+                  <Camera className="h-4 w-4 mr-2" />
+                  {isUploading ? "Uploading..." : "Take Photo"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {isUploading ? "Uploading..." : "Upload Photo"}
+                </Button>
+              </div>
               <p className="text-xs text-muted-foreground mt-2">
                 JPEG, PNG, or WebP. Max 5MB.
               </p>
