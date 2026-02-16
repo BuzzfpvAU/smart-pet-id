@@ -207,11 +207,30 @@ export async function sendTagBatchEmail(
   shortCodes: string[],
   batchId: string
 ) {
+  const QRCode = (await import("qrcode")).default;
+
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ||
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000");
+
+  // Generate QR code PNGs for each tag (~3cm at 300dpi = 354px)
+  const attachments = await Promise.all(
+    shortCodes.map(async (shortCode, i) => {
+      const shortUrl = `${baseUrl}/s/${shortCode}`;
+      const buffer = await QRCode.toBuffer(shortUrl, {
+        width: 354,
+        margin: 1,
+        color: { dark: "#000000", light: "#ffffff" },
+        errorCorrectionLevel: "M",
+      });
+      return {
+        filename: `${codes[i]}.png`,
+        content: buffer,
+      };
+    })
+  );
 
   const tagRows = codes
     .map((code, i) => {
@@ -222,6 +241,7 @@ export async function sendTagBatchEmail(
           <td style="padding: 8px 12px; font-size: 13px;">
             <a href="${shortUrl}" style="color: #2563eb; text-decoration: underline;">${shortUrl}</a>
           </td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #71717a;">${code}.png</td>
         </tr>`;
     })
     .join("");
@@ -230,6 +250,7 @@ export async function sendTagBatchEmail(
     from: FROM_EMAIL,
     to: adminEmail,
     subject: `Tag Batch Generated: ${codes.length} codes (${batchId.slice(0, 8)})`,
+    attachments,
     html: `
       <div style="font-family: sans-serif; max-width: 640px; margin: 0 auto; padding: 24px;">
         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
@@ -243,12 +264,13 @@ export async function sendTagBatchEmail(
         </div>
         <div style="margin: 16px 0;">
           <h3 style="font-size: 14px; margin: 0 0 8px 0;">Activation Codes &amp; Short URLs</h3>
-          <p style="color: #71717a; font-size: 13px; margin: 0 0 8px 0;">Use the short URLs below to generate QR codes for each tag.</p>
+          <p style="color: #71717a; font-size: 13px; margin: 0 0 8px 0;">Each QR code is attached as a PNG (3cm print size). Filenames match the activation codes.</p>
           <table style="width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid #e4e4e7; border-radius: 8px;">
             <thead>
               <tr style="background: #f4f4f5;">
                 <th style="padding: 8px 12px; text-align: left; font-size: 13px;">Activation Code</th>
-                <th style="padding: 8px 12px; text-align: left; font-size: 13px;">Short URL (for QR)</th>
+                <th style="padding: 8px 12px; text-align: left; font-size: 13px;">Short URL</th>
+                <th style="padding: 8px 12px; text-align: left; font-size: 13px;">QR File</th>
               </tr>
             </thead>
             <tbody>
