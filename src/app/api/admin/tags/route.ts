@@ -91,12 +91,14 @@ export async function POST(req: Request) {
       shortCodes.push(shortCode);
     }
 
-    // Send email with codes to the admin who generated them (non-blocking)
+    // Send email with codes and QR attachments to the admin who generated them
     const adminEmail = session.user.email;
     if (adminEmail) {
-      sendTagBatchEmail(adminEmail, codes, shortCodes, batchId).catch(
-        (err) => console.error("Failed to send tag batch email:", err)
-      );
+      try {
+        await sendTagBatchEmail(adminEmail, codes, shortCodes, batchId);
+      } catch (err) {
+        console.error("Failed to send tag batch email:", err);
+      }
     }
 
     return NextResponse.json({ codes, batchId, count: codes.length });
