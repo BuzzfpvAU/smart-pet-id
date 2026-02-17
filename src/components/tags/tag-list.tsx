@@ -127,7 +127,7 @@ export function TagList({
 
   function getLinkedName(tag: TagData) {
     if (tag.item) return `Linked to ${tag.item.name} (${tag.item.tagType.name})`;
-    if (tag.pet) return `Linked to ${tag.pet.name} (Pet)`;
+    if (tag.pet) return `Linked to ${tag.pet.name} (${tag.pet.species})`;
     return "Not linked";
   }
 
@@ -138,7 +138,7 @@ export function TagList({
     })),
     ...pets.map((p) => ({
       id: p.id,
-      label: `${p.name} (${p.species} - Legacy Pet)`,
+      label: `${p.name} (${p.species})`,
     })),
   ];
 

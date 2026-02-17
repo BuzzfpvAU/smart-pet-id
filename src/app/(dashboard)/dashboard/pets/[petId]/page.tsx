@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, History } from "lucide-react";
 
 export const metadata = {
-  title: "Edit Pet - Tagz.au",
+  title: "Edit Profile - Tagz.au",
 };
 
 export default async function EditPetPage({
@@ -59,7 +59,7 @@ export default async function EditPetPage({
           <div>
             <h1 className="text-2xl font-bold">Edit {pet.name}</h1>
             <p className="text-muted-foreground text-sm">
-              Update your pet&apos;s profile information
+              Update profile information
             </p>
           </div>
         </div>

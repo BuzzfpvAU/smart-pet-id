@@ -30,11 +30,11 @@ export function DeletePetButton({
     try {
       const res = await fetch(`/api/pets/${petId}`, { method: "DELETE" });
       if (res.ok) {
-        toast.success("Pet profile deleted");
+        toast.success("Profile deleted");
         router.push("/dashboard");
         router.refresh();
       } else {
-        toast.error("Failed to delete pet");
+        toast.error("Failed to delete profile");
       }
     } catch {
       toast.error("Something went wrong");
@@ -50,7 +50,7 @@ export function DeletePetButton({
           <div>
             <p className="font-medium text-sm text-destructive">Danger Zone</p>
             <p className="text-xs text-muted-foreground">
-              Permanently delete this pet profile and all associated data.
+              Permanently delete this profile and all associated data.
             </p>
           </div>
           <Button
@@ -59,7 +59,7 @@ export function DeletePetButton({
             onClick={() => setOpen(true)}
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            Delete Pet
+            Delete Profile
           </Button>
         </div>
       </div>

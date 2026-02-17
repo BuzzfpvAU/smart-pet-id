@@ -306,7 +306,7 @@ export function ScanPageClient({
           <CardContent className="p-4">
             <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
               <Navigation className="h-4 w-4" />
-              Help Reunite — Share Your Location
+              Share Your Location
             </h3>
             {locationStatus === "idle" && (
               <Button onClick={shareLocation} className="w-full" variant="outline">
@@ -360,7 +360,7 @@ export function ScanPageClient({
                   required
                 />
                 <Textarea
-                  placeholder="Optional message (e.g., where you found the pet)"
+                  placeholder="Optional message (e.g., where you found this)"
                   value={finderMessage}
                   onChange={(e) => setFinderMessage(e.target.value)}
                   rows={2}

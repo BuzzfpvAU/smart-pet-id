@@ -21,9 +21,9 @@ export default function HomePage() {
               Tagz.au
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              QR code and NFC-enabled pet tags that link to detailed pet
-              profiles. When someone finds your pet, they scan the tag and you
-              get notified instantly with their location.
+              QR code and NFC-enabled smart tags that link to detailed online
+              profiles. When someone scans your tag, you get notified instantly
+              with their location.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
@@ -66,7 +66,7 @@ export default function HomePage() {
                 <h3 className="font-semibold text-lg mb-2">Get Notified</h3>
                 <p className="text-muted-foreground text-sm">
                   Receive instant email alerts when someone scans your
-                  pet&apos;s tag, including their GPS location.
+                  tag, including their GPS location.
                 </p>
               </div>
               <div className="text-center p-6">
@@ -75,8 +75,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Privacy Control</h3>
                 <p className="text-muted-foreground text-sm">
-                  Toggle your contact info on or off. When your pet is safe at
-                  home, keep your details private.
+                  Toggle your contact info on or off. Keep your details
+                  private when you don&apos;t need them visible.
                 </p>
               </div>
             </div>
@@ -89,18 +89,18 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
                 <div className="text-4xl font-bold text-primary mb-2">
-                  1 in 3
+                  Millions
                 </div>
                 <p className="text-muted-foreground">
-                  Pets get lost at some point
+                  Of items lost or stolen each year
                 </p>
               </div>
               <div>
                 <div className="text-4xl font-bold text-primary mb-2">
-                  10M+
+                  Instant
                 </div>
                 <p className="text-muted-foreground">
-                  Pets in shelters each year
+                  Notifications when your tag is scanned
                 </p>
               </div>
               <div>
@@ -118,10 +118,10 @@ export default function HomePage() {
         {/* CTA */}
         <section className="py-16 bg-muted/50">
           <div className="container text-center max-w-2xl">
-            <h2 className="text-3xl font-bold mb-4">Protect Your Pet Today</h2>
+            <h2 className="text-3xl font-bold mb-4">Protect What Matters</h2>
             <p className="text-muted-foreground mb-8">
-              Create a free account and set up your pet&apos;s profile in
-              minutes. Unlimited pets, no subscription required.
+              Create a free account and set up your profile in minutes.
+              Unlimited profiles, no subscription required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>

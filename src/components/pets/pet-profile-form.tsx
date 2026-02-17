@@ -198,12 +198,12 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
 
       if (!res.ok) {
         const err = await res.json();
-        toast.error(err.error || "Failed to save pet profile");
+        toast.error(err.error || "Failed to save profile");
         return;
       }
 
       const pet = await res.json();
-      toast.success(petId ? "Pet profile updated" : "Pet profile created");
+      toast.success(petId ? "Profile updated" : "Profile created");
       router.push(`/dashboard/pets/${pet.id}`);
       router.refresh();
     } catch {
@@ -218,7 +218,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       {/* Pet Photo */}
       <Card>
         <CardHeader>
-          <CardTitle>Pet Photo</CardTitle>
+          <CardTitle>Photo</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -235,7 +235,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
                   >
                     <img
                       src={url}
-                      alt="Pet photo"
+                      alt="Profile photo"
                       className="w-full h-32 object-cover cursor-pointer"
                       onClick={() => setPrimaryPhoto(url)}
                     />
@@ -295,7 +295,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Pet Name *</Label>
+              <Label htmlFor="name">Name *</Label>
               <Input
                 id="name"
                 value={data.name}
@@ -402,7 +402,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
         </CardHeader>
         <CardContent>
           <Textarea
-            placeholder="Any behavioral notes that might help someone caring for your pet..."
+            placeholder="Any notes that might help someone who finds this..."
             value={data.behavioralNotes}
             onChange={(e) => update("behavioralNotes", e.target.value)}
             rows={3}
@@ -450,7 +450,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
               <p className="font-medium text-sm">Privacy Mode</p>
               <p className="text-xs text-muted-foreground">
                 When enabled, your contact info is hidden from the public scan
-                page. Enable when your pet is safe at home.
+                page.
               </p>
             </div>
             <Switch
@@ -522,8 +522,8 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
           {isLoading
             ? "Saving..."
             : petId
-              ? "Update Pet Profile"
-              : "Create Pet Profile"}
+              ? "Update Profile"
+              : "Create Profile"}
         </Button>
         <Button
           type="button"

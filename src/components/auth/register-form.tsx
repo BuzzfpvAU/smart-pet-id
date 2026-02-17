@@ -56,7 +56,7 @@ export function RegisterForm() {
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>
-          Sign up to manage your pet&apos;s smart tags
+          Sign up to manage your smart tags
         </CardDescription>
       </CardHeader>
       <CardContent>

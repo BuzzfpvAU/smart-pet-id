@@ -98,7 +98,7 @@ export default function AdminTagsPage() {
               <TableHead>Status</TableHead>
               <TableHead>QR</TableHead>
               <TableHead>Assigned To</TableHead>
-              <TableHead>Pet</TableHead>
+              <TableHead>Linked Profile</TableHead>
               <TableHead>Scans</TableHead>
               <TableHead>Batch</TableHead>
               <TableHead>Created</TableHead>
@@ -202,7 +202,7 @@ export default function AdminTagsPage() {
                 includeMargin
               />
               <p className="text-sm text-muted-foreground text-center">
-                Scan this QR code to view the pet profile
+                Scan this QR code to view the profile
               </p>
               <code className="text-xs text-muted-foreground">
                 {qrTag.activationCode}

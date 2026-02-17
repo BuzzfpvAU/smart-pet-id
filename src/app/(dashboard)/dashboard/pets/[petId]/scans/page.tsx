@@ -69,8 +69,7 @@ export default async function ScanHistoryPage({
           <MapPin className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">No scans yet</h2>
           <p className="text-muted-foreground">
-            When someone scans your pet&apos;s tag, the scan details will appear
-            here.
+            When someone scans your tag, the scan details will appear here.
           </p>
         </div>
       ) : (

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tagz.au - QR & NFC Pet Tag Management",
+  title: "Tagz.au - Smart QR & NFC Tag Management",
   description:
-    "Keep your pets safe with smart QR and NFC ID tags. Create detailed pet profiles, get instant notifications when your pet is found.",
+    "Smart QR and NFC ID tags for everything that matters. Create detailed profiles, get instant notifications when your tag is scanned.",
 };
 
 export default function RootLayout({

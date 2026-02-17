@@ -48,9 +48,9 @@ export default function AdminPetsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">All Pets</h1>
+          <h1 className="text-3xl font-bold">All Pet Profiles</h1>
           <p className="text-muted-foreground">
-            View all registered pets across all users
+            View all registered pet profiles across all users
           </p>
         </div>
         <Button variant="outline" size="icon" onClick={fetchPets}>
@@ -80,7 +80,7 @@ export default function AdminPetsPage() {
             ) : pets.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                  No pets registered yet.
+                  No pet profiles registered yet.
                 </TableCell>
               </TableRow>
             ) : (

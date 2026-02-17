@@ -19,10 +19,9 @@ export default function TermsPage() {
 
       <h2>2. Service Description</h2>
       <p>
-        Tagz.au provides a digital pet identification service using QR code
-        and NFC-enabled tags. The service allows pet owners to create online
-        profiles for their pets and receive notifications when their pet&apos;s
-        tag is scanned.
+        Tagz.au provides a digital identification service using QR code
+        and NFC-enabled tags. The service allows users to create online
+        profiles and receive notifications when their tag is scanned.
       </p>
 
       <h2>3. User Accounts</h2>
@@ -37,23 +36,22 @@ export default function TermsPage() {
         We take your privacy seriously. Personal information you provide is used
         solely for the purpose of operating the Tagz.au service. We use
         encryption to protect your data. You have control over what information
-        is displayed on your pet&apos;s public profile through the privacy
-        toggle feature.
+        is displayed on your public profile through the privacy toggle feature.
       </p>
 
       <h2>5. Location Data</h2>
       <p>
-        When someone scans your pet&apos;s tag, they may choose to share their
-        GPS location with you. This location data is stored securely and is only
-        visible to the pet owner. Location sharing by the scanner is voluntary
-        and requires their explicit consent.
+        When someone scans your tag, they may choose to share their GPS location
+        with you. This location data is stored securely and is only visible to
+        the tag owner. Location sharing by the scanner is voluntary and requires
+        their explicit consent.
       </p>
 
       <h2>6. User Content</h2>
       <p>
-        You retain ownership of all content you upload, including pet photos and
+        You retain ownership of all content you upload, including photos and
         profile information. By using our service, you grant us a license to
-        display this content as part of the pet profile functionality.
+        display this content as part of the profile functionality.
       </p>
 
       <h2>7. Prohibited Use</h2>

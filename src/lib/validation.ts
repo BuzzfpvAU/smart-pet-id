@@ -28,7 +28,7 @@ export const sendCodeSchema = z.object({
 });
 
 export const petSchema = z.object({
-  name: z.string().min(1, "Pet name is required"),
+  name: z.string().min(1, "Name is required"),
   species: z.string().min(1, "Species is required"),
   breed: z.string().optional(),
   age: z.string().optional(),
@@ -60,7 +60,7 @@ export const activateTagSchema = z.object({
 });
 
 export const linkTagSchema = z.object({
-  petId: z.string().min(1, "Pet ID is required"),
+  petId: z.string().min(1, "Profile ID is required"),
 });
 
 export const scanLogSchema = z.object({

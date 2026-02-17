@@ -181,7 +181,7 @@ export default async function DashboardPage() {
       {pets.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">My Pets</h2>
+            <h2 className="text-lg font-semibold">My Pet Profiles</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {pets.map((pet) => (
