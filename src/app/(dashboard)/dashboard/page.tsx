@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PetCard } from "@/components/pets/pet-card";
 import { ItemCard } from "@/components/items/item-card";
-import { Plus, QrCode, Tag, ScanLine, MapPin, Package } from "lucide-react";
+import { Plus, QrCode, Tag, ScanLine, MapPin, Package, ShoppingCart } from "lucide-react";
 
 export const metadata = {
   title: "Dashboard - Tagz.au",
@@ -199,12 +199,20 @@ export default async function DashboardPage() {
           <p className="text-muted-foreground mb-6 max-w-md">
             Add your first item to create a profile and link it to a smart tag.
           </p>
-          <Button asChild>
-            <Link href="/dashboard/items/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Your First Item
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button asChild>
+              <Link href="/dashboard/items/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Item
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/buy">
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Buy a Tag
+              </Link>
+            </Button>
+          </div>
         </div>
       )}
     </div>

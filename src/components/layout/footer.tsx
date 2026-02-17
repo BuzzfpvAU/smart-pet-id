@@ -20,6 +20,12 @@ export function Footer() {
             <h3 className="font-semibold mb-3 text-sm">Links</h3>
             <nav className="flex flex-col gap-2">
               <Link
+                href="/buy"
+                className="text-sm text-muted-foreground hover:text-primary"
+              >
+                Buy a Tag
+              </Link>
+              <Link
                 href="/faq"
                 className="text-sm text-muted-foreground hover:text-primary"
               >

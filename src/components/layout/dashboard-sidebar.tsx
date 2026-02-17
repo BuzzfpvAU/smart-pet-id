@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { QrCode, Home, Tag, Settings, LogOut, Shield, Plus } from "lucide-react";
+import { QrCode, Home, Tag, Settings, LogOut, Shield, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -62,14 +62,23 @@ export function DashboardSidebar() {
         )}
       </nav>
 
-      <Button
-        variant="ghost"
-        className="justify-start gap-3 text-muted-foreground"
-        onClick={() => signOut({ callbackUrl: "/login" })}
-      >
-        <LogOut className="h-4 w-4" />
-        Sign out
-      </Button>
+      <div className="space-y-1">
+        <Link
+          href="/buy"
+          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-primary hover:bg-primary/10 font-medium"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          Buy a Tag
+        </Link>
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-3 text-muted-foreground"
+          onClick={() => signOut({ callbackUrl: "/login" })}
+        >
+          <LogOut className="h-4 w-4" />
+          Sign out
+        </Button>
+      </div>
     </aside>
   );
 }

@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, QrCode } from "lucide-react";
+import { Menu, QrCode, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
+  { href: "/buy", label: "Buy a Tag" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
   { href: "/b2b", label: "B2B / Wholesale" },

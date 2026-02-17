@@ -1,9 +1,12 @@
+import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "FAQ - Tagz.au",
@@ -82,6 +85,19 @@ export default function FaqPage() {
           </AccordionItem>
         ))}
       </Accordion>
+
+      <div className="mt-12 text-center p-8 rounded-lg bg-muted/50">
+        <h2 className="text-xl font-semibold mb-2">Ready to get started?</h2>
+        <p className="text-muted-foreground mb-4">
+          Purchase a smart tag and protect your pet today.
+        </p>
+        <Button size="lg" asChild>
+          <Link href="/buy">
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            Buy a Tag
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { QrCode, Bell, Shield } from "lucide-react";
+import { QrCode, Bell, Shield, ShoppingCart } from "lucide-react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { Footer } from "@/components/layout/footer";
 
@@ -27,6 +27,12 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
+                <Link href="/buy">
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Buy a Tag
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
                 <Link href="/register">Get Started</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
@@ -117,9 +123,17 @@ export default function HomePage() {
               Create a free account and set up your pet&apos;s profile in
               minutes. Unlimited pets, no subscription required.
             </p>
-            <Button size="lg" asChild>
-              <Link href="/register">Create Free Account</Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild>
+                <Link href="/buy">
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Buy a Tag
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/register">Create Free Account</Link>
+              </Button>
+            </div>
           </div>
         </section>
       </main>

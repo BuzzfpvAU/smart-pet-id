@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { QrCode, UserPlus, ShieldCheck, Bell } from "lucide-react";
+import { QrCode, UserPlus, ShieldCheck, Bell, ShoppingCart } from "lucide-react";
 
 interface InactiveTagPageProps {
   activationCode: string;
@@ -78,16 +78,34 @@ export function InactiveTagPage({ activationCode, tagStatus }: InactiveTagPagePr
               >
                 Already have an account? Sign In
               </Link>
+              <div className="pt-2">
+                <Link
+                  href="/buy"
+                  className="inline-flex items-center gap-1.5 text-sm text-orange-600 hover:underline font-medium"
+                >
+                  <ShoppingCart className="h-3.5 w-3.5" />
+                  Want your own tag? Buy one here
+                </Link>
+              </div>
             </div>
           )}
 
           {isDeactivated && (
-            <Link
-              href="/"
-              className="flex items-center justify-center gap-2 w-full bg-black text-white rounded-lg py-3 px-4 font-medium hover:bg-gray-800 transition-colors"
-            >
-              Learn About Tagz.au
-            </Link>
+            <div className="space-y-3">
+              <Link
+                href="/buy"
+                className="flex items-center justify-center gap-2 w-full bg-black text-white rounded-lg py-3 px-4 font-medium hover:bg-gray-800 transition-colors"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                Buy Your Own Tag
+              </Link>
+              <Link
+                href="/"
+                className="flex items-center justify-center gap-2 w-full bg-white text-gray-900 border-2 border-gray-200 rounded-lg py-3 px-4 font-medium hover:border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                Learn About Tagz.au
+              </Link>
+            </div>
           )}
         </div>
 
