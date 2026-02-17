@@ -8,7 +8,7 @@ function getResend() {
 }
 
 const FROM_EMAIL = process.env.FROM_EMAIL || "Tagz.au <onboarding@resend.dev>";
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@smartpetid.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "buzz@buzzfpv.com.au";
 
 export async function sendVerificationCode(email: string, code: string) {
   await getResend().emails.send({
