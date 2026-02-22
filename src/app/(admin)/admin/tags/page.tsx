@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { QRCodeSVG } from "qrcode.react";
 import { GenerateTagsDialog } from "@/components/admin/generate-tags-dialog";
-import { Plus, RefreshCw, QrCode, ScanLine } from "lucide-react";
+import { Plus, RefreshCw, QrCode, ScanLine, Filter } from "lucide-react";
 
 interface TagData {
   id: string;
@@ -27,6 +28,8 @@ interface TagData {
   shortCode: string | null;
   status: string;
   batchId: string | null;
+  madeLive: boolean;
+  madeLiveAt: string | null;
   createdAt: string;
   user: { name: string; email: string } | null;
   pet: { name: string } | null;
@@ -39,6 +42,7 @@ export default function AdminTagsPage() {
   const [showGenerate, setShowGenerate] = useState(false);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [qrTag, setQrTag] = useState<TagData | null>(null);
+  const [filterUnmade, setFilterUnmade] = useState(false);
 
   const fetchTags = useCallback(async () => {
     setIsLoading(true);
@@ -57,6 +61,40 @@ export default function AdminTagsPage() {
     fetchTags();
   }, [fetchTags]);
 
+  async function toggleMadeLive(tag: TagData) {
+    const newValue = !tag.madeLive;
+    // Optimistic update
+    setTags((prev) =>
+      prev.map((t) =>
+        t.id === tag.id
+          ? { ...t, madeLive: newValue, madeLiveAt: newValue ? new Date().toISOString() : null }
+          : t
+      )
+    );
+    try {
+      const res = await fetch(`/api/admin/tags/${tag.id}/made-live`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ madeLive: newValue }),
+      });
+      if (!res.ok) {
+        // Revert on failure
+        setTags((prev) =>
+          prev.map((t) =>
+            t.id === tag.id ? { ...t, madeLive: tag.madeLive, madeLiveAt: tag.madeLiveAt } : t
+          )
+        );
+      }
+    } catch {
+      // Revert on failure
+      setTags((prev) =>
+        prev.map((t) =>
+          t.id === tag.id ? { ...t, madeLive: tag.madeLive, madeLiveAt: tag.madeLiveAt } : t
+        )
+      );
+    }
+  }
+
   function statusBadge(status: string) {
     switch (status) {
       case "active":
@@ -70,6 +108,8 @@ export default function AdminTagsPage() {
     }
   }
 
+  const displayedTags = filterUnmade ? tags.filter((t) => !t.madeLive) : tags;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -80,6 +120,14 @@ export default function AdminTagsPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant={filterUnmade ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterUnmade(!filterUnmade)}
+          >
+            <Filter className="h-4 w-4 mr-2" />
+            {filterUnmade ? "Show All" : "Not Yet Made"}
+          </Button>
           <Button variant="outline" size="icon" onClick={fetchTags}>
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -94,6 +142,7 @@ export default function AdminTagsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[60px]">Made</TableHead>
               <TableHead>Activation Code</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>QR</TableHead>
@@ -107,19 +156,25 @@ export default function AdminTagsPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   Loading...
                 </TableCell>
               </TableRow>
-            ) : tags.length === 0 ? (
+            ) : displayedTags.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                  No tags found. Generate some!
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                  {filterUnmade ? "All tags have been made live!" : "No tags found. Generate some!"}
                 </TableCell>
               </TableRow>
             ) : (
-              tags.map((tag) => (
+              displayedTags.map((tag) => (
                 <TableRow key={tag.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={tag.madeLive}
+                      onCheckedChange={() => toggleMadeLive(tag)}
+                    />
+                  </TableCell>
                   <TableCell className="font-mono text-sm">
                     {tag.activationCode}
                   </TableCell>

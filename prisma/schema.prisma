@@ -125,6 +125,8 @@ model Tag {
   petId           String?
   itemId          String?
 
+  madeLive        Boolean   @default(false)
+  madeLiveAt      DateTime?
   activatedAt     DateTime?
   deactivatedAt   DateTime?
   createdAt       DateTime  @default(now())
