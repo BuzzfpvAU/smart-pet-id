@@ -9,12 +9,17 @@ export async function loginAction(
   formData: FormData
 ) {
   const email = formData.get("email") as string;
+  const activationCode = formData.get("activationCode") as string | null;
+
+  const redirectTo = activationCode
+    ? `/dashboard/tags/activate?code=${encodeURIComponent(activationCode)}`
+    : "/dashboard";
 
   try {
     await signIn("credentials", {
       email,
       password: formData.get("password") as string,
-      redirectTo: "/dashboard",
+      redirectTo,
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -22,7 +27,10 @@ export async function loginAction(
       const causeMessage =
         error.cause?.err?.message || (error as unknown as { message?: string }).message || "";
       if (causeMessage.includes("EMAIL_NOT_VERIFIED")) {
-        redirect(`/verify-email?email=${encodeURIComponent(email)}`);
+        const verifyUrl = activationCode
+          ? `/verify-email?email=${encodeURIComponent(email)}&activationCode=${encodeURIComponent(activationCode)}`
+          : `/verify-email?email=${encodeURIComponent(email)}`;
+        redirect(verifyUrl);
       }
 
       switch (error.type) {

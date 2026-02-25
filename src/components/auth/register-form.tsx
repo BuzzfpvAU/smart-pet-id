@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,17 @@ import {
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const activationCode = searchParams.get("activationCode");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const postAuthRedirect = activationCode
+    ? `/dashboard/tags/activate?code=${encodeURIComponent(activationCode)}`
+    : "/dashboard";
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +49,10 @@ export function RegisterForm() {
         return;
       }
 
-      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+      const verifyUrl = activationCode
+        ? `/verify-email?email=${encodeURIComponent(email)}&activationCode=${encodeURIComponent(activationCode)}`
+        : `/verify-email?email=${encodeURIComponent(email)}`;
+      router.push(verifyUrl);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -64,6 +73,11 @@ export function RegisterForm() {
           {error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
               {error}
+            </div>
+          )}
+          {activationCode && (
+            <div className="bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 text-sm p-3 rounded-md">
+              Create an account to activate your tag automatically.
             </div>
           )}
           <div className="space-y-2">
@@ -125,7 +139,7 @@ export function RegisterForm() {
           type="button"
           variant="outline"
           className="w-full gap-2"
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          onClick={() => signIn("google", { callbackUrl: postAuthRedirect })}
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24">
             <path
@@ -151,7 +165,10 @@ export function RegisterForm() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary hover:underline">
+          <Link
+            href={activationCode ? `/login?activationCode=${encodeURIComponent(activationCode)}` : "/login"}
+            className="text-primary hover:underline"
+          >
             Sign in
           </Link>
         </p>

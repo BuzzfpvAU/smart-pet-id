@@ -20,6 +20,7 @@ export function VerifyEmailForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get("email") || "";
+  const activationCode = searchParams.get("activationCode");
 
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -53,7 +54,10 @@ export function VerifyEmailForm() {
         return;
       }
 
-      router.push("/login?verified=true");
+      const loginUrl = activationCode
+        ? `/login?verified=true&activationCode=${encodeURIComponent(activationCode)}`
+        : "/login?verified=true";
+      router.push(loginUrl);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -154,7 +158,10 @@ export function VerifyEmailForm() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Wrong email?{" "}
-          <Link href="/register" className="text-primary hover:underline">
+          <Link
+            href={activationCode ? `/register?activationCode=${encodeURIComponent(activationCode)}` : "/register"}
+            className="text-primary hover:underline"
+          >
             Sign up again
           </Link>
         </p>

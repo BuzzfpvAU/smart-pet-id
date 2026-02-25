@@ -34,10 +34,15 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const verified = searchParams.get("verified") === "true";
+  const activationCode = searchParams.get("activationCode");
   const [passkeyLoading, setPasskeyLoading] = useState(false);
   const [passkeyError, setPasskeyError] = useState<string | null>(null);
 
   const supportsPasskeys = typeof window !== "undefined" && browserSupportsWebAuthn();
+
+  const postAuthRedirect = activationCode
+    ? `/dashboard/tags/activate?code=${encodeURIComponent(activationCode)}`
+    : "/dashboard";
 
   async function handlePasskeyLogin() {
     setPasskeyLoading(true);
@@ -83,8 +88,8 @@ export function LoginForm() {
         throw new Error("Failed to create session");
       }
 
-      // Success - redirect to dashboard
-      router.push("/dashboard");
+      // Success - redirect
+      router.push(postAuthRedirect);
     } catch (error: unknown) {
       const err = error as { name?: string; message?: string };
       if (err.name === "NotAllowedError") {
@@ -105,9 +110,17 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
+          {activationCode && (
+            <input type="hidden" name="activationCode" value={activationCode} />
+          )}
           {verified && (
             <div className="bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-400 text-sm p-3 rounded-md">
               Email verified successfully! You can now sign in.
+            </div>
+          )}
+          {activationCode && (
+            <div className="bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 text-sm p-3 rounded-md">
+              Sign in to activate your tag automatically.
             </div>
           )}
           {state?.error && (
@@ -164,7 +177,7 @@ export function LoginForm() {
             type="button"
             variant="outline"
             className="w-full gap-2"
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => signIn("google", { callbackUrl: postAuthRedirect })}
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24">
               <path
@@ -204,7 +217,10 @@ export function LoginForm() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-primary hover:underline">
+          <Link
+            href={activationCode ? `/register?activationCode=${encodeURIComponent(activationCode)}` : "/register"}
+            className="text-primary hover:underline"
+          >
             Sign up
           </Link>
         </p>

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { TagActivationForm } from "@/components/tags/tag-activation-form";
 
 export const metadata = {
@@ -13,7 +14,9 @@ export default function ActivateTagPage() {
           Enter the activation code found on your smart tag
         </p>
       </div>
-      <TagActivationForm />
+      <Suspense>
+        <TagActivationForm />
+      </Suspense>
     </div>
   );
 }
