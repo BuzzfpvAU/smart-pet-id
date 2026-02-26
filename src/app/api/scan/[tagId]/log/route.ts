@@ -85,23 +85,23 @@ export async function POST(
 
       if (emergencyContacts && emergencyContacts.length > 0) {
         const { sendEmergencyAutoAlert } = await import("@/lib/email");
-        const results = await Promise.allSettled(
-          emergencyContacts.map((contact) =>
-            sendEmergencyAutoAlert(
+        // Send sequentially with delay to avoid Resend rate limits
+        for (let i = 0; i < emergencyContacts.length; i++) {
+          const contact = emergencyContacts[i];
+          if (i > 0) await new Promise((r) => setTimeout(r, 1500));
+          try {
+            await sendEmergencyAutoAlert(
               contact.email,
               contact.name,
               tag.item!.name,
               latitude ?? null,
               longitude ?? null,
               scan.createdAt
-            )
-          )
-        );
-        results.forEach((r, i) => {
-          if (r.status === "rejected") {
-            console.error(`Failed to send auto-alert to contact ${i}:`, r.reason);
+            );
+          } catch (err) {
+            console.error(`Failed to send auto-alert to contact ${i}:`, err);
           }
-        });
+        }
       }
     }
 

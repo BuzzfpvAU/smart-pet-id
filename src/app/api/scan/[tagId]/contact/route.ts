@@ -96,9 +96,12 @@ export async function POST(
       if (emergencyContacts && emergencyContacts.length > 0) {
         const { sendEmergencyDetailedAlert } = await import("@/lib/email");
 
-        const results = await Promise.allSettled(
-          emergencyContacts.map((contact) =>
-            sendEmergencyDetailedAlert(
+        // Send sequentially with delay to avoid Resend rate limits
+        for (let i = 0; i < emergencyContacts.length; i++) {
+          const contact = emergencyContacts[i];
+          if (i > 0) await new Promise((r) => setTimeout(r, 1500));
+          try {
+            await sendEmergencyDetailedAlert(
               contact.email,
               contact.name,
               tag.item!.name,
@@ -108,16 +111,12 @@ export async function POST(
               scanLat,
               scanLng,
               new Date()
-            )
-          )
-        );
-        results.forEach((r, i) => {
-          if (r.status === "rejected") {
-            console.error(`Failed to send detailed alert to contact ${i}:`, r.reason);
-          } else {
-            console.log(`Detailed alert sent to contact ${i} successfully`);
+            );
+            console.log(`Detailed alert sent to contact ${i} (${contact.name})`);
+          } catch (err) {
+            console.error(`Failed to send detailed alert to contact ${i}:`, err);
           }
-        });
+        }
       }
     }
 
