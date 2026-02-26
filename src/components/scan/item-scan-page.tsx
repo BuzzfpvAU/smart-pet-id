@@ -55,6 +55,11 @@ export function ItemScanPage({
   const [finderPhone, setFinderPhone] = useState("");
   const [finderMessage, setFinderMessage] = useState("");
   const [contactSent, setContactSent] = useState(false);
+  const [scannerName, setScannerName] = useState("");
+  const [scannerContact, setScannerContact] = useState("");
+  const [description, setDescription] = useState("");
+
+  const isEmergencyContact = item.tagType.slug === "emergency-contact";
 
   useEffect(() => {
     fetch(`/api/scan/${tagId}/log`, {
@@ -98,15 +103,24 @@ export function ItemScanPage({
 
   async function sendContact(e: React.FormEvent) {
     e.preventDefault();
-    if (!finderPhone) return;
+    if (isEmergencyContact) {
+      if (!description) return;
+    } else {
+      if (!finderPhone) return;
+    }
 
     await fetch(`/api/scan/${tagId}/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        phone: finderPhone,
+        phone: finderPhone || null,
         message: finderMessage,
         scanId,
+        ...(isEmergencyContact && {
+          description,
+          scannerName: scannerName || null,
+          scannerContact: scannerContact || null,
+        }),
       }),
     });
 
@@ -412,42 +426,85 @@ export function ItemScanPage({
         </Card>
 
         {/* Finder Contact Form */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              Leave Your Contact Info
-            </h3>
-            {contactSent ? (
-              <div className="flex items-center gap-2 text-green-600">
-                <Check className="h-4 w-4" />
-                <p className="text-sm">
-                  Your contact info has been sent to the owner. Thank you!
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={sendContact} className="space-y-3">
-                <Input
-                  type="tel"
-                  placeholder="Your phone number"
-                  value={finderPhone}
-                  onChange={(e) => setFinderPhone(e.target.value)}
-                  required
-                />
-                <Textarea
-                  placeholder={`Optional message (e.g., where you found the ${item.tagType.name.toLowerCase()})`}
-                  value={finderMessage}
-                  onChange={(e) => setFinderMessage(e.target.value)}
-                  rows={2}
-                />
-                <Button type="submit" className="w-full">
-                  <Send className="h-4 w-4 mr-2" />
-                  Send to Owner
-                </Button>
-              </form>
-            )}
-          </CardContent>
-        </Card>
+        {isEmergencyContact ? (
+          <Card className="border-red-300">
+            <CardContent className="p-4">
+              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-red-600" />
+                Why did you scan this tag?
+              </h3>
+              {contactSent ? (
+                <div className="flex items-center gap-2 text-green-600">
+                  <Check className="h-4 w-4" />
+                  <p className="text-sm">
+                    Thank you. All emergency contacts have been notified with your details.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={sendContact} className="space-y-3">
+                  <Textarea
+                    placeholder="Please describe why you scanned this tag and the situation..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    required
+                  />
+                  <Input
+                    placeholder="Your name (optional)"
+                    value={scannerName}
+                    onChange={(e) => setScannerName(e.target.value)}
+                  />
+                  <Input
+                    placeholder="Your phone or email (optional)"
+                    value={scannerContact}
+                    onChange={(e) => setScannerContact(e.target.value)}
+                  />
+                  <Button type="submit" className="w-full" variant="destructive">
+                    <Send className="h-4 w-4 mr-2" />
+                    Notify Emergency Contacts
+                  </Button>
+                </form>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                Leave Your Contact Info
+              </h3>
+              {contactSent ? (
+                <div className="flex items-center gap-2 text-green-600">
+                  <Check className="h-4 w-4" />
+                  <p className="text-sm">
+                    Your contact info has been sent to the owner. Thank you!
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={sendContact} className="space-y-3">
+                  <Input
+                    type="tel"
+                    placeholder="Your phone number"
+                    value={finderPhone}
+                    onChange={(e) => setFinderPhone(e.target.value)}
+                    required
+                  />
+                  <Textarea
+                    placeholder={`Optional message (e.g., where you found the ${item.tagType.name.toLowerCase()})`}
+                    value={finderMessage}
+                    onChange={(e) => setFinderMessage(e.target.value)}
+                    rows={2}
+                  />
+                  <Button type="submit" className="w-full">
+                    <Send className="h-4 w-4 mr-2" />
+                    Send to Owner
+                  </Button>
+                </form>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Footer */}
         <p className="text-center text-xs text-muted-foreground py-4">
