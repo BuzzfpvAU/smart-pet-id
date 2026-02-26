@@ -720,37 +720,39 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
         </CardContent>
       </Card>
 
-      {/* Reward Offer */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Reward Offer</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-sm">Offer a reward</p>
-              <p className="text-xs text-muted-foreground">
-                Let finders know a reward is offered for return
-              </p>
-            </div>
-            <Switch
-              checked={data.rewardOffered}
-              onCheckedChange={(v) => updateTop("rewardOffered", v)}
-            />
-          </div>
-          {data.rewardOffered && (
-            <div className="space-y-2">
-              <Label htmlFor="rewardDetails">Reward Details</Label>
-              <Textarea
-                id="rewardDetails"
-                placeholder="e.g., $50 reward for safe return"
-                value={data.rewardDetails}
-                onChange={(e) => updateTop("rewardDetails", e.target.value)}
+      {/* Reward Offer - hidden for emergency contact cards */}
+      {tagType.slug !== "emergency-contact" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Reward Offer</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-sm">Offer a reward</p>
+                <p className="text-xs text-muted-foreground">
+                  Let finders know a reward is offered for return
+                </p>
+              </div>
+              <Switch
+                checked={data.rewardOffered}
+                onCheckedChange={(v) => updateTop("rewardOffered", v)}
               />
             </div>
-          )}
-        </CardContent>
-      </Card>
+            {data.rewardOffered && (
+              <div className="space-y-2">
+                <Label htmlFor="rewardDetails">Reward Details</Label>
+                <Textarea
+                  id="rewardDetails"
+                  placeholder="e.g., $50 reward for safe return"
+                  value={data.rewardDetails}
+                  onChange={(e) => updateTop("rewardDetails", e.target.value)}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Visibility Toggles */}
       <FieldVisibilityToggles

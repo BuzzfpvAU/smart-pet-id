@@ -191,8 +191,8 @@ export function ItemScanPage({
           </div>
         </div>
 
-        {/* Reward Offer */}
-        {item.rewardOffered && item.rewardDetails && (
+        {/* Reward Offer - hidden for emergency contact cards */}
+        {item.rewardOffered && item.rewardDetails && item.tagType.slug !== "emergency-contact" && (
           <Card className="border-green-300 bg-green-50 dark:bg-green-950/20">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
