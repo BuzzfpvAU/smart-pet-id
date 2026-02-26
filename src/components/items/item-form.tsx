@@ -28,6 +28,12 @@ interface EmergencyContact {
   relationship?: string;
 }
 
+interface EmergencyContactWithEmail {
+  name: string;
+  phone: string;
+  email: string;
+}
+
 interface TagTypeInfo {
   slug: string;
   name: string;
@@ -152,6 +158,32 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
 
   function removeContact(key: string, index: number) {
     const contacts = getContacts(key).filter((_, i) => i !== index);
+    updateField(key, contacts);
+  }
+
+  function getEmergencyContacts(key: string): EmergencyContactWithEmail[] {
+    return (data.data[key] as EmergencyContactWithEmail[]) || [];
+  }
+
+  function addEmergencyContact(key: string) {
+    const contacts = getEmergencyContacts(key);
+    if (contacts.length >= 3) return;
+    updateField(key, [...contacts, { name: "", phone: "", email: "" }]);
+  }
+
+  function updateEmergencyContact(
+    key: string,
+    index: number,
+    field: keyof EmergencyContactWithEmail,
+    value: string
+  ) {
+    const contacts = [...getEmergencyContacts(key)];
+    contacts[index] = { ...contacts[index], [field]: value };
+    updateField(key, contacts);
+  }
+
+  function removeEmergencyContact(key: string, index: number) {
+    const contacts = getEmergencyContacts(key).filter((_, i) => i !== index);
     updateField(key, contacts);
   }
 
@@ -306,6 +338,73 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
           value={items}
           onChange={(newItems) => updateField(field.key, newItems)}
         />
+      );
+    }
+
+    if (field.type === "emergency_contacts_list") {
+      const contacts = getEmergencyContacts(field.key);
+      return (
+        <div key={field.key} className="space-y-3">
+          {contacts.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-2">
+              No emergency contacts added yet. Add up to 3 contacts.
+            </p>
+          )}
+          {contacts.map((contact, i) => (
+            <div key={i} className="flex gap-3 items-start">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
+                <Input
+                  placeholder="Name *"
+                  value={contact.name}
+                  onChange={(e) =>
+                    updateEmergencyContact(field.key, i, "name", e.target.value)
+                  }
+                  required
+                />
+                <Input
+                  placeholder="Phone *"
+                  type="tel"
+                  value={contact.phone}
+                  onChange={(e) =>
+                    updateEmergencyContact(field.key, i, "phone", e.target.value)
+                  }
+                  required
+                />
+                <Input
+                  placeholder="Email *"
+                  type="email"
+                  value={contact.email}
+                  onChange={(e) =>
+                    updateEmergencyContact(field.key, i, "email", e.target.value)
+                  }
+                  required
+                />
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeEmergencyContact(field.key, i)}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            </div>
+          ))}
+          {contacts.length < 3 && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addEmergencyContact(field.key)}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Emergency Contact
+            </Button>
+          )}
+          <p className="text-xs text-muted-foreground">
+            All contacts will be notified via email when this tag is scanned.
+          </p>
+        </div>
       );
     }
 
