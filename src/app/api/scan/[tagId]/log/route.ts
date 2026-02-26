@@ -22,6 +22,7 @@ export async function POST(
         item: {
           include: {
             user: { select: { email: true } },
+            tagType: { select: { slug: true } },
           },
         },
       },
@@ -63,6 +64,30 @@ export async function POST(
       );
     } catch {
       console.error("Failed to send scan alert email");
+    }
+
+    // Auto-notify emergency contacts for emergency-contact type
+    if (tag.item?.tagType?.slug === "emergency-contact") {
+      const itemData = (tag.item.data || {}) as Record<string, unknown>;
+      const emergencyContacts = itemData.emergencyContacts as
+        | { name: string; phone: string; email: string }[]
+        | undefined;
+
+      if (emergencyContacts && emergencyContacts.length > 0) {
+        const { sendEmergencyAutoAlert } = await import("@/lib/email");
+        await Promise.allSettled(
+          emergencyContacts.map((contact) =>
+            sendEmergencyAutoAlert(
+              contact.email,
+              contact.name,
+              tag.item!.name,
+              latitude ?? null,
+              longitude ?? null,
+              scan.createdAt
+            )
+          )
+        );
+      }
     }
 
     return NextResponse.json({ success: true, scanId: scan.id });
