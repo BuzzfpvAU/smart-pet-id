@@ -9,11 +9,11 @@ export async function POST(
   const { tagId } = await params;
 
   try {
-    const { phone, message, scanId } = await req.json();
+    const { phone, message, scanId, description, scannerName, scannerContact } = await req.json();
 
-    if (!phone) {
+    if (!phone && !description) {
       return NextResponse.json(
-        { error: "Phone number is required" },
+        { error: "Phone number or description is required" },
         { status: 400 }
       );
     }
@@ -29,6 +29,7 @@ export async function POST(
         item: {
           include: {
             user: { select: { email: true } },
+            tagType: { select: { slug: true } },
           },
         },
       },
@@ -47,8 +48,8 @@ export async function POST(
       await prisma.scan.updateMany({
         where: { id: scanId, tagId: tag.id },
         data: {
-          finderPhone: phone,
-          finderMessage: message || null,
+          finderPhone: phone || scannerContact || null,
+          finderMessage: description || message || null,
         },
       });
     }
@@ -68,6 +69,48 @@ export async function POST(
       );
     } catch {
       console.error("Failed to send finder contact alert");
+    }
+
+    // Send detailed alerts to emergency contacts for emergency-contact type
+    if (tag.item?.tagType?.slug === "emergency-contact" && description) {
+      const itemData = (tag.item.data || {}) as Record<string, unknown>;
+      const emergencyContacts = itemData.emergencyContacts as
+        | { name: string; phone: string; email: string }[]
+        | undefined;
+
+      if (emergencyContacts && emergencyContacts.length > 0) {
+        const { sendEmergencyDetailedAlert } = await import("@/lib/email");
+
+        // Get scan location if available
+        let lat: number | null = null;
+        let lng: number | null = null;
+        if (scanId) {
+          const scanRecord = await prisma.scan.findFirst({
+            where: { id: scanId, tagId: tag.id },
+            select: { latitude: true, longitude: true },
+          });
+          if (scanRecord) {
+            lat = scanRecord.latitude;
+            lng = scanRecord.longitude;
+          }
+        }
+
+        await Promise.allSettled(
+          emergencyContacts.map((contact) =>
+            sendEmergencyDetailedAlert(
+              contact.email,
+              contact.name,
+              tag.item!.name,
+              description,
+              scannerName || null,
+              scannerContact || phone || null,
+              lat,
+              lng,
+              new Date()
+            )
+          )
+        );
+      }
     }
 
     return NextResponse.json({ success: true });
