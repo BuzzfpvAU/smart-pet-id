@@ -18,6 +18,18 @@ export function buildItemDataSchema(fieldGroups: FieldGroupDefinition[]) {
         continue;
       }
 
+      if (field.type === "emergency_contacts_list") {
+        const emergencyContactSchema = z.array(
+          z.object({
+            name: z.string().min(1),
+            phone: z.string().min(1),
+            email: z.string().email(),
+          })
+        ).max(3);
+        shape[field.key] = field.required ? emergencyContactSchema : emergencyContactSchema.optional();
+        continue;
+      }
+
       if (field.type === "checklist_builder") {
         const checklistSchema = z.array(
           z.object({
