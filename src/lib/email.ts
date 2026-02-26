@@ -372,3 +372,107 @@ export async function sendB2BNotification(
     `,
   });
 }
+
+export async function sendEmergencyAutoAlert(
+  contactEmail: string,
+  contactName: string,
+  personName: string,
+  latitude: number | null,
+  longitude: number | null,
+  scanTime: Date
+) {
+  const mapUrl =
+    latitude && longitude
+      ? `https://www.google.com/maps?q=${latitude},${longitude}`
+      : null;
+
+  const staticMapUrl =
+    latitude && longitude && process.env.GOOGLE_MAPS_SERVER_KEY
+      ? `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&markers=color:red%7C${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_SERVER_KEY}`
+      : null;
+
+  const locationHtml = mapUrl
+    ? `
+      <div style="margin: 16px 0;">
+        <p><strong>Scan location:</strong></p>
+        ${staticMapUrl ? `<img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" />` : ""}
+        <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a>
+      </div>
+    `
+    : `<p style="color: #71717a;">Location was not shared by the scanner.</p>`;
+
+  const safePersonName = escapeHtml(personName);
+  const safeContactName = escapeHtml(contactName);
+
+  await getResend().emails.send({
+    from: FROM_EMAIL,
+    to: contactEmail,
+    subject: `URGENT: ${safePersonName}'s emergency tag was scanned`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+        <div style="background: #fef2f2; border: 2px solid #dc2626; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h2 style="color: #dc2626; margin: 0 0 8px 0;">Emergency Tag Scanned</h2>
+          <p style="margin: 0;">Hi ${safeContactName}, someone scanned <strong>${safePersonName}</strong>'s emergency contact tag at ${escapeHtml(scanTime.toLocaleString())}.</p>
+        </div>
+        ${locationHtml}
+        <p style="color: #71717a; font-size: 14px; margin-top: 24px;">
+          You are receiving this because you are listed as an emergency contact for ${safePersonName} on Tagz.au.
+        </p>
+      </div>
+    `,
+  });
+}
+
+export async function sendEmergencyDetailedAlert(
+  contactEmail: string,
+  contactName: string,
+  personName: string,
+  scannerDescription: string,
+  scannerName: string | null,
+  scannerContact: string | null,
+  latitude: number | null,
+  longitude: number | null,
+  scanTime: Date
+) {
+  const mapUrl =
+    latitude && longitude
+      ? `https://www.google.com/maps?q=${latitude},${longitude}`
+      : null;
+
+  const locationHtml = mapUrl
+    ? `<p><strong>Location:</strong> <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a></p>`
+    : `<p style="color: #71717a;">Location was not shared.</p>`;
+
+  const safePersonName = escapeHtml(personName);
+  const safeContactName = escapeHtml(contactName);
+  const safeDescription = escapeHtml(scannerDescription);
+  const safeScannerName = scannerName ? escapeHtml(scannerName) : null;
+  const safeScannerContact = scannerContact ? escapeHtml(scannerContact) : null;
+
+  await getResend().emails.send({
+    from: FROM_EMAIL,
+    to: contactEmail,
+    subject: `Update: Someone provided details about ${safePersonName}'s emergency tag scan`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h2 style="color: #2563eb; margin: 0 0 8px 0;">Scanner Details Received</h2>
+          <p style="margin: 0;">Hi ${safeContactName}, someone provided details after scanning <strong>${safePersonName}</strong>'s emergency tag.</p>
+        </div>
+        <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
+          <p style="margin: 0 0 4px 0;"><strong>Why they scanned:</strong></p>
+          <p style="margin: 0; white-space: pre-wrap;">${safeDescription}</p>
+        </div>
+        <div style="margin: 16px 0;">
+          ${safeScannerName ? `<p><strong>Scanner name:</strong> ${safeScannerName}</p>` : ""}
+          ${safeScannerContact ? `<p><strong>Scanner contact:</strong> ${safeScannerContact}</p>` : ""}
+          <p><strong>Time:</strong> ${escapeHtml(scanTime.toLocaleString())}</p>
+          ${locationHtml}
+        </div>
+        <p style="color: #71717a; font-size: 14px; margin-top: 24px;">
+          You are receiving this because you are listed as an emergency contact for ${safePersonName} on Tagz.au.
+        </p>
+      </div>
+    `,
+  });
+}
