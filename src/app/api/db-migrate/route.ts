@@ -11,7 +11,8 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get("secret");
-  const authSecret = process.env.AUTH_SECRET;
+  // Check both common NextAuth env var names
+  const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
 
   if (!secret || !authSecret || secret !== authSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
