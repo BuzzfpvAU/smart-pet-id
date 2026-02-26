@@ -88,6 +88,9 @@ export default async function ScanHistoryPage({
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-primary mt-0.5" />
                     <div>
+                      {scan.locationName && (
+                        <p className="text-sm font-medium">{scan.locationName}</p>
+                      )}
                       <a
                         href={`https://www.google.com/maps?q=${scan.latitude},${scan.longitude}`}
                         target="_blank"

@@ -147,7 +147,7 @@ export default async function DashboardPage() {
                           className="text-xs text-primary hover:underline flex items-center gap-1"
                         >
                           <MapPin className="h-3 w-3" />
-                          Location
+                          {scan.locationName || "Location"}
                         </a>
                       ) : (
                         <span className="text-xs text-muted-foreground">

@@ -63,7 +63,8 @@ export async function sendScanAlert(
   longitude: number | null,
   finderPhone: string | null,
   scanTime: Date,
-  finderMessage?: string | null
+  finderMessage?: string | null,
+  locationName?: string | null
 ) {
   const mapUrl =
     latitude && longitude
@@ -75,10 +76,12 @@ export async function sendScanAlert(
       ? `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&markers=color:red%7C${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_SERVER_KEY}`
       : null;
 
+  const safeLocationName = locationName ? escapeHtml(locationName) : null;
+
   const locationHtml = mapUrl
     ? `
       <div style="margin: 16px 0;">
-        <p><strong>Scan location:</strong></p>
+        <p><strong>Scan location:</strong>${safeLocationName ? ` ${safeLocationName}` : ""}</p>
         ${staticMapUrl ? `<img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" />` : ""}
         <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a>
       </div>
@@ -396,7 +399,8 @@ export async function sendEmergencyAutoAlert(
   personName: string,
   latitude: number | null,
   longitude: number | null,
-  scanTime: Date
+  scanTime: Date,
+  locationName?: string | null
 ) {
   const mapUrl =
     latitude && longitude
@@ -408,10 +412,12 @@ export async function sendEmergencyAutoAlert(
       ? `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&markers=color:red%7C${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_SERVER_KEY}`
       : null;
 
+  const safeLocationName = locationName ? escapeHtml(locationName) : null;
+
   const locationHtml = mapUrl
     ? `
       <div style="margin: 16px 0;">
-        <p><strong>Scan location:</strong></p>
+        <p><strong>Scan location:</strong>${safeLocationName ? ` ${safeLocationName}` : ""}</p>
         ${staticMapUrl ? `<img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" />` : ""}
         <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a>
       </div>
@@ -449,15 +455,18 @@ export async function sendEmergencyDetailedAlert(
   scannerContact: string | null,
   latitude: number | null,
   longitude: number | null,
-  scanTime: Date
+  scanTime: Date,
+  locationName?: string | null
 ) {
   const mapUrl =
     latitude && longitude
       ? `https://www.google.com/maps?q=${latitude},${longitude}`
       : null;
 
+  const safeLocationName = locationName ? escapeHtml(locationName) : null;
+
   const locationHtml = mapUrl
-    ? `<p><strong>Location:</strong> <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a></p>`
+    ? `<p><strong>Location:</strong>${safeLocationName ? ` ${safeLocationName} — ` : " "}<a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a></p>`
     : `<p style="color: #71717a;">Location was not shared.</p>`;
 
   const safePersonName = escapeHtml(personName);

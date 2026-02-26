@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendScanAlert } from "@/lib/email";
+import { reverseGeocode } from "@/lib/geocode";
 
 export async function POST(
   req: Request,
@@ -38,9 +39,10 @@ export async function POST(
     // If existingScanId is provided, update the existing scan with location
     // instead of creating a new one (used when user shares location after initial scan)
     if (existingScanId && latitude != null && longitude != null) {
+      const locationName = await reverseGeocode(latitude, longitude);
       await prisma.scan.updateMany({
         where: { id: existingScanId, tagId: tag.id },
-        data: { latitude, longitude },
+        data: { latitude, longitude, locationName },
       });
       return NextResponse.json({ success: true, scanId: existingScanId });
     }
@@ -49,11 +51,18 @@ export async function POST(
     const forwarded = req.headers.get("x-forwarded-for");
     const ipAddress = forwarded?.split(",")[0]?.trim() || undefined;
 
+    // Reverse geocode if we have coordinates
+    let locationName: string | null = null;
+    if (latitude != null && longitude != null) {
+      locationName = await reverseGeocode(latitude, longitude);
+    }
+
     const scan = await prisma.scan.create({
       data: {
         tagId: tag.id,
         latitude: latitude ?? null,
         longitude: longitude ?? null,
+        locationName,
         ipAddress,
         userAgent,
       },
@@ -70,7 +79,9 @@ export async function POST(
         latitude ?? null,
         longitude ?? null,
         null,
-        scan.createdAt
+        scan.createdAt,
+        null,
+        locationName
       );
     } catch {
       console.error("Failed to send scan alert email");
@@ -96,7 +107,8 @@ export async function POST(
               tag.item!.name,
               latitude ?? null,
               longitude ?? null,
-              scan.createdAt
+              scan.createdAt,
+              locationName
             );
           } catch (err) {
             console.error(`Failed to send auto-alert to contact ${i}:`, err);

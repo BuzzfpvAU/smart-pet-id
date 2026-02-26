@@ -150,6 +150,7 @@ model Scan {
   tagId           String
   latitude        Float?
   longitude       Float?
+  locationName    String?
   finderPhone     String?
   finderMessage   String?
   ipAddress       String?

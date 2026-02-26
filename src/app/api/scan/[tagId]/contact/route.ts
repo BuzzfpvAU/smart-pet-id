@@ -54,17 +54,19 @@ export async function POST(
       });
     }
 
-    // Look up scan location to include in notification
+    // Look up scan location and suburb name to include in notification
     let scanLat: number | null = null;
     let scanLng: number | null = null;
+    let scanLocationName: string | null = null;
     if (scanId) {
       const scanRecord = await prisma.scan.findFirst({
         where: { id: scanId, tagId: tag.id },
-        select: { latitude: true, longitude: true },
+        select: { latitude: true, longitude: true, locationName: true },
       });
       if (scanRecord) {
         scanLat = scanRecord.latitude;
         scanLng = scanRecord.longitude;
+        scanLocationName = scanRecord.locationName;
       }
     }
 
@@ -80,7 +82,8 @@ export async function POST(
         scanLng,
         phone || scannerContact || null,
         new Date(),
-        description || message || null
+        description || message || null,
+        scanLocationName
       );
     } catch {
       console.error("Failed to send finder contact alert");
@@ -110,7 +113,8 @@ export async function POST(
               scannerContact || phone || null,
               scanLat,
               scanLng,
-              new Date()
+              new Date(),
+              scanLocationName
             );
             console.log(`Detailed alert sent to contact ${i} (${contact.name})`);
           } catch (err) {
