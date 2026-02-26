@@ -10,6 +10,15 @@ export async function POST() {
   }
 
   try {
+    // Ensure any pending schema migrations are applied
+    try {
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE "scans" ADD COLUMN IF NOT EXISTS "locationName" TEXT`
+      );
+    } catch {
+      // Column may already exist, ignore
+    }
+
     const results = [];
 
     for (const tagType of defaultTagTypes) {
