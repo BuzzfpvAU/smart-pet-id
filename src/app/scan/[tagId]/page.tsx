@@ -5,6 +5,7 @@ import { ScanPageClient } from "@/components/scan/scan-page-client";
 import { ItemScanPage } from "@/components/scan/item-scan-page";
 import { ChecklistScanPage } from "@/components/scan/checklist-scan-page";
 import { InactiveTagPage } from "@/components/scan/inactive-tag-page";
+import { UnlinkedTagPage } from "@/components/scan/unlinked-tag-page";
 import type { FieldGroupDefinition } from "@/lib/tag-types";
 
 interface Props {
@@ -32,8 +33,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Tag Not Found - Tagz.au" };
   }
 
-  if (tag.status !== "active" || (!tag.pet && !tag.item)) {
+  if (tag.status !== "active") {
     return { title: "Activate Your Tag - Tagz.au" };
+  }
+
+  if (!tag.pet && !tag.item) {
+    return { title: "Tag Not Set Up Yet - Tagz.au" };
   }
 
   // Item-based tag
@@ -76,8 +81,12 @@ export default async function ScanPage({ params }: Props) {
     notFound();
   }
 
-  if (tag.status !== "active" || (!tag.pet && !tag.item)) {
+  if (tag.status !== "active") {
     return <InactiveTagPage activationCode={tag.activationCode} tagStatus={tag.status} />;
+  }
+
+  if (!tag.pet && !tag.item) {
+    return <UnlinkedTagPage />;
   }
 
   // Item-based tag (new system)
