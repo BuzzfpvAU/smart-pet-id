@@ -10,6 +10,16 @@ function getResend() {
 const FROM_EMAIL = process.env.FROM_EMAIL || "Tagz.au <onboarding@resend.dev>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "buzz@buzzfpv.com.au";
 
+/** Escape user-supplied values before interpolating into HTML emails */
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function sendVerificationCode(email: string, code: string) {
   await getResend().emails.send({
     from: FROM_EMAIL,
@@ -20,7 +30,7 @@ export async function sendVerificationCode(email: string, code: string) {
         <h2 style="color: #1a1a1a;">Verify your email</h2>
         <p>Your verification code is:</p>
         <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
-          <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${code}</span>
+          <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${escapeHtml(code)}</span>
         </div>
         <p style="color: #71717a; font-size: 14px;">This code expires in 10 minutes. If you didn't request this, please ignore this email.</p>
       </div>
@@ -38,7 +48,7 @@ export async function sendPasswordResetCode(email: string, code: string) {
         <h2 style="color: #1a1a1a;">Reset your password</h2>
         <p>Your password reset code is:</p>
         <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
-          <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${code}</span>
+          <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${escapeHtml(code)}</span>
         </div>
         <p style="color: #71717a; font-size: 14px;">This code expires in 10 minutes. If you didn't request this, please ignore this email.</p>
       </div>
@@ -74,19 +84,22 @@ export async function sendScanAlert(
     `
     : `<p style="color: #71717a;">Location was not shared by the scanner.</p>`;
 
-  const finderHtml = finderPhone
-    ? `<p><strong>Finder's phone:</strong> <a href="tel:${finderPhone}">${finderPhone}</a></p>`
+  const safePhone = finderPhone ? escapeHtml(finderPhone) : null;
+  const finderHtml = safePhone
+    ? `<p><strong>Finder's phone:</strong> <a href="tel:${safePhone}">${safePhone}</a></p>`
     : "";
+
+  const safeItemName = escapeHtml(itemName);
 
   await getResend().emails.send({
     from: FROM_EMAIL,
     to: ownerEmail,
-    subject: `Alert: ${itemName}'s tag was scanned!`,
+    subject: `Alert: ${safeItemName}'s tag was scanned!`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
           <h2 style="color: #dc2626; margin: 0 0 8px 0;">Tag Scanned!</h2>
-          <p style="margin: 0;">Someone scanned <strong>${itemName}</strong>'s tag at ${scanTime.toLocaleString()}.</p>
+          <p style="margin: 0;">Someone scanned <strong>${safeItemName}</strong>'s tag at ${escapeHtml(scanTime.toLocaleString())}.</p>
         </div>
         ${locationHtml}
         ${finderHtml}
@@ -104,10 +117,15 @@ export async function sendContactNotification(
   phone: string | null,
   message: string
 ) {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeMessage = escapeHtml(message);
+  const safePhone = phone ? escapeHtml(phone) : null;
+
   await getResend().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
-    subject: `New Contact Form Submission from ${name}`,
+    subject: `New Contact Form Submission from ${safeName}`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
@@ -115,13 +133,13 @@ export async function sendContactNotification(
           <p style="margin: 0;">Someone submitted the contact form on Tagz.au.</p>
         </div>
         <div style="margin: 16px 0;">
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-          ${phone ? `<p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>` : ""}
+          <p><strong>Name:</strong> ${safeName}</p>
+          <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+          ${safePhone ? `<p><strong>Phone:</strong> <a href="tel:${safePhone}">${safePhone}</a></p>` : ""}
         </div>
         <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <p style="margin: 0 0 4px 0;"><strong>Message:</strong></p>
-          <p style="margin: 0; white-space: pre-wrap;">${message}</p>
+          <p style="margin: 0; white-space: pre-wrap;">${safeMessage}</p>
         </div>
       </div>
     `,
@@ -162,28 +180,32 @@ export async function sendChecklistAlert(
 
   const resultsHtml = results
     .map((r) => {
+      const safeLabel = escapeHtml(r.label);
       if (r.type === "checkbox") {
         const icon = r.value ? "&#9989;" : "&#10060;";
-        return `<tr><td style="padding: 4px 8px;">${icon}</td><td style="padding: 4px 8px;">${r.label}</td></tr>`;
+        return `<tr><td style="padding: 4px 8px;">${icon}</td><td style="padding: 4px 8px;">${safeLabel}</td></tr>`;
       }
-      const displayValue = r.value !== "" && r.value !== undefined ? String(r.value) : "—";
-      return `<tr><td style="padding: 4px 8px;">&#128221;</td><td style="padding: 4px 8px;"><strong>${r.label}:</strong> ${displayValue}</td></tr>`;
+      const displayValue = r.value !== "" && r.value !== undefined ? escapeHtml(String(r.value)) : "—";
+      return `<tr><td style="padding: 4px 8px;">&#128221;</td><td style="padding: 4px 8px;"><strong>${safeLabel}:</strong> ${displayValue}</td></tr>`;
     })
     .join("");
+
+  const safeItemName = escapeHtml(itemName);
+  const safeScannerName = escapeHtml(scannerName);
 
   await getResend().emails.send({
     from: FROM_EMAIL,
     to: ownerEmail,
-    subject: `Checklist completed: ${itemName}`,
+    subject: `Checklist completed: ${safeItemName}`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
           <h2 style="color: #2563eb; margin: 0 0 8px 0;">Checklist Completed</h2>
-          <p style="margin: 0;">A checklist was completed for <strong>${itemName}</strong>.</p>
+          <p style="margin: 0;">A checklist was completed for <strong>${safeItemName}</strong>.</p>
         </div>
         <div style="margin: 16px 0;">
-          <p><strong>Conducted by:</strong> ${scannerName}</p>
-          <p><strong>Time:</strong> ${submittedAt.toLocaleString()}</p>
+          <p><strong>Conducted by:</strong> ${safeScannerName}</p>
+          <p><strong>Time:</strong> ${escapeHtml(submittedAt.toLocaleString())}</p>
           ${summaryHtml}
         </div>
         ${locationHtml}
@@ -237,11 +259,11 @@ export async function sendTagBatchEmail(
       const shortUrl = `${baseUrl}/s/${shortCodes[i]}`;
       return `
         <tr style="border-bottom: 1px solid #e4e4e7;">
-          <td style="padding: 8px 12px; font-family: monospace; font-size: 14px;">${code}</td>
+          <td style="padding: 8px 12px; font-family: monospace; font-size: 14px;">${escapeHtml(code)}</td>
           <td style="padding: 8px 12px; font-size: 13px;">
-            <a href="${shortUrl}" style="color: #2563eb; text-decoration: underline;">${shortUrl}</a>
+            <a href="${escapeHtml(shortUrl)}" style="color: #2563eb; text-decoration: underline;">${escapeHtml(shortUrl)}</a>
           </td>
-          <td style="padding: 8px 12px; font-size: 13px; color: #71717a;">${code}.png</td>
+          <td style="padding: 8px 12px; font-size: 13px; color: #71717a;">${escapeHtml(code)}.png</td>
         </tr>`;
     })
     .join("");
@@ -258,7 +280,7 @@ export async function sendTagBatchEmail(
           <p style="margin: 0;">You generated <strong>${codes.length}</strong> new tag codes.</p>
         </div>
         <div style="margin: 16px 0;">
-          <p><strong>Batch ID:</strong> <span style="font-family: monospace;">${batchId.slice(0, 8)}</span></p>
+          <p><strong>Batch ID:</strong> <span style="font-family: monospace;">${escapeHtml(batchId.slice(0, 8))}</span></p>
           <p><strong>Generated at:</strong> ${new Date().toLocaleString()}</p>
           <p><strong>Total tags:</strong> ${codes.length}</p>
         </div>
@@ -304,8 +326,8 @@ export async function sendB2BNotification(
 ) {
   const fields = [
     { label: "Name", value: data.name },
-    { label: "Email", value: data.email, href: `mailto:${data.email}` },
-    { label: "Phone", value: data.phone, href: data.phone ? `tel:${data.phone}` : undefined },
+    { label: "Email", value: data.email, href: `mailto:${escapeHtml(data.email)}` },
+    { label: "Phone", value: data.phone, href: data.phone ? `tel:${escapeHtml(data.phone)}` : undefined },
     { label: "Website", value: data.website },
     { label: "Address", value: data.address },
     { label: "Current Products", value: data.currentProducts },
@@ -318,17 +340,21 @@ export async function sendB2BNotification(
 
   const fieldsHtml = fields
     .filter((f) => f.value)
-    .map((f) =>
-      f.href
-        ? `<p><strong>${f.label}:</strong> <a href="${f.href}">${f.value}</a></p>`
-        : `<p><strong>${f.label}:</strong> ${f.value}</p>`
-    )
+    .map((f) => {
+      const safeValue = escapeHtml(f.value!);
+      return f.href
+        ? `<p><strong>${f.label}:</strong> <a href="${f.href}">${safeValue}</a></p>`
+        : `<p><strong>${f.label}:</strong> ${safeValue}</p>`;
+    })
     .join("");
+
+  const safeName = escapeHtml(data.name);
+  const safeMessage = escapeHtml(data.message);
 
   await getResend().emails.send({
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
-    subject: `New B2B Inquiry from ${data.name}`,
+    subject: `New B2B Inquiry from ${safeName}`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
@@ -340,7 +366,7 @@ export async function sendB2BNotification(
         </div>
         <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <p style="margin: 0 0 4px 0;"><strong>Message:</strong></p>
-          <p style="margin: 0; white-space: pre-wrap;">${data.message}</p>
+          <p style="margin: 0; white-space: pre-wrap;">${safeMessage}</p>
         </div>
       </div>
     `,

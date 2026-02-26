@@ -2,19 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateShortCode } from "@/lib/shortcode";
+import { generateActivationCode } from "@/lib/auth-helpers";
 import { sendTagBatchEmail } from "@/lib/email";
 import crypto from "crypto";
-
-const CHARSET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-
-function generateActivationCode(): string {
-  let code = "";
-  for (let i = 0; i < 12; i++) {
-    if (i > 0 && i % 4 === 0) code += "-";
-    code += CHARSET[Math.floor(Math.random() * CHARSET.length)];
-  }
-  return code;
-}
 
 export async function GET() {
   try {

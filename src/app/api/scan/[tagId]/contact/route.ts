@@ -42,9 +42,10 @@ export async function POST(
     }
 
     // Update the scan record with finder contact info if scanId provided
+    // Validate that the scan belongs to this tag to prevent IDOR
     if (scanId) {
-      await prisma.scan.update({
-        where: { id: scanId },
+      await prisma.scan.updateMany({
+        where: { id: scanId, tagId: tag.id },
         data: {
           finderPhone: phone,
           finderMessage: message || null,

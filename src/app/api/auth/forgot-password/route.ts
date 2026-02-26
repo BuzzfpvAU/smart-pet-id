@@ -49,19 +49,13 @@ export async function POST(req: Request) {
       },
     });
 
-    let emailSent = false;
     try {
       await sendPasswordResetCode(email, code);
-      emailSent = true;
     } catch {
-      console.error("Failed to send password reset email - returning code directly");
+      console.error("Failed to send password reset email");
     }
 
-    // If email failed to send, return the code directly as a fallback
-    if (!emailSent) {
-      return NextResponse.json({ success: true, code, emailFailed: true });
-    }
-
+    // Always return success — never leak the code in the response
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Forgot password error:", error);

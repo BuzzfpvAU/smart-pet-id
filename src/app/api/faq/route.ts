@@ -12,11 +12,7 @@ export async function GET() {
   } catch (error) {
     console.error("FAQ API error:", error);
     return NextResponse.json(
-      {
-        error: "Database error",
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
