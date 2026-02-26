@@ -54,7 +54,21 @@ export async function POST(
       });
     }
 
-    // Send another notification to the owner with finder's phone
+    // Look up scan location to include in notification
+    let scanLat: number | null = null;
+    let scanLng: number | null = null;
+    if (scanId) {
+      const scanRecord = await prisma.scan.findFirst({
+        where: { id: scanId, tagId: tag.id },
+        select: { latitude: true, longitude: true },
+      });
+      if (scanRecord) {
+        scanLat = scanRecord.latitude;
+        scanLng = scanRecord.longitude;
+      }
+    }
+
+    // Send notification to the owner with finder's details
     const ownerEmail = tag.item?.user.email ?? tag.pet!.user.email;
     const itemName = tag.item?.name ?? tag.pet!.name;
 
@@ -62,10 +76,11 @@ export async function POST(
       await sendScanAlert(
         ownerEmail,
         itemName,
-        null,
-        null,
-        phone,
-        new Date()
+        scanLat,
+        scanLng,
+        phone || scannerContact || null,
+        new Date(),
+        description || message || null
       );
     } catch {
       console.error("Failed to send finder contact alert");
@@ -81,20 +96,6 @@ export async function POST(
       if (emergencyContacts && emergencyContacts.length > 0) {
         const { sendEmergencyDetailedAlert } = await import("@/lib/email");
 
-        // Get scan location if available
-        let lat: number | null = null;
-        let lng: number | null = null;
-        if (scanId) {
-          const scanRecord = await prisma.scan.findFirst({
-            where: { id: scanId, tagId: tag.id },
-            select: { latitude: true, longitude: true },
-          });
-          if (scanRecord) {
-            lat = scanRecord.latitude;
-            lng = scanRecord.longitude;
-          }
-        }
-
         const results = await Promise.allSettled(
           emergencyContacts.map((contact) =>
             sendEmergencyDetailedAlert(
@@ -104,8 +105,8 @@ export async function POST(
               description,
               scannerName || null,
               scannerContact || phone || null,
-              lat,
-              lng,
+              scanLat,
+              scanLng,
               new Date()
             )
           )

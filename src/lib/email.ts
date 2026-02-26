@@ -62,7 +62,8 @@ export async function sendScanAlert(
   latitude: number | null,
   longitude: number | null,
   finderPhone: string | null,
-  scanTime: Date
+  scanTime: Date,
+  finderMessage?: string | null
 ) {
   const mapUrl =
     latitude && longitude
@@ -89,20 +90,36 @@ export async function sendScanAlert(
     ? `<p><strong>Finder's phone:</strong> <a href="tel:${safePhone}">${safePhone}</a></p>`
     : "";
 
+  const safeMessage = finderMessage ? escapeHtml(finderMessage) : null;
+  const messageHtml = safeMessage
+    ? `
+      <div style="background: #f4f4f5; border-radius: 8px; padding: 12px; margin: 12px 0;">
+        <p style="margin: 0 0 4px 0;"><strong>Message from finder:</strong></p>
+        <p style="margin: 0; white-space: pre-wrap;">${safeMessage}</p>
+      </div>
+    `
+    : "";
+
   const safeItemName = escapeHtml(itemName);
+
+  const isFinderContact = finderPhone || finderMessage;
+  const subject = isFinderContact
+    ? `Someone found ${safeItemName} and left their details!`
+    : `Alert: ${safeItemName}'s tag was scanned!`;
 
   await getResend().emails.send({
     from: FROM_EMAIL,
     to: ownerEmail,
-    subject: `Alert: ${safeItemName}'s tag was scanned!`,
+    subject,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-          <h2 style="color: #dc2626; margin: 0 0 8px 0;">Tag Scanned!</h2>
+          <h2 style="color: #dc2626; margin: 0 0 8px 0;">${isFinderContact ? "Finder Contact Info" : "Tag Scanned!"}</h2>
           <p style="margin: 0;">Someone scanned <strong>${safeItemName}</strong>'s tag at ${escapeHtml(scanTime.toLocaleString())}.</p>
         </div>
         ${locationHtml}
         ${finderHtml}
+        ${messageHtml}
         <p style="color: #71717a; font-size: 14px; margin-top: 24px;">
           Log in to your dashboard to view the full scan history.
         </p>
