@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendScanAlert } from "@/lib/email";
 import { reverseGeocode } from "@/lib/geocode";
 
 export async function POST(
@@ -15,17 +14,8 @@ export async function POST(
     const tag = await prisma.tag.findFirst({
       where: { id: tagId, status: "active" },
       include: {
-        pet: {
-          include: {
-            user: { select: { email: true } },
-          },
-        },
-        item: {
-          include: {
-            user: { select: { email: true } },
-            tagType: { select: { slug: true } },
-          },
-        },
+        pet: { select: { id: true } },
+        item: { select: { id: true } },
       },
     });
 
@@ -68,54 +58,9 @@ export async function POST(
       },
     });
 
-    // Send email notification to owner
-    const ownerEmail = tag.item?.user.email ?? tag.pet!.user.email;
-    const itemName = tag.item?.name ?? tag.pet!.name;
-
-    try {
-      await sendScanAlert(
-        ownerEmail,
-        itemName,
-        latitude ?? null,
-        longitude ?? null,
-        null,
-        scan.createdAt,
-        null,
-        locationName
-      );
-    } catch {
-      console.error("Failed to send scan alert email");
-    }
-
-    // Auto-notify emergency contacts for emergency-contact type
-    if (tag.item?.tagType?.slug === "emergency-contact") {
-      const itemData = (tag.item.data || {}) as Record<string, unknown>;
-      const emergencyContacts = itemData.emergencyContacts as
-        | { name: string; phone: string; email: string }[]
-        | undefined;
-
-      if (emergencyContacts && emergencyContacts.length > 0) {
-        const { sendEmergencyAutoAlert } = await import("@/lib/email");
-        // Send sequentially with delay to avoid Resend rate limits
-        for (let i = 0; i < emergencyContacts.length; i++) {
-          const contact = emergencyContacts[i];
-          if (i > 0) await new Promise((r) => setTimeout(r, 1500));
-          try {
-            await sendEmergencyAutoAlert(
-              contact.email,
-              contact.name,
-              tag.item!.name,
-              latitude ?? null,
-              longitude ?? null,
-              scan.createdAt,
-              locationName
-            );
-          } catch (err) {
-            console.error(`Failed to send auto-alert to contact ${i}:`, err);
-          }
-        }
-      }
-    }
+    // No email sent here — emails are sent from the contact route
+    // after the finder submits their details, so the owner gets
+    // one comprehensive notification instead of two.
 
     return NextResponse.json({ success: true, scanId: scan.id });
   } catch (error) {
