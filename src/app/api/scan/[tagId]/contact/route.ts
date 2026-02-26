@@ -95,7 +95,7 @@ export async function POST(
           }
         }
 
-        await Promise.allSettled(
+        const results = await Promise.allSettled(
           emergencyContacts.map((contact) =>
             sendEmergencyDetailedAlert(
               contact.email,
@@ -110,6 +110,13 @@ export async function POST(
             )
           )
         );
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.error(`Failed to send detailed alert to contact ${i}:`, r.reason);
+          } else {
+            console.log(`Detailed alert sent to contact ${i} successfully`);
+          }
+        });
       }
     }
 

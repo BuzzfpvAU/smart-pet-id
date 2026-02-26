@@ -79,11 +79,12 @@ export function ScanPageClient({
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         setLocationStatus("granted");
-        // Update the scan with GPS coordinates
+        // Update the existing scan with GPS coordinates
         await fetch(`/api/scan/${tagId}/log`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            scanId,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           }),
@@ -94,7 +95,7 @@ export function ScanPageClient({
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
-  }, [tagId]);
+  }, [tagId, scanId]);
 
   async function sendContact(e: React.FormEvent) {
     e.preventDefault();

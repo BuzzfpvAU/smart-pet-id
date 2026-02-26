@@ -9,7 +9,7 @@ export async function POST(
   const { tagId } = await params;
 
   try {
-    const { latitude, longitude } = await req.json();
+    const { latitude, longitude, scanId: existingScanId } = await req.json();
 
     const tag = await prisma.tag.findFirst({
       where: { id: tagId, status: "active" },
@@ -33,6 +33,16 @@ export async function POST(
         { error: "Tag not found" },
         { status: 404 }
       );
+    }
+
+    // If existingScanId is provided, update the existing scan with location
+    // instead of creating a new one (used when user shares location after initial scan)
+    if (existingScanId && latitude != null && longitude != null) {
+      await prisma.scan.updateMany({
+        where: { id: existingScanId, tagId: tag.id },
+        data: { latitude, longitude },
+      });
+      return NextResponse.json({ success: true, scanId: existingScanId });
     }
 
     const userAgent = req.headers.get("user-agent") || undefined;
@@ -75,7 +85,7 @@ export async function POST(
 
       if (emergencyContacts && emergencyContacts.length > 0) {
         const { sendEmergencyAutoAlert } = await import("@/lib/email");
-        await Promise.allSettled(
+        const results = await Promise.allSettled(
           emergencyContacts.map((contact) =>
             sendEmergencyAutoAlert(
               contact.email,
@@ -87,6 +97,11 @@ export async function POST(
             )
           )
         );
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.error(`Failed to send auto-alert to contact ${i}:`, r.reason);
+          }
+        });
       }
     }
 
