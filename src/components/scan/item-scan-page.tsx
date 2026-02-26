@@ -212,7 +212,7 @@ export function ItemScanPage({
                     {group.fields.map((field) => {
                       const val = item.data[field.key];
                       if (!val || (typeof val === "string" && !val.trim())) return null;
-                      if (field.type === "contacts_list") return null;
+                      if (field.type === "contacts_list" || field.type === "emergency_contacts_list") return null;
                       return (
                         <p key={field.key}>
                           <strong>{field.label}:</strong> {String(val)}
@@ -250,6 +250,41 @@ export function ItemScanPage({
                                   <p className="text-xs text-muted-foreground">
                                     {contact.relationship}
                                   </p>
+                                )}
+                              </div>
+                              <a
+                                href={`tel:${contact.phone}`}
+                                className="text-sm text-primary hover:underline"
+                              >
+                                {contact.phone}
+                              </a>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    );
+                  }
+
+                  // Emergency contacts list (with email)
+                  if (field.type === "emergency_contacts_list" && Array.isArray(val)) {
+                    if (val.length === 0) return null;
+                    return (
+                      <div key={field.key} className="space-y-2">
+                        <h4 className="font-medium text-xs text-muted-foreground">
+                          {field.label}
+                        </h4>
+                        {(val as { name: string; phone: string; email: string }[]).map(
+                          (contact, i) => (
+                            <div key={i} className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium">{contact.name}</p>
+                                {contact.email && (
+                                  <a
+                                    href={`mailto:${contact.email}`}
+                                    className="text-xs text-muted-foreground hover:underline"
+                                  >
+                                    {contact.email}
+                                  </a>
                                 )}
                               </div>
                               <a
