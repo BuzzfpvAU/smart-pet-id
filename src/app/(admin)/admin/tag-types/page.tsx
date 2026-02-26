@@ -54,6 +54,7 @@ export default function AdminTagTypesPage() {
   const [formIcon, setFormIcon] = useState("tag");
   const [formColor, setFormColor] = useState("#6366f1");
   const [formFieldGroups, setFormFieldGroups] = useState("");
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const fetchTypes = useCallback(async () => {
     setIsLoading(true);
@@ -203,6 +204,33 @@ export default function AdminTagTypesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={isSyncing}
+            onClick={async () => {
+              setIsSyncing(true);
+              try {
+                const res = await fetch("/api/admin/tag-types/sync", {
+                  method: "POST",
+                });
+                const data = await res.json();
+                if (res.ok) {
+                  toast.success(`Synced ${data.synced} tag types from defaults`);
+                  fetchTypes();
+                } else {
+                  toast.error(data.error || "Sync failed");
+                }
+              } catch {
+                toast.error("Sync failed");
+              } finally {
+                setIsSyncing(false);
+              }
+            }}
+          >
+            <RefreshCw className={`h-4 w-4 mr-1 ${isSyncing ? "animate-spin" : ""}`} />
+            {isSyncing ? "Syncing..." : "Sync Defaults"}
+          </Button>
           <Button variant="outline" size="sm" onClick={fetchTypes}>
             <RefreshCw className="h-4 w-4 mr-1" />
             Refresh
