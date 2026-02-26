@@ -62,8 +62,12 @@ export async function POST(req: Request) {
       } else {
         await sendPasswordResetCode(email, code);
       }
-    } catch {
-      console.error("Failed to send email");
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      return NextResponse.json(
+        { error: "Failed to send email. Please try again." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true });
