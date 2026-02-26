@@ -62,6 +62,7 @@ interface ChecklistSubmission {
   scannerEmail: string | null;
   latitude: number | null;
   longitude: number | null;
+  locationName: string | null;
   createdAt: string;
 }
 
@@ -277,7 +278,7 @@ export default function EditItemPage() {
                                   onClick={(e) => e.stopPropagation()}
                                 >
                                   <MapPin className="h-3 w-3" />
-                                  View
+                                  {sub.locationName || "View"}
                                 </a>
                               ) : (
                                 <span className="text-xs text-muted-foreground">

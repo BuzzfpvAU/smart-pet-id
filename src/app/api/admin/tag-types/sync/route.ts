@@ -15,8 +15,11 @@ export async function POST() {
       await prisma.$executeRawUnsafe(
         `ALTER TABLE "scans" ADD COLUMN IF NOT EXISTS "locationName" TEXT`
       );
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE "checklist_submissions" ADD COLUMN IF NOT EXISTS "locationName" TEXT`
+      );
     } catch {
-      // Column may already exist, ignore
+      // Columns may already exist, ignore
     }
 
     const results = [];

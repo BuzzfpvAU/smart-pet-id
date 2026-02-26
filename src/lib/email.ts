@@ -173,17 +173,20 @@ export async function sendChecklistAlert(
   results: { id: string; label: string; type: string; value: boolean | number | string }[],
   latitude: number | null,
   longitude: number | null,
-  submittedAt: Date
+  submittedAt: Date,
+  locationName?: string | null
 ) {
   const mapUrl =
     latitude && longitude
       ? `https://www.google.com/maps?q=${latitude},${longitude}`
       : null;
 
+  const safeLocationName = locationName ? escapeHtml(locationName) : null;
+
   const locationHtml = mapUrl
     ? `
       <div style="margin: 16px 0;">
-        <p><strong>Location:</strong> <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a></p>
+        <p><strong>Location:</strong> ${safeLocationName ? `${safeLocationName} — ` : ""}<a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a></p>
       </div>
     `
     : `<p style="color: #71717a;">Location was not captured.</p>`;

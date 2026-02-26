@@ -285,6 +285,7 @@ model ChecklistSubmission {
   results      Json     // Array of { id, label, type, value }
   latitude     Float?
   longitude    Float?
+  locationName String?
   scannerName  String?
   scannerEmail String?
   ipAddress    String?

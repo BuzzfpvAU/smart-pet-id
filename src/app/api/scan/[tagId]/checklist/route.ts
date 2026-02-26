@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendChecklistAlert } from "@/lib/email";
+import { reverseGeocode } from "@/lib/geocode";
 
 interface ChecklistItemDef {
   id: string;
@@ -118,6 +119,12 @@ export async function POST(
     const forwarded = req.headers.get("x-forwarded-for");
     const ipAddress = forwarded?.split(",")[0]?.trim() || undefined;
 
+    // Reverse geocode if we have coordinates
+    let locationName: string | null = null;
+    if (latitude != null && longitude != null) {
+      locationName = await reverseGeocode(latitude, longitude);
+    }
+
     // Create checklist submission
     const submission = await prisma.checklistSubmission.create({
       data: {
@@ -126,6 +133,7 @@ export async function POST(
         results: results as any,
         latitude: latitude ?? null,
         longitude: longitude ?? null,
+        locationName,
         scannerName: scannerName.trim(),
         scannerEmail: scannerEmail || null,
         ipAddress,
@@ -139,6 +147,7 @@ export async function POST(
         tagId: tag.id,
         latitude: latitude ?? null,
         longitude: longitude ?? null,
+        locationName,
         ipAddress,
         userAgent,
       },
@@ -153,7 +162,8 @@ export async function POST(
         results as ChecklistResult[],
         latitude ?? null,
         longitude ?? null,
-        submission.createdAt
+        submission.createdAt,
+        locationName
       );
     } catch {
       console.error("Failed to send checklist alert email");

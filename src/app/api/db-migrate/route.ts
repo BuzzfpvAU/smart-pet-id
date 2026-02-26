@@ -28,14 +28,25 @@ export async function GET(req: NextRequest) {
     results.push("Added locationName column to scans table");
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    // Column might already exist
     if (message.includes("already exists")) {
-      results.push("locationName column already exists");
+      results.push("locationName column already exists in scans");
     } else {
-      return NextResponse.json(
-        { error: `Migration failed: ${message}` },
-        { status: 500 }
-      );
+      results.push(`scans migration failed: ${message}`);
+    }
+  }
+
+  try {
+    // Add locationName column to checklist_submissions table if it doesn't exist
+    await prisma.$executeRawUnsafe(
+      `ALTER TABLE "checklist_submissions" ADD COLUMN IF NOT EXISTS "locationName" TEXT`
+    );
+    results.push("Added locationName column to checklist_submissions table");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("already exists")) {
+      results.push("locationName column already exists in checklist_submissions");
+    } else {
+      results.push(`checklist_submissions migration failed: ${message}`);
     }
   }
 
