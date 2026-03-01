@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { QrCode, Bell, Shield, ShoppingCart } from "lucide-react";
+import { QrCode, Bell, Shield, ShoppingCart, Tag } from "lucide-react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { Footer } from "@/components/layout/footer";
 
@@ -21,9 +21,9 @@ export default function HomePage() {
               Tagz.au
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              QR code and NFC-enabled pet tags that link to detailed pet
-              profiles. When someone finds your pet, they scan the tag and you
-              get notified instantly with their location.
+              Smart QR code and NFC tags for pets, keys, luggage, electronics
+              and more. Attach a tag, create a profile, and get notified
+              instantly when someone scans it.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
@@ -55,8 +55,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Scan or Tap</h3>
                 <p className="text-muted-foreground text-sm">
-                  Each tag has a unique QR code and NFC chip. Anyone with a
-                  smartphone can scan it instantly — no app needed.
+                  Each tag has a unique QR code and NFC chip. Anyone can scan
+                  it with a smartphone — no app needed.
                 </p>
               </div>
               <div className="text-center p-6">
@@ -65,8 +65,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Get Notified</h3>
                 <p className="text-muted-foreground text-sm">
-                  Receive instant email alerts when someone scans your
-                  pet&apos;s tag, including their GPS location.
+                  Receive instant email alerts when someone scans your tag,
+                  including their GPS location.
                 </p>
               </div>
               <div className="text-center p-6">
@@ -75,8 +75,8 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Privacy Control</h3>
                 <p className="text-muted-foreground text-sm">
-                  Toggle your contact info on or off. When your pet is safe at
-                  home, keep your details private.
+                  Toggle your contact info on or off. Choose exactly what
+                  details are visible when someone scans your tag.
                 </p>
               </div>
             </div>
@@ -89,18 +89,18 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
                 <div className="text-4xl font-bold text-primary mb-2">
-                  1 in 3
+                  12+
                 </div>
                 <p className="text-muted-foreground">
-                  Pets get lost at some point
+                  Tag types for pets, keys, luggage and more
                 </p>
               </div>
               <div>
                 <div className="text-4xl font-bold text-primary mb-2">
-                  10M+
+                  Instant
                 </div>
                 <p className="text-muted-foreground">
-                  Pets in shelters each year
+                  Scan alerts with GPS location
                 </p>
               </div>
               <div>
@@ -118,10 +118,10 @@ export default function HomePage() {
         {/* CTA */}
         <section className="py-16 bg-muted/50">
           <div className="container text-center max-w-2xl">
-            <h2 className="text-3xl font-bold mb-4">Protect Your Pet Today</h2>
+            <h2 className="text-3xl font-bold mb-4">Get Started Today</h2>
             <p className="text-muted-foreground mb-8">
-              Create a free account and set up your pet&apos;s profile in
-              minutes. Unlimited pets, no subscription required.
+              Create a free account and set up your first tag in minutes.
+              Unlimited tags, no subscription required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>

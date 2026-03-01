@@ -12,8 +12,8 @@ export function Footer() {
               <span className="font-bold">Tagz.au</span>
             </Link>
             <p className="text-sm text-muted-foreground">
-              Keep your pets safe with smart QR and NFC ID tags. Instant
-              notifications when your pet is found.
+              Smart QR and NFC tags for pets, keys, luggage, electronics and
+              more. Instant notifications when your items are found.
             </p>
           </div>
           <div>
