@@ -21,6 +21,12 @@ export const defaultTagTypes: TagTypeConfig[] = [
           },
           { key: "breed", label: "Breed", type: "text" },
           { key: "age", label: "Age", type: "text", placeholder: "e.g., 3 years" },
+          {
+            key: "registrationNumber",
+            label: "Registration Number",
+            type: "text",
+            placeholder: "Council registration number",
+          },
         ],
       },
       {
@@ -55,6 +61,7 @@ export const defaultTagTypes: TagTypeConfig[] = [
       species: true,
       breed: true,
       age: true,
+      registrationNumber: true,
       medications: true,
       vaccinations: true,
       allergies: true,
