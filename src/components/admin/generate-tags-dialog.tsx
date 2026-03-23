@@ -67,7 +67,7 @@ export function GenerateTagsDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle>
+          <AlertDialogTitle className="font-display">
             {result ? "Tags Generated!" : "Generate Tag Codes"}
           </AlertDialogTitle>
           <AlertDialogDescription>

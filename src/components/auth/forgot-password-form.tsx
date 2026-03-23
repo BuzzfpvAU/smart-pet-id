@@ -103,9 +103,9 @@ export function ForgotPasswordForm() {
 
   if (step === "reset") {
     return (
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md backdrop-blur-xl bg-card/80 border-border/30 shadow-2xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Reset your password</CardTitle>
+          <CardTitle className="font-display text-2xl tracking-tight">Reset your password</CardTitle>
           <CardDescription>
             Enter the code we sent to {email}
           </CardDescription>
@@ -160,9 +160,9 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md backdrop-blur-xl bg-card/80 border-border/30 shadow-2xl">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Forgot password</CardTitle>
+        <CardTitle className="font-display text-2xl tracking-tight">Forgot password</CardTitle>
         <CardDescription>
           Enter your email and we&apos;ll send you a reset code
         </CardDescription>
@@ -191,7 +191,7 @@ export function ForgotPasswordForm() {
         </form>
       </CardContent>
       <CardFooter className="justify-center">
-        <Link href="/login" className="text-sm text-primary hover:underline">
+        <Link href="/login" className="text-sm text-accent hover:underline">
           Back to sign in
         </Link>
       </CardFooter>

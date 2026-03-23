@@ -49,7 +49,7 @@ export default function AdminItemsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">All Items</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold">All Items</h1>
           <p className="text-muted-foreground text-sm">
             View all registered items across all users
           </p>
@@ -60,21 +60,21 @@ export default function AdminItemsPage() {
         </Button>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Owner</TableHead>
-                <TableHead>Tags</TableHead>
-                <TableHead>Registered</TableHead>
+              <TableRow className="bg-muted/30">
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Type</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Owner</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tags</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Registered</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item.id} className="hover:bg-accent/5">
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>
                     <Badge

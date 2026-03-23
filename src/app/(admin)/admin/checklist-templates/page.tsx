@@ -228,7 +228,7 @@ export default function AdminChecklistTemplatesPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Checklist Templates</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold">Checklist Templates</h1>
           <p className="text-muted-foreground text-sm">
             Manage reusable checklist templates for users
           </p>
@@ -245,15 +245,15 @@ export default function AdminChecklistTemplatesPage() {
         </div>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Template</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Items</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="bg-muted/30">
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Template</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Items</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -271,7 +271,7 @@ export default function AdminChecklistTemplatesPage() {
                 </TableRow>
               ) : (
                 templates.map((template) => (
-                  <TableRow key={template.id}>
+                  <TableRow key={template.id} className="hover:bg-accent/5">
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div
@@ -330,7 +330,7 @@ export default function AdminChecklistTemplatesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="font-display">
               {editTemplate ? `Edit ${editTemplate.name}` : "New Checklist Template"}
             </DialogTitle>
           </DialogHeader>

@@ -71,7 +71,7 @@ export function ChecklistScanPage({
       >
         <div className="flex items-center justify-center gap-2">
           <QrCode className="h-5 w-5" />
-          <span className="font-semibold">Tagz.au</span>
+          <span className="font-display font-semibold">Tagz.au</span>
         </div>
       </div>
 
@@ -134,7 +134,7 @@ function ChoosePage({
             />
           </div>
         )}
-        <h1 className="text-2xl font-bold">{item.name}</h1>
+        <h1 className="font-display text-2xl font-bold">{item.name}</h1>
         <Badge
           className="mt-2"
           style={{
@@ -160,7 +160,7 @@ function ChoosePage({
         <Button
           onClick={() => onChoose("found")}
           variant="outline"
-          className="w-full py-8 text-left flex items-start gap-4 h-auto"
+          className="w-full py-8 text-left flex items-start gap-4 h-auto rounded-2xl hover:-translate-y-0.5 hover:shadow-[0_4px_20px_hsl(var(--shadow-color)/0.15)] transition-all duration-300"
         >
           <div
             className="h-12 w-12 rounded-full flex items-center justify-center shrink-0"
@@ -178,7 +178,7 @@ function ChoosePage({
 
         <Button
           onClick={() => onChoose("checklist")}
-          className="w-full py-8 text-left flex items-start gap-4 h-auto"
+          className="w-full py-8 text-left flex items-start gap-4 h-auto rounded-2xl hover:-translate-y-0.5 hover:shadow-[0_4px_20px_hsl(var(--shadow-color)/0.15)] transition-all duration-300 active:scale-[0.97]"
           style={{ backgroundColor: item.tagType.color }}
         >
           <div className="h-12 w-12 rounded-full flex items-center justify-center shrink-0 bg-white/20">
@@ -195,7 +195,7 @@ function ChoosePage({
 
       {/* Footer */}
       <p className="text-center text-xs text-muted-foreground py-4">
-        Powered by Tagz.au
+        Powered by <span className="font-display font-semibold">Tagz.au</span>
       </p>
     </div>
   );
@@ -298,18 +298,18 @@ function FoundItemPage({
           </div>
         )}
         <div>
-          <h1 className="text-xl font-bold">{item.name}</h1>
+          <h1 className="font-display text-xl font-bold">{item.name}</h1>
           <p className="text-sm text-muted-foreground">Found this item?</p>
         </div>
       </div>
 
       {/* Reward Offer */}
       {item.rewardOffered && item.rewardDetails && (
-        <Card className="border-green-300 bg-green-50 dark:bg-green-950/20">
+        <Card className="border-green-300 bg-green-50 dark:bg-green-950/20 rounded-2xl">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <Gift className="h-5 w-5 text-green-600" />
-              <h2 className="font-semibold text-green-800 dark:text-green-200">
+              <h2 className="font-display font-semibold text-green-800 dark:text-green-200">
                 Reward Offered
               </h2>
             </div>
@@ -325,21 +325,21 @@ function FoundItemPage({
         <>
           <a
             href={`tel:${item.ownerPhone}`}
-            className="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white rounded-xl p-5 text-lg font-semibold transition-colors"
+            className="flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl p-6 text-lg font-semibold shadow-lg active:scale-[0.97] transition-all duration-200"
           >
             <Phone className="h-6 w-6" />
             Call Owner
           </a>
 
-          <Card>
+          <Card className="rounded-2xl">
             <CardContent className="p-4 space-y-3">
-              <h2 className="font-semibold flex items-center gap-2">
-                <Heart className="h-4 w-4 text-primary" />
+              <h2 className="font-display font-semibold flex items-center gap-2">
+                <Heart className="h-4 w-4 text-accent" />
                 Owner Contact
               </h2>
               <a
                 href={`tel:${item.ownerPhone}`}
-                className="flex items-center gap-2 text-sm text-primary hover:underline"
+                className="flex items-center gap-2 text-sm text-accent hover:underline"
               >
                 <Phone className="h-4 w-4" />
                 {item.ownerPhone}
@@ -347,7 +347,7 @@ function FoundItemPage({
               {item.ownerEmail && (
                 <a
                   href={`mailto:${item.ownerEmail}`}
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
+                  className="flex items-center gap-2 text-sm text-accent hover:underline"
                 >
                   <Mail className="h-4 w-4" />
                   {item.ownerEmail}
@@ -365,7 +365,7 @@ function FoundItemPage({
       )}
 
       {!item.ownerPhone && (
-        <Card>
+        <Card className="rounded-2xl">
           <CardContent className="p-4 text-center">
             <p className="text-sm text-muted-foreground">
               The owner&apos;s contact information is not available.
@@ -379,9 +379,9 @@ function FoundItemPage({
       <Separator />
 
       {/* Share Location */}
-      <Card>
+      <Card className="rounded-2xl">
         <CardContent className="p-4">
-          <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+          <h3 className="font-display font-semibold text-sm mb-3 flex items-center gap-2">
             <Navigation className="h-4 w-4" />
             Share your location
           </h3>
@@ -414,9 +414,9 @@ function FoundItemPage({
       </Card>
 
       {/* Finder Contact Form */}
-      <Card>
+      <Card className="backdrop-blur-xl bg-card/80 border-border/30 rounded-2xl">
         <CardContent className="p-4">
-          <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+          <h3 className="font-display font-semibold text-sm mb-3 flex items-center gap-2">
             <Phone className="h-4 w-4" />
             Leave Your Contact Info
           </h3>
@@ -453,7 +453,7 @@ function FoundItemPage({
 
       {/* Footer */}
       <p className="text-center text-xs text-muted-foreground py-4">
-        Powered by Tagz.au
+        Powered by <span className="font-display font-semibold">Tagz.au</span>
       </p>
     </div>
   );
@@ -602,12 +602,12 @@ function ChecklistFormPage({
   if (submitted) {
     return (
       <div className="max-w-lg mx-auto p-4 space-y-4">
-        <Card className="border-green-300 bg-green-50 dark:bg-green-950/20">
+        <Card className="border-green-300 bg-green-50 dark:bg-green-950/20 rounded-2xl">
           <CardContent className="p-6 text-center">
             <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 mx-auto mb-4 flex items-center justify-center">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
+            <h2 className="font-display text-xl font-bold text-green-800 dark:text-green-200 mb-2">
               Checklist Submitted
             </h2>
             <p className="text-sm text-green-700 dark:text-green-300">
@@ -619,15 +619,15 @@ function ChecklistFormPage({
 
         {/* Owner Contact (post-submission) */}
         {item.ownerPhone && (
-          <Card>
+          <Card className="rounded-2xl">
             <CardContent className="p-4 space-y-3">
-              <h2 className="font-semibold flex items-center gap-2">
-                <Heart className="h-4 w-4 text-primary" />
+              <h2 className="font-display font-semibold flex items-center gap-2">
+                <Heart className="h-4 w-4 text-accent" />
                 Owner Contact
               </h2>
               <a
                 href={`tel:${item.ownerPhone}`}
-                className="flex items-center gap-2 text-sm text-primary hover:underline"
+                className="flex items-center gap-2 text-sm text-accent hover:underline"
               >
                 <Phone className="h-4 w-4" />
                 {item.ownerPhone}
@@ -635,7 +635,7 @@ function ChecklistFormPage({
               {item.ownerEmail && (
                 <a
                   href={`mailto:${item.ownerEmail}`}
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
+                  className="flex items-center gap-2 text-sm text-accent hover:underline"
                 >
                   <Mail className="h-4 w-4" />
                   {item.ownerEmail}
@@ -652,7 +652,7 @@ function ChecklistFormPage({
         )}
 
         <p className="text-center text-xs text-muted-foreground py-4">
-          Powered by Tagz.au
+          Powered by <span className="font-display font-semibold">Tagz.au</span>
         </p>
       </div>
     );
@@ -692,7 +692,7 @@ function ChecklistFormPage({
           </div>
         )}
         <div>
-          <h1 className="text-xl font-bold">{item.name}</h1>
+          <h1 className="font-display text-xl font-bold">{item.name}</h1>
           <p className="text-sm text-muted-foreground">Complete the checklist below</p>
         </div>
       </div>
@@ -700,9 +700,9 @@ function ChecklistFormPage({
       {/* Checklist Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Conducted By */}
-        <Card>
+        <Card className="rounded-2xl">
           <CardContent className="p-4 space-y-3">
-            <h3 className="font-semibold text-sm flex items-center gap-2">
+            <h3 className="font-display font-semibold text-sm flex items-center gap-2">
               <User className="h-4 w-4" />
               Conducted By
             </h3>
@@ -741,9 +741,9 @@ function ChecklistFormPage({
         </Card>
 
         {/* Checklist Items */}
-        <Card>
+        <Card className="rounded-2xl">
           <CardContent className="p-4 space-y-4">
-            <h3 className="font-semibold text-sm flex items-center gap-2">
+            <h3 className="font-display font-semibold text-sm flex items-center gap-2">
               <ClipboardCheck className="h-4 w-4" />
               Checklist
             </h3>
@@ -808,7 +808,7 @@ function ChecklistFormPage({
         </Card>
 
         {/* Location Status */}
-        <Card>
+        <Card className="rounded-2xl">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm">
               <MapPin className="h-4 w-4" />
@@ -859,7 +859,7 @@ function ChecklistFormPage({
 
       {/* Footer */}
       <p className="text-center text-xs text-muted-foreground py-4">
-        Powered by Tagz.au
+        Powered by <span className="font-display font-semibold">Tagz.au</span>
       </p>
     </div>
   );

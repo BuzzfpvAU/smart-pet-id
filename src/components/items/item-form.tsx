@@ -533,9 +533,9 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
     <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
       {/* Tag auto-link banner */}
       {tagId && (
-        <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg flex items-center gap-3">
-          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-            <Tag className="h-5 w-5 text-primary" />
+        <div className="p-4 bg-accent/10 border border-accent/20 rounded-2xl flex items-center gap-3">
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+            <Tag className="h-5 w-5 text-accent" />
           </div>
           <div>
             <p className="font-medium text-sm">Tag will be automatically linked</p>
@@ -551,7 +551,7 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       {/* Photo */}
       <Card>
         <CardHeader>
-          <CardTitle>Photo</CardTitle>
+          <CardTitle className="font-display">Photo</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -642,7 +642,7 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       {/* Item Name */}
       <Card>
         <CardHeader>
-          <CardTitle>Name</CardTitle>
+          <CardTitle className="font-display">Name</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -670,7 +670,7 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       {tagType.fieldGroups.map((group) => (
         <Card key={group.key}>
           <CardHeader>
-            <CardTitle>{group.label}</CardTitle>
+            <CardTitle className="font-display">{group.label}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {group.fields.map((field) => renderField(field))}
@@ -681,7 +681,7 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       {/* Owner Contact */}
       <Card>
         <CardHeader>
-          <CardTitle>Owner Contact Information</CardTitle>
+          <CardTitle className="font-display">Owner Contact Information</CardTitle>
           {!itemId && userProfile && (userProfile.ownerPhone || userProfile.ownerEmail || userProfile.ownerAddress) && (
             <p className="text-xs text-muted-foreground">
               Pre-filled from your settings. You can override for this item.
@@ -724,7 +724,7 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       {tagType.slug !== "emergency-contact" && (
         <Card>
           <CardHeader>
-            <CardTitle>Reward Offer</CardTitle>
+            <CardTitle className="font-display">Reward Offer</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -766,7 +766,7 @@ export function ItemForm({ tagType, initialData, itemId, userProfile, tagId }: I
       {!itemId && !tagId && unlinkedTags.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="font-display flex items-center gap-2">
               <Tag className="h-5 w-5" />
               Link a Tag
             </CardTitle>

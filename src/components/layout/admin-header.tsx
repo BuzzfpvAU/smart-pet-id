@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 import {
-  QrCode,
   Menu,
   X,
   LayoutDashboard,
@@ -30,11 +30,11 @@ export function AdminHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="md:hidden border-b bg-background">
+    <header className="md:hidden border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="flex items-center justify-between p-4">
         <Link href="/admin" className="flex items-center gap-2">
-          <QrCode className="h-5 w-5 text-primary" />
-          <span className="font-bold">Admin Console</span>
+          <Image src="/logo.svg" alt="Tagz.au" width={24} height={24} className="h-6 w-6" />
+          <span className="font-display font-bold">Admin</span>
         </Link>
         <Button
           variant="ghost"
@@ -46,7 +46,7 @@ export function AdminHeader() {
       </div>
 
       {isOpen && (
-        <nav className="border-t p-4 space-y-1">
+        <nav className="border-t border-border/30 p-4 space-y-1.5">
           {navItems.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -57,10 +57,10 @@ export function AdminHeader() {
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200",
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-accent/10 text-accent border-l-2 border-accent font-medium"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                 )}
               >
                 <item.icon className="h-4 w-4" />

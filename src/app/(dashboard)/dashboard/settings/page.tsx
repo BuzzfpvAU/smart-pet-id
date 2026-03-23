@@ -120,7 +120,7 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Settings</h1>
+        <h1 className="font-display text-2xl font-bold">Settings</h1>
         <p className="text-muted-foreground text-sm">
           Manage your account settings
         </p>
@@ -129,7 +129,7 @@ export default function SettingsPage() {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Profile</CardTitle>
+            <CardTitle className="font-display">Profile</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -158,7 +158,7 @@ export default function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Owner Contact Details</CardTitle>
+            <CardTitle className="font-display">Owner Contact Details</CardTitle>
             <CardDescription>
               These details will be pre-filled when creating new items.
               You can still override them per item.
@@ -208,7 +208,7 @@ export default function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Change Password</CardTitle>
+            <CardTitle className="font-display">Change Password</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleChangePassword} className="space-y-4">

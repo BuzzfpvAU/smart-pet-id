@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { QrCode, Home, Tag, Settings, LogOut, Shield, Plus, ShoppingCart } from "lucide-react";
+import { Home, Tag, Settings, LogOut, Shield, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -20,13 +21,13 @@ export function DashboardSidebar() {
   const isAdmin = session?.user?.role === "admin";
 
   return (
-    <aside className="hidden md:flex w-64 flex-col border-r bg-muted/30 p-4">
-      <Link href="/dashboard" className="flex items-center gap-2 mb-8 px-2">
-        <QrCode className="h-6 w-6 text-primary" />
-        <span className="font-bold text-xl">Tagz.au</span>
+    <aside className="hidden md:flex w-64 flex-col border-r border-border/50 bg-background p-5">
+      <Link href="/dashboard" className="flex items-center gap-2.5 px-2 pb-6 border-b border-border/30 mb-6">
+        <Image src="/logo.svg" alt="Tagz.au" width={32} height={32} className="h-8 w-8" />
+        <span className="font-display font-bold text-xl tracking-tight">Tagz.au</span>
       </Link>
 
-      <nav className="flex-1 space-y-1">
+      <nav className="flex-1 space-y-1.5">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -36,10 +37,10 @@ export function DashboardSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200",
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-accent/10 text-accent border-l-2 border-accent font-medium"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground hover:translate-x-0.5"
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -50,10 +51,10 @@ export function DashboardSidebar() {
 
         {isAdmin && (
           <>
-            <div className="my-3 border-t" />
+            <div className="my-3 border-t border-border/30" />
             <Link
               href="/admin"
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-amber-600 hover:bg-amber-50 hover:text-amber-700 dark:text-amber-400 dark:hover:bg-amber-950 dark:hover:text-amber-300"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400"
             >
               <Shield className="h-4 w-4" />
               Admin Console
@@ -62,10 +63,10 @@ export function DashboardSidebar() {
         )}
       </nav>
 
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <Link
           href="/buy"
-          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-primary hover:bg-primary/10 font-medium"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-accent hover:bg-accent/10 font-medium"
         >
           <ShoppingCart className="h-4 w-4" />
           Buy a Tag

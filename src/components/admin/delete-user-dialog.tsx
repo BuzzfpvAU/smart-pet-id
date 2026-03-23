@@ -56,7 +56,7 @@ export function DeleteUserDialog({
     <AlertDialog open={!!user} onOpenChange={() => onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete User</AlertDialogTitle>
+          <AlertDialogTitle className="font-display">Delete User</AlertDialogTitle>
           <AlertDialogDescription>
             Are you sure you want to delete <strong>{user?.name}</strong> ({user?.email})?
             This will permanently delete their account, all their pets, and unlink any associated tags.

@@ -198,7 +198,7 @@ export default function AdminTagTypesPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Tag Types</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold">Tag Types</h1>
           <p className="text-muted-foreground text-sm">
             Manage tag types and their field configurations
           </p>
@@ -242,17 +242,17 @@ export default function AdminTagTypesPage() {
         </div>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Items</TableHead>
-                <TableHead>Fields</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="bg-muted/30">
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Type</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Slug</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Items</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Fields</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -262,7 +262,7 @@ export default function AdminTagTypesPage() {
                 ).reduce((acc, g) => acc + g.fields.length, 0);
 
                 return (
-                  <TableRow key={type.id}>
+                  <TableRow key={type.id} className="hover:bg-accent/5">
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div
@@ -316,7 +316,7 @@ export default function AdminTagTypesPage() {
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="font-display">
               {editType ? `Edit ${editType.name}` : "New Tag Type"}
             </DialogTitle>
           </DialogHeader>

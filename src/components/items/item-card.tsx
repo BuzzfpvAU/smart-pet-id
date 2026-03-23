@@ -26,7 +26,7 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Link href={`/dashboard/items/${item.id}`}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer">
+      <Card className="hover:-translate-y-0.5 hover:shadow-[0_4px_20px_hsl(var(--shadow-color)/0.15)] transition-all duration-300 cursor-pointer">
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
             {item.primaryPhotoUrl ? (
@@ -47,7 +47,7 @@ export function ItemCard({ item }: ItemCardProps) {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold truncate">{item.name}</h3>
+              <h3 className="font-display font-semibold truncate">{item.name}</h3>
               <div className="flex items-center gap-2 mt-1">
                 <Badge
                   variant="secondary"

@@ -61,9 +61,9 @@ export function RegisterForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md backdrop-blur-xl bg-card/80 border-border/30 shadow-2xl">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Create an account</CardTitle>
+        <CardTitle className="font-display text-2xl tracking-tight">Create an account</CardTitle>
         <CardDescription>
           Sign up to manage your pet&apos;s smart tags
         </CardDescription>
@@ -116,7 +116,7 @@ export function RegisterForm() {
           </div>
           <p className="text-xs text-muted-foreground">
             By signing up, you agree to our{" "}
-            <Link href="/terms" className="text-primary hover:underline">
+            <Link href="/terms" className="text-accent hover:underline">
               Terms of Service
             </Link>
             .
@@ -167,7 +167,7 @@ export function RegisterForm() {
           Already have an account?{" "}
           <Link
             href={activationCode ? `/login?activationCode=${encodeURIComponent(activationCode)}` : "/login"}
-            className="text-primary hover:underline"
+            className="text-accent hover:underline"
           >
             Sign in
           </Link>

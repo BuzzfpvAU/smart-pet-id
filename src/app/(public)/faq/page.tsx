@@ -65,18 +65,18 @@ const faqs = [
 
 export default function FaqPage() {
   return (
-    <div className="container max-w-3xl py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold">Frequently Asked Questions</h1>
+    <div className="container max-w-3xl py-24 md:py-36">
+      <div className="text-center mb-12 animate-in-up" style={{ animationDelay: '0ms' }}>
+        <h1 className="font-display text-3xl font-bold tracking-tight">Frequently Asked Questions</h1>
         <p className="text-muted-foreground mt-2">
           Everything you need to know about Tagz.au
         </p>
       </div>
 
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion type="single" collapsible className="w-full animate-in-up" style={{ animationDelay: '100ms' }}>
         {faqs.map((faq, i) => (
           <AccordionItem key={i} value={`item-${i}`}>
-            <AccordionTrigger className="text-left">
+            <AccordionTrigger className="text-left font-display">
               {faq.q}
             </AccordionTrigger>
             <AccordionContent className="text-muted-foreground">
@@ -86,12 +86,12 @@ export default function FaqPage() {
         ))}
       </Accordion>
 
-      <div className="mt-12 text-center p-8 rounded-lg bg-muted/50">
-        <h2 className="text-xl font-semibold mb-2">Ready to get started?</h2>
+      <div className="mt-12 text-center p-8 rounded-2xl bg-gradient-to-br from-muted/40 via-muted/20 to-background animate-in-up" style={{ animationDelay: '200ms' }}>
+        <h2 className="font-display text-xl font-semibold tracking-tight mb-2">Ready to get started?</h2>
         <p className="text-muted-foreground mb-4">
           Purchase a smart tag and protect your pet today.
         </p>
-        <Button size="lg" asChild>
+        <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90" asChild>
           <Link href="/buy">
             <ShoppingCart className="h-4 w-4 mr-2" />
             Buy a Tag

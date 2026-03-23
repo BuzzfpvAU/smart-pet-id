@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, QrCode, ShoppingCart } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
@@ -19,33 +20,33 @@ export function PublicHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <QrCode className="h-6 w-6 text-primary" />
-          <span className="font-bold text-xl">Tagz.au</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="container flex h-18 items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image src="/logo.svg" alt="Tagz.au" width={36} height={36} className="h-9 w-9" />
+          <span className="font-display font-bold text-xl tracking-tight">Tagz.au</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm transition-colors hover:text-primary ${
+              className={`relative text-sm transition-colors after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:bg-accent after:transition-all after:duration-300 ${
                 pathname === link.href
-                  ? "text-primary font-medium"
-                  : "text-muted-foreground"
+                  ? "text-accent font-medium after:w-full"
+                  : "text-muted-foreground hover:text-foreground after:w-0 hover:after:w-full"
               }`}
             >
               {link.label}
             </Link>
           ))}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" asChild>
               <Link href="/login">Sign in</Link>
             </Button>
-            <Button size="sm" asChild>
+            <Button size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90" asChild>
               <Link href="/register">Sign up</Link>
             </Button>
           </div>
@@ -58,34 +59,34 @@ export function PublicHeader() {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-64">
+          <SheetContent side="right" className="w-72">
             <nav className="flex flex-col gap-4 mt-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`text-sm transition-colors hover:text-primary ${
+                  className={`text-sm transition-colors ${
                     pathname === link.href
-                      ? "text-primary font-medium"
-                      : "text-muted-foreground"
+                      ? "text-accent font-medium"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              <hr />
+              <hr className="border-border/50" />
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="text-sm"
+                className="text-sm text-muted-foreground hover:text-foreground"
               >
                 Sign in
               </Link>
               <Link
                 href="/register"
                 onClick={() => setOpen(false)}
-                className="text-sm font-medium text-primary"
+                className="text-sm font-medium text-accent"
               >
                 Sign up
               </Link>

@@ -62,9 +62,9 @@ export function ChangeRoleDialog({
     <AlertDialog open={!!user} onOpenChange={() => onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2">
+          <AlertDialogTitle className="font-display flex items-center gap-2">
             {isPromoting ? (
-              <Shield className="h-5 w-5 text-blue-600" />
+              <Shield className="h-5 w-5 text-accent" />
             ) : (
               <ShieldOff className="h-5 w-5 text-orange-600" />
             )}

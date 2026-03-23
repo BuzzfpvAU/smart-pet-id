@@ -220,7 +220,7 @@ export function TagList({
       <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Link Tag to Item</DialogTitle>
+            <DialogTitle className="font-display">Link Tag to Item</DialogTitle>
           </DialogHeader>
           {linkOptions.length === 0 ? (
             <p className="text-sm text-muted-foreground">
@@ -258,7 +258,7 @@ export function TagList({
       <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="font-display flex items-center gap-2">
               <ScanLine className="h-5 w-5" />
               QR Code
             </DialogTitle>

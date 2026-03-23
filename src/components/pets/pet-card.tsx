@@ -43,7 +43,7 @@ export function PetCard({ pet }: PetCardProps) {
   }
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card className="overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_4px_20px_hsl(var(--shadow-color)/0.15)] transition-all duration-300">
       <Link href={`/dashboard/pets/${pet.id}`}>
         <div className="h-48 bg-muted flex items-center justify-center">
           {pet.primaryPhotoUrl ? (
@@ -60,7 +60,7 @@ export function PetCard({ pet }: PetCardProps) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <Link href={`/dashboard/pets/${pet.id}`}>
-            <h3 className="font-semibold text-lg hover:underline">
+            <h3 className="font-display font-semibold text-lg hover:underline">
               {pet.name}
             </h3>
           </Link>

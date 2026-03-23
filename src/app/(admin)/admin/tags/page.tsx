@@ -114,7 +114,7 @@ export default function AdminTagsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Tag Codes</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold">Tag Codes</h1>
           <p className="text-muted-foreground">
             Manage and generate activation codes
           </p>
@@ -138,19 +138,19 @@ export default function AdminTagsPage() {
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-2xl border overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-[60px]">Made</TableHead>
-              <TableHead>Activation Code</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>QR</TableHead>
-              <TableHead>Assigned To</TableHead>
-              <TableHead>Pet</TableHead>
-              <TableHead>Scans</TableHead>
-              <TableHead>Batch</TableHead>
-              <TableHead>Created</TableHead>
+            <TableRow className="bg-muted/30">
+              <TableHead className="w-[60px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">Made</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Activation Code</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">QR</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Assigned To</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pet</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Scans</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Batch</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Created</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -168,7 +168,7 @@ export default function AdminTagsPage() {
               </TableRow>
             ) : (
               displayedTags.map((tag) => (
-                <TableRow key={tag.id}>
+                <TableRow key={tag.id} className="hover:bg-accent/5">
                   <TableCell>
                     <Checkbox
                       checked={tag.madeLive}
@@ -239,8 +239,8 @@ export default function AdminTagsPage() {
       <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <ScanLine className="h-5 w-5" />
+            <DialogTitle className="font-display flex items-center gap-2">
+              <ScanLine className="h-5 w-5 text-accent" />
               QR Code
             </DialogTitle>
           </DialogHeader>
@@ -262,7 +262,7 @@ export default function AdminTagsPage() {
               <code className="text-xs text-muted-foreground">
                 {qrTag.activationCode}
               </code>
-              <code className="text-xs text-blue-600">
+              <code className="text-xs text-accent">
                 {qrTag.shortCode
                   ? `${process.env.NEXT_PUBLIC_BASE_URL || ""}/s/${qrTag.shortCode}`
                   : `${process.env.NEXT_PUBLIC_BASE_URL || ""}/scan/${qrTag.id}`}

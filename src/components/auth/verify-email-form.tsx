@@ -91,12 +91,12 @@ export function VerifyEmailForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md backdrop-blur-xl bg-card/80 border-border/30 shadow-2xl">
       <CardHeader className="text-center">
-        <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-          <Mail className="h-6 w-6 text-primary" />
+        <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
+          <Mail className="h-6 w-6 text-accent" />
         </div>
-        <CardTitle className="text-2xl">Verify your email</CardTitle>
+        <CardTitle className="font-display text-2xl tracking-tight">Verify your email</CardTitle>
         <CardDescription>
           We&apos;ve sent a 6-digit verification code to{" "}
           <strong>{emailParam || "your email"}</strong>. Enter it below to
@@ -146,7 +146,7 @@ export function VerifyEmailForm() {
               type="button"
               onClick={handleResend}
               disabled={resendCooldown > 0}
-              className="text-primary hover:underline disabled:opacity-50 disabled:no-underline"
+              className="text-accent hover:underline disabled:opacity-50 disabled:no-underline"
             >
               {resendCooldown > 0
                 ? `Resend in ${resendCooldown}s`
@@ -160,7 +160,7 @@ export function VerifyEmailForm() {
           Wrong email?{" "}
           <Link
             href={activationCode ? `/register?activationCode=${encodeURIComponent(activationCode)}` : "/register"}
-            className="text-primary hover:underline"
+            className="text-accent hover:underline"
           >
             Sign up again
           </Link>

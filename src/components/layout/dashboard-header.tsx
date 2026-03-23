@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { QrCode, Home, Plus, Tag, Settings, LogOut, Menu, Shield, ShoppingCart } from "lucide-react";
+import { Home, Plus, Tag, Settings, LogOut, Menu, Shield, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -37,7 +38,7 @@ export function DashboardHeader() {
     .slice(0, 2);
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 md:px-6">
       {/* Mobile menu */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild className="md:hidden">
@@ -45,16 +46,16 @@ export function DashboardHeader() {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-4">
+        <SheetContent side="left" className="w-72 p-5">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 mb-8"
+            className="flex items-center gap-2.5 pb-6 border-b border-border/30 mb-6"
             onClick={() => setOpen(false)}
           >
-            <QrCode className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">Tagz.au</span>
+            <Image src="/logo.svg" alt="Tagz.au" width={32} height={32} className="h-8 w-8" />
+            <span className="font-display font-bold text-xl tracking-tight">Tagz.au</span>
           </Link>
-          <nav className="space-y-1">
+          <nav className="space-y-1.5">
             {navItems.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -65,10 +66,10 @@ export function DashboardHeader() {
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200",
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? "bg-accent/10 text-accent border-l-2 border-accent font-medium"
+                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
@@ -79,11 +80,11 @@ export function DashboardHeader() {
 
             {session?.user?.role === "admin" && (
               <>
-                <div className="my-3 border-t" />
+                <div className="my-3 border-t border-border/30" />
                 <Link
                   href="/admin"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-amber-600 hover:bg-amber-50 hover:text-amber-700 dark:text-amber-400 dark:hover:bg-amber-950 dark:hover:text-amber-300"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400"
                 >
                   <Shield className="h-4 w-4" />
                   Admin Console
@@ -91,11 +92,11 @@ export function DashboardHeader() {
               </>
             )}
 
-            <div className="my-3 border-t" />
+            <div className="my-3 border-t border-border/30" />
             <Link
               href="/buy"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors text-primary hover:bg-primary/10 font-medium"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-accent hover:bg-accent/10 font-medium"
             >
               <ShoppingCart className="h-4 w-4" />
               Buy a Tag

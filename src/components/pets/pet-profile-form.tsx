@@ -218,7 +218,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       {/* Pet Photo */}
       <Card>
         <CardHeader>
-          <CardTitle>Pet Photo</CardTitle>
+          <CardTitle className="font-display">Pet Photo</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -290,7 +290,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       {/* Basic Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle className="font-display">Basic Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -345,7 +345,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       {/* Medical Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Medical Information</CardTitle>
+          <CardTitle className="font-display">Medical Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -398,7 +398,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       {/* Behavioral Notes */}
       <Card>
         <CardHeader>
-          <CardTitle>Behavioral Notes</CardTitle>
+          <CardTitle className="font-display">Behavioral Notes</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -413,7 +413,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       {/* Owner Contact */}
       <Card>
         <CardHeader>
-          <CardTitle>Owner Contact Information</CardTitle>
+          <CardTitle className="font-display">Owner Contact Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -465,7 +465,7 @@ export function PetProfileForm({ initialData, petId }: PetProfileFormProps) {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Emergency Contacts</CardTitle>
+            <CardTitle className="font-display">Emergency Contacts</CardTitle>
             <Button
               type="button"
               variant="outline"

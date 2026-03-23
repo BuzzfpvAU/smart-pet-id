@@ -140,16 +140,25 @@ export function ItemScanPage({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      {/* Header with gradient */}
       <div
-        className="text-white p-4 text-center"
+        className="text-white p-4 text-center relative overflow-hidden"
         style={{ backgroundColor: item.tagType.color }}
       >
-        <div className="flex items-center justify-center gap-2">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
+        <div className="relative flex items-center justify-center gap-2">
           <QrCode className="h-5 w-5" />
-          <span className="font-semibold">Tagz.au</span>
+          <span className="font-display font-semibold">Tagz.au</span>
         </div>
       </div>
+
+      {/* Gradient fade from tag color */}
+      <div
+        className="h-32 -mb-24"
+        style={{
+          background: `linear-gradient(to bottom, ${item.tagType.color}15, transparent)`,
+        }}
+      />
 
       <div className="max-w-lg mx-auto p-4 space-y-4">
         {/* Photo & Name */}
@@ -158,18 +167,17 @@ export function ItemScanPage({
             <img
               src={item.primaryPhotoUrl}
               alt={item.name}
-              className="w-32 h-32 rounded-full mx-auto object-cover border-4 mb-4"
-              style={{ borderColor: item.tagType.color + "40" }}
+              className="w-36 h-36 rounded-full mx-auto object-cover shadow-xl ring-4 ring-background mb-4"
             />
           ) : (
             <div
-              className="w-32 h-32 rounded-full mx-auto flex items-center justify-center mb-4"
+              className="w-36 h-36 rounded-full mx-auto flex items-center justify-center shadow-xl ring-4 ring-background mb-4"
               style={{ backgroundColor: item.tagType.color + "15" }}
             >
-              <QrCode className="h-12 w-12" style={{ color: item.tagType.color + "50" }} />
+              <QrCode className="h-14 w-14" style={{ color: item.tagType.color + "50" }} />
             </div>
           )}
-          <h1 className="text-3xl font-bold">{item.name}</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-bold">{item.name}</h1>
           <div className="flex items-center justify-center gap-2 mt-2">
             <Badge
               style={{
@@ -194,11 +202,11 @@ export function ItemScanPage({
 
         {/* Reward Offer - hidden for emergency contact cards */}
         {item.rewardOffered && item.rewardDetails && item.tagType.slug !== "emergency-contact" && (
-          <Card className="border-green-300 bg-green-50 dark:bg-green-950/20">
+          <Card className="border-green-300 bg-green-50 dark:bg-green-950/20 rounded-2xl">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Gift className="h-5 w-5 text-green-600" />
-                <h2 className="font-semibold text-green-800 dark:text-green-200">
+                <h2 className="font-display font-semibold text-green-800 dark:text-green-200">
                   Reward Offered
                 </h2>
               </div>
@@ -215,11 +223,11 @@ export function ItemScanPage({
 
           if (group.alertStyle) {
             return (
-              <Card key={group.key} className="border-amber-300 bg-amber-50 dark:bg-amber-950/20">
+              <Card key={group.key} className="border-amber-300 bg-amber-50 dark:bg-amber-950/20 rounded-2xl">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <AlertTriangle className="h-5 w-5 text-amber-600" />
-                    <h2 className="font-semibold text-amber-800 dark:text-amber-200">
+                    <h2 className="font-display font-semibold text-amber-800 dark:text-amber-200">
                       {group.label}
                     </h2>
                   </div>
@@ -241,9 +249,9 @@ export function ItemScanPage({
           }
 
           return (
-            <Card key={group.key}>
+            <Card key={group.key} className="rounded-2xl">
               <CardContent className="p-4 space-y-3">
-                <h3 className="font-semibold text-sm">{group.label}</h3>
+                <h3 className="font-display font-semibold text-sm">{group.label}</h3>
                 {group.fields.map((field) => {
                   const val = item.data[field.key];
                   if (!val) return null;
@@ -269,7 +277,7 @@ export function ItemScanPage({
                               </div>
                               <a
                                 href={`tel:${contact.phone}`}
-                                className="text-sm text-primary hover:underline"
+                                className="text-sm text-accent hover:underline"
                               >
                                 {contact.phone}
                               </a>
@@ -304,7 +312,7 @@ export function ItemScanPage({
                               </div>
                               <a
                                 href={`tel:${contact.phone}`}
-                                className="text-sm text-primary hover:underline"
+                                className="text-sm text-accent hover:underline"
                               >
                                 {contact.phone}
                               </a>
@@ -336,22 +344,22 @@ export function ItemScanPage({
           <>
             <a
               href={`tel:${item.ownerPhone}`}
-              className="flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white rounded-xl p-5 text-lg font-semibold transition-colors"
+              className="flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl p-6 text-lg font-semibold shadow-lg active:scale-[0.97] transition-all duration-200"
             >
               <Phone className="h-6 w-6" />
               Call Owner
             </a>
 
-            <Card>
+            <Card className="rounded-2xl">
               <CardContent className="p-4 space-y-3">
-                <h2 className="font-semibold flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-primary" />
+                <h2 className="font-display font-semibold flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-accent" />
                   Owner Contact
                 </h2>
                 {item.ownerPhone && (
                   <a
                     href={`tel:${item.ownerPhone}`}
-                    className="flex items-center gap-2 text-sm text-primary hover:underline"
+                    className="flex items-center gap-2 text-sm text-accent hover:underline"
                   >
                     <Phone className="h-4 w-4" />
                     {item.ownerPhone}
@@ -360,7 +368,7 @@ export function ItemScanPage({
                 {item.ownerEmail && (
                   <a
                     href={`mailto:${item.ownerEmail}`}
-                    className="flex items-center gap-2 text-sm text-primary hover:underline"
+                    className="flex items-center gap-2 text-sm text-accent hover:underline"
                   >
                     <Mail className="h-4 w-4" />
                     {item.ownerEmail}
@@ -378,7 +386,7 @@ export function ItemScanPage({
         )}
 
         {!item.ownerPhone && (
-          <Card>
+          <Card className="rounded-2xl">
             <CardContent className="p-4 text-center">
               <p className="text-sm text-muted-foreground">
                 The owner&apos;s contact information is not available.
@@ -392,9 +400,9 @@ export function ItemScanPage({
         <Separator />
 
         {/* Share Location */}
-        <Card>
+        <Card className="rounded-2xl">
           <CardContent className="p-4">
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+            <h3 className="font-display font-semibold text-sm mb-3 flex items-center gap-2">
               <Navigation className="h-4 w-4" />
               Found this item? Share your location
             </h3>
@@ -428,9 +436,9 @@ export function ItemScanPage({
 
         {/* Finder Contact Form */}
         {isEmergencyContact ? (
-          <Card className="border-red-300">
+          <Card className="border-red-300 rounded-2xl">
             <CardContent className="p-4">
-              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+              <h3 className="font-display font-semibold text-sm mb-3 flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-red-600" />
                 Why did you scan this tag?
               </h3>
@@ -469,9 +477,9 @@ export function ItemScanPage({
             </CardContent>
           </Card>
         ) : (
-          <Card>
+          <Card className="backdrop-blur-xl bg-card/80 border-border/30 rounded-2xl">
             <CardContent className="p-4">
-              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+              <h3 className="font-display font-semibold text-sm mb-3 flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 Leave Your Contact Info
               </h3>
@@ -509,7 +517,7 @@ export function ItemScanPage({
 
         {/* Footer */}
         <p className="text-center text-xs text-muted-foreground py-4">
-          Powered by Tagz.au
+          Powered by <span className="font-display font-semibold">Tagz.au</span>
         </p>
       </div>
     </div>

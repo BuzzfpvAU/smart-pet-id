@@ -57,7 +57,7 @@ export default async function DashboardPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground text-sm">
             Welcome back, {session.user.name}
           </p>
@@ -72,39 +72,39 @@ export default async function DashboardPage() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <Card>
+        <Card className="border-t-2 border-t-accent">
           <CardContent className="p-4 flex items-center gap-4">
-            <div className="rounded-full bg-primary/10 p-3">
-              <Package className="h-5 w-5 text-primary" />
+            <div className="rounded-full bg-accent/10 p-3">
+              <Package className="h-5 w-5 text-accent" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{totalItems}</p>
+              <p className="font-display text-3xl font-bold">{totalItems}</p>
               <p className="text-sm text-muted-foreground">
                 Item{totalItems !== 1 ? "s" : ""} registered
               </p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-t-2 border-t-accent">
           <CardContent className="p-4 flex items-center gap-4">
-            <div className="rounded-full bg-primary/10 p-3">
-              <Tag className="h-5 w-5 text-primary" />
+            <div className="rounded-full bg-accent/10 p-3">
+              <Tag className="h-5 w-5 text-accent" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{tagCount}</p>
+              <p className="font-display text-3xl font-bold">{tagCount}</p>
               <p className="text-sm text-muted-foreground">
                 Active tag{tagCount !== 1 ? "s" : ""}
               </p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-t-2 border-t-accent">
           <CardContent className="p-4 flex items-center gap-4">
-            <div className="rounded-full bg-primary/10 p-3">
-              <ScanLine className="h-5 w-5 text-primary" />
+            <div className="rounded-full bg-accent/10 p-3">
+              <ScanLine className="h-5 w-5 text-accent" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{totalScans}</p>
+              <p className="font-display text-3xl font-bold">{totalScans}</p>
               <p className="text-sm text-muted-foreground">
                 Total scan{totalScans !== 1 ? "s" : ""}
               </p>
@@ -116,7 +116,7 @@ export default async function DashboardPage() {
       {/* Recent Scans */}
       {recentScans.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold mb-4">Recent Scans</h2>
+          <h2 className="font-display text-lg font-semibold mb-4">Recent Scans</h2>
           <Card>
             <CardContent className="p-0 divide-y">
               {recentScans.map((scan) => {
@@ -144,7 +144,7 @@ export default async function DashboardPage() {
                           href={`https://www.google.com/maps?q=${scan.latitude},${scan.longitude}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-primary hover:underline flex items-center gap-1"
+                          className="text-xs text-accent hover:underline flex items-center gap-1"
                         >
                           <MapPin className="h-3 w-3" />
                           {scan.locationName || "Location"}
@@ -167,7 +167,7 @@ export default async function DashboardPage() {
       {items.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">My Items</h2>
+            <h2 className="font-display text-lg font-semibold">My Items</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.map((item) => (
@@ -181,7 +181,7 @@ export default async function DashboardPage() {
       {pets.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">My Pets</h2>
+            <h2 className="font-display text-lg font-semibold">My Pets</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {pets.map((pet) => (
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
       {totalItems === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <QrCode className="h-16 w-16 text-muted-foreground/30 mb-4" />
-          <h2 className="text-xl font-semibold mb-2">No items yet</h2>
+          <h2 className="font-display text-xl font-semibold mb-2">No items yet</h2>
           <p className="text-muted-foreground mb-6 max-w-md">
             Add your first item to create a profile and link it to a smart tag.
           </p>

@@ -68,17 +68,17 @@ export default function B2BPage() {
   }
 
   return (
-    <div className="container max-w-2xl py-12">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold">B2B / Wholesale</h1>
+    <div className="container max-w-2xl py-24 md:py-36">
+      <div className="text-center mb-8 animate-in-up" style={{ animationDelay: '0ms' }}>
+        <h1 className="font-display text-3xl font-bold tracking-tight">B2B / Wholesale</h1>
         <p className="text-muted-foreground mt-2">
           Interested in selling Tagz.au tags? Tell us about your business.
         </p>
       </div>
 
-      <Card>
+      <Card className="backdrop-blur-xl bg-card/80 border-border/30 shadow-2xl animate-in-up" style={{ animationDelay: '100ms' }}>
         <CardHeader>
-          <CardTitle>Wholesale Inquiry</CardTitle>
+          <CardTitle className="font-display tracking-tight">Wholesale Inquiry</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -172,7 +172,7 @@ export default function B2BPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isLoading}>
               {isLoading ? "Submitting..." : "Submit Inquiry"}
             </Button>
           </form>

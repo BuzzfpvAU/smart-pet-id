@@ -23,21 +23,23 @@ export default async function AdminOverviewPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Admin Overview</h1>
+        <h1 className="font-display text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
         <p className="text-muted-foreground">System statistics at a glance</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label}>
+          <Card key={stat.label} className="border-t-2 border-t-accent">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.label}
               </CardTitle>
-              <stat.icon className={`h-5 w-5 ${stat.color}`} />
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10">
+                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stat.value}</div>
+              <div className="font-display text-3xl font-bold">{stat.value}</div>
             </CardContent>
           </Card>
         ))}
@@ -46,20 +48,20 @@ export default async function AdminOverviewPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Tag Status Breakdown</CardTitle>
+            <CardTitle className="font-display text-lg">Tag Status Breakdown</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Active</span>
-              <span className="font-semibold text-green-600">{activeTagCount}</span>
+              <span className="font-display font-semibold text-green-600">{activeTagCount}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Inactive (Available)</span>
-              <span className="font-semibold text-gray-600">{inactiveTagCount}</span>
+              <span className="font-display font-semibold text-gray-600">{inactiveTagCount}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Deactivated</span>
-              <span className="font-semibold text-red-600">
+              <span className="font-display font-semibold text-red-600">
                 {tagCount - activeTagCount - inactiveTagCount}
               </span>
             </div>

@@ -103,9 +103,9 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md backdrop-blur-xl bg-card/80 border-border/30 shadow-2xl">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
+        <CardTitle className="font-display text-2xl tracking-tight">Welcome back</CardTitle>
         <CardDescription>Sign in to your account</CardDescription>
       </CardHeader>
       <CardContent>
@@ -148,7 +148,7 @@ export function LoginForm() {
               <Label htmlFor="password">Password</Label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-accent hover:underline"
               >
                 Forgot password?
               </Link>
@@ -219,7 +219,7 @@ export function LoginForm() {
           Don&apos;t have an account?{" "}
           <Link
             href={activationCode ? `/register?activationCode=${encodeURIComponent(activationCode)}` : "/register"}
-            className="text-primary hover:underline"
+            className="text-accent hover:underline"
           >
             Sign up
           </Link>

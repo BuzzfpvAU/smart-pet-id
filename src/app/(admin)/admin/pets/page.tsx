@@ -48,7 +48,7 @@ export default function AdminPetsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">All Pets</h1>
+          <h1 className="font-display text-2xl md:text-3xl font-bold">All Pets</h1>
           <p className="text-muted-foreground">
             View all registered pets across all users
           </p>
@@ -58,16 +58,16 @@ export default function AdminPetsPage() {
         </Button>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-2xl border overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Species</TableHead>
-              <TableHead>Breed</TableHead>
-              <TableHead>Owner</TableHead>
-              <TableHead>Tags</TableHead>
-              <TableHead>Registered</TableHead>
+            <TableRow className="bg-muted/30">
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Species</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Breed</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Owner</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tags</TableHead>
+              <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Registered</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -85,7 +85,7 @@ export default function AdminPetsPage() {
               </TableRow>
             ) : (
               pets.map((pet) => (
-                <TableRow key={pet.id}>
+                <TableRow key={pet.id} className="hover:bg-accent/5">
                   <TableCell className="font-medium">{pet.name}</TableCell>
                   <TableCell className="capitalize">{pet.species}</TableCell>
                   <TableCell>{pet.breed || "-"}</TableCell>

@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center p-4">
+    <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center p-4 bg-gradient-to-b from-accent/5 via-background to-background">
       <Suspense>
         <RegisterForm />
       </Suspense>

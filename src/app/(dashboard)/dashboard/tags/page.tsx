@@ -43,7 +43,7 @@ export default async function TagsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">My Tags</h1>
+          <h1 className="font-display text-2xl font-bold">My Tags</h1>
           <p className="text-muted-foreground text-sm">
             Manage your smart tags
           </p>
@@ -59,7 +59,7 @@ export default async function TagsPage() {
       {tags.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Tag className="h-16 w-16 text-muted-foreground/30 mb-4" />
-          <h2 className="text-xl font-semibold mb-2">No tags yet</h2>
+          <h2 className="font-display text-xl font-semibold mb-2">No tags yet</h2>
           <p className="text-muted-foreground mb-6 max-w-md">
             Activate a smart tag by entering the activation code that came with
             your tag.

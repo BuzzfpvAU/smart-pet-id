@@ -61,9 +61,9 @@ export default function NewItemPage() {
     return (
       <div>
         {tagId && (
-          <div className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg flex items-center gap-3">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-              <Tag className="h-5 w-5 text-primary" />
+          <div className="mb-6 p-4 bg-accent/10 border border-accent/20 rounded-2xl flex items-center gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+              <Tag className="h-5 w-5 text-accent" />
             </div>
             <div>
               <p className="font-medium text-sm">Tag activated successfully</p>
@@ -74,7 +74,7 @@ export default function NewItemPage() {
           </div>
         )}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold">Add New Item</h1>
+          <h1 className="font-display text-2xl font-bold">Add New Item</h1>
           <p className="text-muted-foreground text-sm">
             Choose a tag type to get started
           </p>
@@ -102,7 +102,7 @@ export default function NewItemPage() {
           <ArrowLeft className="h-4 w-4 mr-1" />
           Change Type
         </Button>
-        <h1 className="text-2xl font-bold">New {selectedType.name}</h1>
+        <h1 className="font-display text-2xl font-bold">New {selectedType.name}</h1>
         <p className="text-muted-foreground text-sm">
           Fill in the details for your {selectedType.name.toLowerCase()}
         </p>
