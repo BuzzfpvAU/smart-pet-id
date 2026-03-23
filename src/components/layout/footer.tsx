@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <Image src="/logo.png" alt="Tagz.au" width={28} height={28} className="h-7 w-7" />
+              <Image src="/logo.svg" alt="Tagz.au" width={28} height={28} className="h-7 w-7" />
               <span className="font-display font-bold">Tagz.au</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">

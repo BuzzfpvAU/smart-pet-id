@@ -52,7 +52,7 @@ export function DashboardHeader() {
             className="flex items-center gap-2.5 pb-6 border-b border-border/30 mb-6"
             onClick={() => setOpen(false)}
           >
-            <Image src="/logo.png" alt="Tagz.au" width={32} height={32} className="h-8 w-8" />
+            <Image src="/logo.svg" alt="Tagz.au" width={32} height={32} className="h-8 w-8" />
             <span className="font-display font-bold text-xl tracking-tight">Tagz.au</span>
           </Link>
           <nav className="space-y-1.5">

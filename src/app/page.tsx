@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { QrCode, Bell, Shield, ShoppingCart, Tag } from "lucide-react";
 import { PublicHeader } from "@/components/layout/public-header";
@@ -12,14 +13,9 @@ export default function HomePage() {
         {/* Hero */}
         <section className="relative py-24 md:py-36 text-center bg-gradient-to-b from-accent/5 via-background to-background before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top_center,oklch(0.84_0.18_90/0.08),transparent_60%)]">
           <div className="container max-w-3xl relative">
-            <div className="flex justify-center mb-6 animate-in-up" style={{ animationDelay: '0ms' }}>
-              <div className="rounded-full bg-accent/10 p-4">
-                <QrCode className="h-12 w-12 text-accent" />
-              </div>
+            <div className="flex justify-center mb-8 animate-in-up" style={{ animationDelay: '0ms' }}>
+              <Image src="/logo.png" alt="Tagz.au" width={280} height={420} className="h-auto w-70 md:w-80 drop-shadow-[0_0_40px_oklch(0.84_0.18_90/0.3)]" priority />
             </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold tracking-tight mb-6 animate-in-up" style={{ animationDelay: '100ms' }}>
-              Tagz.au
-            </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-in-up" style={{ animationDelay: '200ms' }}>
               Smart QR code and NFC tags for pets, keys, luggage, electronics
               and more. Attach a tag, create a profile, and get notified
