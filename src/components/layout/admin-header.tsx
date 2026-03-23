@@ -33,7 +33,7 @@ export function AdminHeader() {
     <header className="md:hidden border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="flex items-center justify-between p-4">
         <Link href="/admin" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="Tagz.au" width={24} height={24} className="h-6 w-6" />
+          <Image src="/logo.png" alt="Tagz.au" width={24} height={24} className="h-6 w-6" />
           <span className="font-display font-bold">Admin</span>
         </Link>
         <Button

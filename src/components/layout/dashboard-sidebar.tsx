@@ -23,7 +23,7 @@ export function DashboardSidebar() {
   return (
     <aside className="hidden md:flex w-64 flex-col border-r border-border/50 bg-background p-5">
       <Link href="/dashboard" className="flex items-center gap-2.5 px-2 pb-6 border-b border-border/30 mb-6">
-        <Image src="/logo.svg" alt="Tagz.au" width={32} height={32} className="h-8 w-8" />
+        <Image src="/logo.png" alt="Tagz.au" width={32} height={32} className="h-8 w-8" />
         <span className="font-display font-bold text-xl tracking-tight">Tagz.au</span>
       </Link>
 

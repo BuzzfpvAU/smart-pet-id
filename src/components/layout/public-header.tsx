@@ -23,7 +23,7 @@ export function PublicHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="container flex h-18 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <Image src="/logo.svg" alt="Tagz.au" width={36} height={36} className="h-9 w-9" />
+          <Image src="/logo.png" alt="Tagz.au" width={36} height={36} className="h-9 w-9" />
           <span className="font-display font-bold text-xl tracking-tight">Tagz.au</span>
         </Link>
 
