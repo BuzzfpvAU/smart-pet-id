@@ -10,10 +10,17 @@ function getResend() {
 const FROM_EMAIL = process.env.FROM_EMAIL || "Tagz.au <onboarding@resend.dev>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "buzz@buzzfpv.com.au";
 
-/** Generate a static map image URL using OpenStreetMap tiles (no API key needed) */
-function getStaticMapUrl(latitude: number, longitude: number): string {
-  // Use OpenStreetMap's free static map service
-  return `https://staticmap.openstreetmap.de/staticmap.php?center=${latitude},${longitude}&zoom=15&size=600x300&markers=${latitude},${longitude},red-pushpin`;
+/** Build a Google Maps Static API image URL (returns null if server key not configured) */
+function getStaticMapUrl(
+  latitude: number,
+  longitude: number,
+  width = 600,
+  height = 300,
+  zoom = 15
+): string | null {
+  const key = process.env.GOOGLE_MAPS_SERVER_KEY;
+  if (!key) return null;
+  return `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=${width}x${height}&markers=color:red%7C${latitude},${longitude}&key=${key}`;
 }
 
 /** Escape user-supplied values before interpolating into HTML emails */
