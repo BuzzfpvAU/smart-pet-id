@@ -10,6 +10,12 @@ function getResend() {
 const FROM_EMAIL = process.env.FROM_EMAIL || "Tagz.au <onboarding@resend.dev>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "buzz@buzzfpv.com.au";
 
+/** Generate a static map image URL using OpenStreetMap tiles (no API key needed) */
+function getStaticMapUrl(latitude: number, longitude: number): string {
+  // Use OpenStreetMap's free static map service
+  return `https://staticmap.openstreetmap.de/staticmap.php?center=${latitude},${longitude}&zoom=15&size=600x300&markers=${latitude},${longitude},red-pushpin`;
+}
+
 /** Escape user-supplied values before interpolating into HTML emails */
 function escapeHtml(s: string): string {
   return s
@@ -72,9 +78,7 @@ export async function sendScanAlert(
       : null;
 
   const staticMapUrl =
-    latitude && longitude && process.env.GOOGLE_MAPS_SERVER_KEY
-      ? `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&markers=color:red%7C${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_SERVER_KEY}`
-      : null;
+    latitude && longitude ? getStaticMapUrl(latitude, longitude) : null;
 
   const safeLocationName = locationName ? escapeHtml(locationName) : null;
 
@@ -82,7 +86,7 @@ export async function sendScanAlert(
     ? `
       <div style="margin: 16px 0;">
         <p><strong>Scan location:</strong>${safeLocationName ? ` ${safeLocationName}` : ""}</p>
-        ${staticMapUrl ? `<img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" />` : ""}
+        ${staticMapUrl ? `<a href="${mapUrl}"><img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" /></a>` : ""}
         <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a>
       </div>
     `
@@ -411,9 +415,7 @@ export async function sendEmergencyAutoAlert(
       : null;
 
   const staticMapUrl =
-    latitude && longitude && process.env.GOOGLE_MAPS_SERVER_KEY
-      ? `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&markers=color:red%7C${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_SERVER_KEY}`
-      : null;
+    latitude && longitude ? getStaticMapUrl(latitude, longitude) : null;
 
   const safeLocationName = locationName ? escapeHtml(locationName) : null;
 
@@ -421,7 +423,7 @@ export async function sendEmergencyAutoAlert(
     ? `
       <div style="margin: 16px 0;">
         <p><strong>Scan location:</strong>${safeLocationName ? ` ${safeLocationName}` : ""}</p>
-        ${staticMapUrl ? `<img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" />` : ""}
+        ${staticMapUrl ? `<a href="${mapUrl}"><img src="${staticMapUrl}" alt="Scan location" style="width: 100%; border-radius: 8px; margin: 8px 0;" /></a>` : ""}
         <a href="${mapUrl}" style="color: #2563eb; text-decoration: underline;">View on Google Maps</a>
       </div>
     `
