@@ -26,7 +26,6 @@
     "@react-email/components": "^1.0.7",
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.3",
-    "@vercel/blob": "^2.2.0",
     "@vis.gl/react-google-maps": "^1.7.1",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",

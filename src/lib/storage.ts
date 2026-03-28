@@ -1,9 +1,6 @@
-import { put, del } from "@vercel/blob";
 import { randomUUID } from "crypto";
 import path from "path";
 import fs from "fs/promises";
-
-const isBlobConfigured = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 function getFileExtension(contentType: string): string {
   const map: Record<string, string> = {
@@ -22,17 +19,6 @@ export async function uploadFile(
   folder: string = "pets"
 ): Promise<string> {
   const ext = getFileExtension(contentType);
-  const filename = `${folder}/${randomUUID()}${ext}`;
-
-  if (isBlobConfigured) {
-    const blob = await put(filename, buffer, {
-      access: "public",
-      contentType,
-    });
-    return blob.url;
-  }
-
-  // Local fallback for development
   const uploadDir = path.join(process.cwd(), "public", "uploads", folder);
   await fs.mkdir(uploadDir, { recursive: true });
   const filePath = path.join(uploadDir, `${randomUUID()}${ext}`);
@@ -42,9 +28,7 @@ export async function uploadFile(
 }
 
 export async function deleteFile(url: string): Promise<void> {
-  if (isBlobConfigured && !url.startsWith("/uploads")) {
-    await del(url);
-  } else if (url.startsWith("/uploads")) {
+  if (url.startsWith("/uploads")) {
     const filePath = path.join(process.cwd(), "public", url);
     await fs.unlink(filePath).catch(() => {});
   }
