@@ -68,10 +68,10 @@ function emailFooter(): string {
       <p style="margin: 0 0 8px 0; font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: #1a1a1a; font-weight: 600;">
         <a href="${BASE_URL}" style="color: #1a1a1a; text-decoration: none;">Tagz.au</a>
         <span style="color: #d4d4d4; margin: 0 6px;">|</span>
-        Smart Pet ID Tags
+        Smart ID Tags
       </p>
       <p style="margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #a1a1a1;">
-        Keeping pets safe, one tag at a time.
+        Keeping valuables safe, one tag at a time.
       </p>
     </div>`;
 }
