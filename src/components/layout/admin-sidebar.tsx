@@ -13,6 +13,8 @@ import {
   Layers,
   Package,
   ClipboardCheck,
+  ShoppingBag,
+  Receipt,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
+  { href: "/admin/products", label: "Products", icon: ShoppingBag },
+  { href: "/admin/orders", label: "Orders", icon: Receipt },
   { href: "/admin/tags", label: "Tag Codes", icon: Tag },
   { href: "/admin/tag-types", label: "Tag Types", icon: Layers },
   { href: "/admin/checklist-templates", label: "Checklist Templates", icon: ClipboardCheck },
