@@ -9,7 +9,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "FAQ - Tagz.au",
+  title: "QR & NFC Tag FAQ — How Smart Tags Work",
+  description:
+    "How Tagz.au smart QR and NFC tags work — activation, scanning, privacy controls, and how they compare to microchips and traditional pet tags.",
+  alternates: {
+    canonical: "/faq",
+  },
 };
 
 const faqs = [
@@ -63,9 +68,26 @@ const faqs = [
   },
 ];
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.a,
+    },
+  })),
+};
+
 export default function FaqPage() {
   return (
     <div className="container max-w-3xl py-24 md:py-36">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="text-center mb-12 animate-in-up" style={{ animationDelay: '0ms' }}>
         <h1 className="font-display text-3xl font-bold tracking-tight">Frequently Asked Questions</h1>
         <p className="text-muted-foreground mt-2">

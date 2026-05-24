@@ -1,5 +1,10 @@
 export const metadata = {
-  title: "Terms of Service - Tagz.au",
+  title: "Terms of Service",
+  description:
+    "The terms of service for using Tagz.au smart QR and NFC tags and the pet profile platform.",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {
