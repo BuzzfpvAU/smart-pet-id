@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { generateShortCode } from "@/lib/shortcode";
-import { generateActivationCode } from "@/lib/auth-helpers";
+import { generateTags } from "@/lib/tags";
 import { sendTagBatchEmail } from "@/lib/email";
 import crypto from "crypto";
 
@@ -50,36 +49,7 @@ export async function POST(req: Request) {
     }
 
     const batchId = crypto.randomUUID();
-    const codes: string[] = [];
-    const shortCodes: string[] = [];
-
-    for (let i = 0; i < count; i++) {
-      let code: string;
-      let exists = true;
-
-      // Ensure unique codes
-      do {
-        code = generateActivationCode();
-        const existing = await prisma.tag.findUnique({
-          where: { activationCode: code },
-        });
-        exists = !!existing;
-      } while (exists);
-
-      const shortCode = generateShortCode();
-
-      await prisma.tag.create({
-        data: {
-          activationCode: code,
-          shortCode,
-          status: "inactive",
-          batchId,
-        },
-      });
-
-      codes.push(code);
-      shortCodes.push(shortCode);
-    }
+    const { codes, shortCodes } = await generateTags(prisma, count, batchId);
 
     // Send email with codes and QR attachments to the admin who generated them
     const adminEmail = session.user.email;
