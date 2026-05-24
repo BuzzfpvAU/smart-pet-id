@@ -17,19 +17,24 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tagz.au";
+    const absoluteImages = product.images
+      .slice(0, 8)
+      .map((img) => (img.startsWith("http") ? img : `${baseUrl}${img}`));
+
     let stripeProduct;
     if (product.stripeProductId) {
       stripeProduct = await stripe.products.update(product.stripeProductId, {
         name: product.name,
         description: product.description,
         active: product.isActive,
-        images: product.images.slice(0, 8),
+        images: absoluteImages,
       });
     } else {
       stripeProduct = await stripe.products.create({
         name: product.name,
         description: product.description,
-        images: product.images.slice(0, 8),
+        images: absoluteImages,
         metadata: { productId: product.id },
       });
     }
