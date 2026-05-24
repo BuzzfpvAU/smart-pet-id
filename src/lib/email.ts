@@ -663,3 +663,171 @@ export async function sendEmergencyDetailedAlert(
     html: emailWrapper(content),
   });
 }
+
+export async function sendOrderConfirmation(order: {
+  orderNumber: string;
+  email: string;
+  name: string;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+  shippingAddress: any;
+  shippingMethod: string;
+  orderItems: Array<{
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    tagCodes: string[];
+    product: { name: string };
+  }>;
+}) {
+  const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+
+  const itemRows = order.orderItems
+    .map(
+      (item) => `
+        <tr>
+          <td style="padding: 8px 0; font-family: 'Inter Tight', sans-serif; font-size: 14px; color: #2d2d2d; border-bottom: 1px solid #f0efed;">
+            ${escapeHtml(item.product.name)} × ${item.quantity}
+          </td>
+          <td style="padding: 8px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #2d2d2d; text-align: right; border-bottom: 1px solid #f0efed;">
+            ${formatPrice(item.totalPrice)}
+          </td>
+        </tr>`
+    )
+    .join("");
+
+  const activationCodes = order.orderItems
+    .flatMap((item) =>
+      item.tagCodes.map(
+        (code) => `
+          <div style="background: #1a1a1a; color: #FFD700; font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600; padding: 10px 16px; border-radius: 6px; margin: 4px 0; text-align: center; letter-spacing: 1px;">
+            ${escapeHtml(code)}
+          </div>`
+      )
+    )
+    .join("");
+
+  const address = order.shippingAddress;
+  const addressHtml = address
+    ? `<p style="font-size: 14px; color: #2d2d2d; margin: 0; line-height: 1.6;">
+        ${escapeHtml(address.line1 || "")}<br>
+        ${address.line2 ? escapeHtml(address.line2) + "<br>" : ""}
+        ${escapeHtml(address.city || "")}, ${escapeHtml(address.state || "")} ${escapeHtml(address.postcode || "")}<br>
+        ${escapeHtml(address.country || "AU")}
+      </p>`
+    : "";
+
+  const content = `
+    ${sectionHeading("Order Confirmed! 🎉")}
+    ${accentBar()}
+    <p style="font-size: 15px; color: #2d2d2d; margin: 0 0 8px 0;">
+      Hi ${escapeHtml(order.name || "there")}, thanks for your order!
+    </p>
+    ${metaText(`Order #${escapeHtml(order.orderNumber)}`)}
+
+    ${infoCard(`
+      <table style="width: 100%; border-collapse: collapse;">
+        ${itemRows}
+        <tr>
+          <td style="padding: 8px 0; font-size: 13px; color: #8c8c8c;">Subtotal</td>
+          <td style="padding: 8px 0; font-size: 13px; color: #8c8c8c; text-align: right;">${formatPrice(order.subtotal)}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; font-size: 13px; color: #8c8c8c;">Shipping (${order.shippingMethod})</td>
+          <td style="padding: 8px 0; font-size: 13px; color: #8c8c8c; text-align: right;">${formatPrice(order.shipping)}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; font-size: 13px; color: #8c8c8c;">GST (included)</td>
+          <td style="padding: 8px 0; font-size: 13px; color: #8c8c8c; text-align: right;">${formatPrice(order.tax)}</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px 0 0 0; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a1a; border-top: 2px solid #1a1a1a;">Total</td>
+          <td style="padding: 12px 0 0 0; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a1a; text-align: right; border-top: 2px solid #1a1a1a;">${formatPrice(order.total)}</td>
+        </tr>
+      </table>
+    `)}
+
+    ${sectionHeading("Your Activation Codes")}
+    ${accentBar("#1a1a1a")}
+    <p style="font-size: 14px; color: #5a5a5a; margin: 0 0 12px 0;">
+      Use these codes to activate your tags at Tagz.au:
+    </p>
+    ${activationCodes}
+
+    ${ctaButton(`${BASE_URL}/dashboard/tags/activate`, "Activate Your Tags")}
+
+    ${address ? `
+      ${sectionHeading("Shipping To")}
+      ${accentBar()}
+      ${infoCard(addressHtml)}
+      <p style="font-size: 13px; color: #8c8c8c; margin: 8px 0 0 0;">
+        Your physical tags will be shipped separately. We'll email you a tracking number when they're on their way.
+      </p>
+    ` : ""}
+  `;
+
+  const resend = getResend();
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: order.email,
+    subject: `Order Confirmed — #${order.orderNumber}`,
+    html: emailWrapper(content),
+  });
+}
+
+export async function sendShippingNotification(order: {
+  orderNumber: string;
+  email: string;
+  name: string;
+  trackingNumber: string;
+  shippingAddress: any;
+  shippingMethod: string;
+}) {
+  const address = order.shippingAddress;
+  const addressHtml = address
+    ? `<p style="font-size: 14px; color: #2d2d2d; margin: 0; line-height: 1.6;">
+        ${escapeHtml(address.line1 || "")}<br>
+        ${address.line2 ? escapeHtml(address.line2) + "<br>" : ""}
+        ${escapeHtml(address.city || "")}, ${escapeHtml(address.state || "")} ${escapeHtml(address.postcode || "")}<br>
+        ${escapeHtml(address.country || "AU")}
+      </p>`
+    : "";
+
+  const content = `
+    ${sectionHeading("Your Tags Have Shipped! 📦")}
+    ${accentBar()}
+    <p style="font-size: 15px; color: #2d2d2d; margin: 0 0 8px 0;">
+      Hi ${escapeHtml(order.name || "there")}, your order is on its way!
+    </p>
+    ${metaText(`Order #${escapeHtml(order.orderNumber)}`)}
+
+    ${infoCard(`
+      <p style="font-size: 13px; color: #8c8c8c; margin: 0 0 4px 0;">Tracking Number</p>
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600; color: #1a1a1a; margin: 0;">
+        ${escapeHtml(order.trackingNumber)}
+      </p>
+    `)}
+
+    ${address ? `
+      ${sectionHeading("Delivering To")}
+      ${accentBar()}
+      ${infoCard(addressHtml)}
+    ` : ""}
+
+    <p style="font-size: 14px; color: #5a5a5a; margin: 16px 0 0 0;">
+      ${order.shippingMethod === "express" ? "Estimated delivery: 1–3 business days." : "Estimated delivery: 3–7 business days."}
+    </p>
+
+    ${ctaButton(`${BASE_URL}/dashboard/orders`, "View Your Orders")}
+  `;
+
+  const resend = getResend();
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: order.email,
+    subject: `Your Tags Have Shipped — #${order.orderNumber}`,
+    html: emailWrapper(content),
+  });
+}
