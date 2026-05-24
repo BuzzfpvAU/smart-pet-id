@@ -9,7 +9,7 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
-  { href: "/buy", label: "Buy a Tag" },
+  { href: "/shop", label: "Shop" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
   { href: "/b2b", label: "B2B / Wholesale" },

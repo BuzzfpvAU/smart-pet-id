@@ -65,11 +65,11 @@ export function DashboardSidebar() {
 
       <div className="space-y-1.5">
         <Link
-          href="/buy"
+          href="/shop"
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-accent hover:bg-accent/10 font-medium"
         >
           <ShoppingCart className="h-4 w-4" />
-          Buy a Tag
+          Shop
         </Link>
         <Button
           variant="ghost"
