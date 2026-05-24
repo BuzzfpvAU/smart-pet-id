@@ -28,6 +28,7 @@ model User {
   sessions          Session[]
   verificationCodes VerificationCode[]
   passkeys          Passkey[]
+  orders            Order[]
 
   @@map("users")
 }
@@ -299,4 +300,85 @@ model ChecklistSubmission {
   @@index([itemId])
   @@index([createdAt])
   @@map("checklist_submissions")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  slug            String   @unique
+  price           Int      // cents (e.g. 1500 = $15.00 AUD)
+  compareAtPrice  Int?     // cents, for strike-through pricing
+  currency        String   @default("aud")
+  tagQuantity     Int      @default(1)
+  images          String[]
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  stripeProductId String?
+  stripePriceId   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  orderItems      OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id                    String      @id @default(cuid())
+  orderNumber           String      @unique
+  userId                String?
+  email                 String
+  name                  String
+  status                OrderStatus @default(PENDING)
+  subtotal              Int
+  shipping              Int
+  tax                   Int
+  total                 Int
+  shippingAddress       Json?
+  shippingMethod        String      @default("standard")
+  stripeSessionId       String?     @unique
+  stripePaymentIntentId String?
+  paymentMethod         String?
+  paidAt                DateTime?
+  shippedAt             DateTime?
+  trackingNumber        String?
+  notes                 String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  user                  User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orderItems            OrderItem[]
+
+  @@index([userId])
+  @@index([email])
+  @@index([status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  unitPrice  Int
+  totalPrice Int
+  tagCodes   String[]
+  createdAt  DateTime @default(now())
+
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
 }
