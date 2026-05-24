@@ -6,6 +6,7 @@ import { ProductDetail } from "./product-detail";
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://tagz.au";
 
 export const dynamicParams = true;
+export const revalidate = 60;
 
 interface Props {
   params: Promise<{ slug: string }>;
