@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    google: "9hQXUAXgx6aHM63O-xzlq26D6enlXeRkVBh8y8SSGRk",
   },
   alternates: {
     canonical: SITE_URL,
