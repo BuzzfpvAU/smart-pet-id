@@ -11,7 +11,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     const { id } = await params;
     const body = await req.json();
-    const { name, description, slug, price, compareAtPrice, tagQuantity, images, isActive, sortOrder } = body;
+    const { name, description, longDescription, slug, price, compareAtPrice, tagQuantity, images, isActive, sortOrder, metaTitle, metaDescription, metaKeywords } = body;
 
     if (slug) {
       const existing = await prisma.product.findFirst({
@@ -31,9 +31,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         ...(price !== undefined && { price: Math.round(price) }),
         ...(compareAtPrice !== undefined && { compareAtPrice: compareAtPrice ? Math.round(compareAtPrice) : null }),
         ...(tagQuantity !== undefined && { tagQuantity }),
+        ...(longDescription !== undefined && { longDescription: longDescription || null }),
         ...(images !== undefined && { images }),
         ...(isActive !== undefined && { isActive }),
         ...(sortOrder !== undefined && { sortOrder }),
+        ...(metaTitle !== undefined && { metaTitle: metaTitle || null }),
+        ...(metaDescription !== undefined && { metaDescription: metaDescription || null }),
+        ...(metaKeywords !== undefined && { metaKeywords: metaKeywords || null }),
       },
     });
 

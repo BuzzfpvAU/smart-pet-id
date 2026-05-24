@@ -316,6 +316,7 @@ model Product {
   id              String   @id @default(cuid())
   name            String
   description     String
+  longDescription String?  @map("long_description")
   slug            String   @unique
   price           Int      // cents (e.g. 1500 = $15.00 AUD)
   compareAtPrice  Int?     // cents, for strike-through pricing
@@ -326,6 +327,9 @@ model Product {
   sortOrder       Int      @default(0)
   stripeProductId String?
   stripePriceId   String?
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description")
+  metaKeywords    String?  @map("meta_keywords")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

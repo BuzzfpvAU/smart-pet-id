@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const products = await prisma.product.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: "asc" },
+    const { slug } = await params;
+
+    const product = await prisma.product.findUnique({
+      where: { slug, isActive: true },
       select: {
         id: true,
         name: true,
@@ -23,9 +24,13 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ products });
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ product });
   } catch (error) {
-    console.error("Products GET error:", error);
+    console.error("Product detail GET error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

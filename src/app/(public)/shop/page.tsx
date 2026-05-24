@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -102,16 +103,30 @@ export default function ShopPage() {
                 key={product.id}
                 className="overflow-hidden border-border/50 hover:border-accent/30 transition-colors"
               >
-                <div className="bg-muted/30 p-8 flex items-center justify-center">
-                  <div className="w-20 h-20 rounded-xl bg-accent/10 flex items-center justify-center">
-                    <Tag className="w-10 h-10 text-accent" />
+                <Link href={`/shop/${product.slug}`} className="block">
+                  <div className="bg-muted/30 aspect-square relative flex items-center justify-center overflow-hidden">
+                    {product.images[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 rounded-xl bg-accent/10 flex items-center justify-center">
+                        <Tag className="w-10 h-10 text-accent" />
+                      </div>
+                    )}
                   </div>
-                </div>
+                </Link>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-2">
-                    <h2 className="font-display text-xl font-bold">
-                      {product.name}
-                    </h2>
+                    <Link href={`/shop/${product.slug}`}>
+                      <h2 className="font-display text-xl font-bold hover:text-accent transition-colors">
+                        {product.name}
+                      </h2>
+                    </Link>
                     {savings && (
                       <Badge
                         variant="secondary"

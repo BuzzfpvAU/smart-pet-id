@@ -33,8 +33,9 @@ export async function POST(req: Request) {
       );
     }
 
+    const folder = (formData.get("folder") as string) || "pets";
     const buffer = Buffer.from(await file.arrayBuffer());
-    const url = await uploadFile(buffer, file.type, "pets");
+    const url = await uploadFile(buffer, file.type, folder);
 
     return NextResponse.json({ url });
   } catch (error) {

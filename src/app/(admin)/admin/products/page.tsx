@@ -23,13 +23,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, RefreshCw, Pencil, Trash2, Upload } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, RefreshCw, Pencil, Trash2, Upload, ImagePlus, X } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 
 interface Product {
   id: string;
   name: string;
   description: string;
+  longDescription: string | null;
   slug: string;
   price: number;
   compareAtPrice: number | null;
@@ -40,6 +43,9 @@ interface Product {
   sortOrder: number;
   stripeProductId: string | null;
   stripePriceId: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  metaKeywords: string | null;
   _count: { orderItems: number };
 }
 
@@ -57,9 +63,15 @@ export default function AdminProductsPage() {
   const [formName, setFormName] = useState("");
   const [formSlug, setFormSlug] = useState("");
   const [formDescription, setFormDescription] = useState("");
+  const [formLongDescription, setFormLongDescription] = useState("");
   const [formPrice, setFormPrice] = useState("");
   const [formCompareAtPrice, setFormCompareAtPrice] = useState("");
   const [formTagQuantity, setFormTagQuantity] = useState("1");
+  const [formImages, setFormImages] = useState<string[]>([]);
+  const [formMetaTitle, setFormMetaTitle] = useState("");
+  const [formMetaDescription, setFormMetaDescription] = useState("");
+  const [formMetaKeywords, setFormMetaKeywords] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -82,9 +94,14 @@ export default function AdminProductsPage() {
     setFormName("");
     setFormSlug("");
     setFormDescription("");
+    setFormLongDescription("");
     setFormPrice("");
     setFormCompareAtPrice("");
     setFormTagQuantity("1");
+    setFormImages([]);
+    setFormMetaTitle("");
+    setFormMetaDescription("");
+    setFormMetaKeywords("");
     setEditProduct(null);
     setDialogOpen(true);
   }
@@ -93,13 +110,49 @@ export default function AdminProductsPage() {
     setFormName(product.name);
     setFormSlug(product.slug);
     setFormDescription(product.description);
+    setFormLongDescription(product.longDescription || "");
     setFormPrice((product.price / 100).toFixed(2));
     setFormCompareAtPrice(
       product.compareAtPrice ? (product.compareAtPrice / 100).toFixed(2) : ""
     );
     setFormTagQuantity(String(product.tagQuantity));
+    setFormImages(product.images);
+    setFormMetaTitle(product.metaTitle || "");
+    setFormMetaDescription(product.metaDescription || "");
+    setFormMetaKeywords(product.metaKeywords || "");
     setEditProduct(product);
     setDialogOpen(true);
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files?.length) return;
+
+    setUploading(true);
+    try {
+      for (const file of Array.from(files)) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "products");
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        if (!res.ok) {
+          const err = await res.json();
+          toast.error(err.error || "Upload failed");
+          continue;
+        }
+        const { url } = await res.json();
+        setFormImages((prev) => [...prev, url]);
+      }
+    } catch {
+      toast.error("Upload failed");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  }
+
+  function removeImage(index: number) {
+    setFormImages((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleSubmit() {
@@ -117,9 +170,14 @@ export default function AdminProductsPage() {
       name: formName,
       slug: formSlug,
       description: formDescription,
+      longDescription: formLongDescription,
       price,
       compareAtPrice,
       tagQuantity: parseInt(formTagQuantity) || 1,
+      images: formImages,
+      metaTitle: formMetaTitle,
+      metaDescription: formMetaDescription,
+      metaKeywords: formMetaKeywords,
     };
 
     try {
@@ -272,11 +330,22 @@ export default function AdminProductsPage() {
                 products.map((product) => (
                   <TableRow key={product.id} className="hover:bg-accent/5">
                     <TableCell>
-                      <div>
-                        <span className="font-medium">{product.name}</span>
-                        <p className="text-xs text-muted-foreground">
-                          {product.slug}
-                        </p>
+                      <div className="flex items-center gap-3">
+                        {product.images[0] ? (
+                          <div className="relative w-10 h-10 rounded-md overflow-hidden bg-muted/30 flex-shrink-0">
+                            <Image src={product.images[0]} alt={product.name} fill className="object-cover" sizes="40px" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-md bg-muted/30 flex items-center justify-center flex-shrink-0">
+                            <ImagePlus className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div>
+                          <span className="font-medium">{product.name}</span>
+                          <p className="text-xs text-muted-foreground">
+                            {product.slug}
+                          </p>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -353,86 +422,197 @@ export default function AdminProductsPage() {
       </Card>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-display">
               {editProduct ? `Edit ${editProduct.name}` : "New Product"}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <Tabs defaultValue="details">
+            <TabsList className="w-full">
+              <TabsTrigger value="details" className="flex-1">Details</TabsTrigger>
+              <TabsTrigger value="images" className="flex-1">Images</TabsTrigger>
+              <TabsTrigger value="seo" className="flex-1">SEO</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="details" className="space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Name</Label>
+                  <Input
+                    value={formName}
+                    onChange={(e) => {
+                      setFormName(e.target.value);
+                      if (!editProduct) {
+                        setFormSlug(
+                          e.target.value
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, "-")
+                            .replace(/^-|-$/g, "")
+                        );
+                      }
+                    }}
+                    placeholder="e.g., 3-Pack Smart Tags"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Slug</Label>
+                  <Input
+                    value={formSlug}
+                    onChange={(e) => setFormSlug(e.target.value)}
+                    placeholder="e.g., 3-pack"
+                    disabled={!!editProduct}
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label>Name</Label>
-                <Input
-                  value={formName}
-                  onChange={(e) => {
-                    setFormName(e.target.value);
-                    if (!editProduct) {
-                      setFormSlug(
-                        e.target.value
-                          .toLowerCase()
-                          .replace(/[^a-z0-9]+/g, "-")
-                          .replace(/^-|-$/g, "")
-                      );
-                    }
-                  }}
-                  placeholder="e.g., 3-Pack Smart Tags"
+                <Label>Short Description</Label>
+                <Textarea
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
+                  placeholder="Brief summary shown on the shop page"
+                  rows={2}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Slug</Label>
-                <Input
-                  value={formSlug}
-                  onChange={(e) => setFormSlug(e.target.value)}
-                  placeholder="e.g., 3-pack"
-                  disabled={!!editProduct}
+                <Label>Full Description</Label>
+                <Textarea
+                  value={formLongDescription}
+                  onChange={(e) => setFormLongDescription(e.target.value)}
+                  placeholder="Detailed product description shown on the product page. Separate paragraphs with blank lines."
+                  rows={6}
                 />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea
-                value={formDescription}
-                onChange={(e) => setFormDescription(e.target.value)}
-                placeholder="Short description of this product"
-                rows={3}
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Price (AUD)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={formPrice}
+                    onChange={(e) => setFormPrice(e.target.value)}
+                    placeholder="15.00"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Compare at</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={formCompareAtPrice}
+                    onChange={(e) => setFormCompareAtPrice(e.target.value)}
+                    placeholder="Optional"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Tag Qty</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={formTagQuantity}
+                    onChange={(e) => setFormTagQuantity(e.target.value)}
+                    placeholder="1"
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="images" className="space-y-4 mt-4">
+              <div className="grid grid-cols-3 gap-3">
+                {formImages.map((img, i) => (
+                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-muted/30 group">
+                    <Image src={img} alt={`Product ${i + 1}`} fill className="object-cover" sizes="200px" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                    {i === 0 && (
+                      <span className="absolute bottom-2 left-2 bg-accent text-accent-foreground text-xs px-2 py-0.5 rounded">
+                        Main
+                      </span>
+                    )}
+                  </div>
+                ))}
+                <label className="aspect-square rounded-lg border-2 border-dashed border-border/50 hover:border-accent/50 flex flex-col items-center justify-center cursor-pointer transition-colors">
+                  <ImagePlus className="h-8 w-8 text-muted-foreground mb-2" />
+                  <span className="text-xs text-muted-foreground">
+                    {uploading ? "Uploading..." : "Add Image"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                </label>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                First image is the main product photo. JPEG, PNG, or WebP. Max 5MB each.
+              </p>
+            </TabsContent>
+
+            <TabsContent value="seo" className="space-y-4 mt-4">
               <div className="space-y-2">
-                <Label>Price (AUD)</Label>
+                <Label>Meta Title</Label>
                 <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formPrice}
-                  onChange={(e) => setFormPrice(e.target.value)}
-                  placeholder="15.00"
+                  value={formMetaTitle}
+                  onChange={(e) => setFormMetaTitle(e.target.value)}
+                  placeholder="e.g., Buy 3-Pack Smart Tags | QR + NFC Tags Australia"
+                  maxLength={70}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {formMetaTitle.length}/70 characters. Shows in search results and browser tab.
+                </p>
               </div>
               <div className="space-y-2">
-                <Label>Compare at</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formCompareAtPrice}
-                  onChange={(e) => setFormCompareAtPrice(e.target.value)}
-                  placeholder="Optional"
+                <Label>Meta Description</Label>
+                <Textarea
+                  value={formMetaDescription}
+                  onChange={(e) => setFormMetaDescription(e.target.value)}
+                  placeholder="e.g., Save on 3 QR + NFC smart tags. Track pets, keys, luggage and more. Free activation, instant setup. Ships Australia-wide."
+                  rows={3}
+                  maxLength={160}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {formMetaDescription.length}/160 characters. Shows below the title in search results.
+                </p>
               </div>
               <div className="space-y-2">
-                <Label>Tag Qty</Label>
+                <Label>Keywords</Label>
                 <Input
-                  type="number"
-                  min="1"
-                  value={formTagQuantity}
-                  onChange={(e) => setFormTagQuantity(e.target.value)}
-                  placeholder="1"
+                  value={formMetaKeywords}
+                  onChange={(e) => setFormMetaKeywords(e.target.value)}
+                  placeholder="e.g., smart tags, QR tags, NFC tags, pet tracker, luggage tag"
                 />
+                <p className="text-xs text-muted-foreground">
+                  Comma-separated keywords for search engine optimization.
+                </p>
               </div>
-            </div>
-          </div>
+
+              {formMetaTitle || formMetaDescription ? (
+                <div className="border border-border/50 rounded-lg p-4 bg-muted/20">
+                  <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-medium">Search Preview</p>
+                  <p className="text-blue-600 dark:text-blue-400 text-base font-medium truncate">
+                    {formMetaTitle || formName || "Product Title"} | Tagz.au
+                  </p>
+                  <p className="text-green-700 dark:text-green-500 text-sm truncate">
+                    tagz.au/shop/{formSlug || "product-slug"}
+                  </p>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                    {formMetaDescription || formDescription || "Product description will appear here."}
+                  </p>
+                </div>
+              ) : null}
+            </TabsContent>
+          </Tabs>
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
               Cancel

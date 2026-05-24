@@ -23,11 +23,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         name: product.name,
         description: product.description,
         active: product.isActive,
+        images: product.images.slice(0, 8),
       });
     } else {
       stripeProduct = await stripe.products.create({
         name: product.name,
         description: product.description,
+        images: product.images.slice(0, 8),
         metadata: { productId: product.id },
       });
     }

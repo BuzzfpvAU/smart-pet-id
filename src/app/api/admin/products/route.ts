@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, description, slug, price, compareAtPrice, tagQuantity, images } = body;
+    const { name, description, longDescription, slug, price, compareAtPrice, tagQuantity, images, metaTitle, metaDescription, metaKeywords } = body;
 
     if (!name || !slug || !price) {
       return NextResponse.json({ error: "Name, slug, and price are required" }, { status: 400 });
@@ -48,12 +48,16 @@ export async function POST(req: Request) {
       data: {
         name,
         description: description || "",
+        longDescription: longDescription || null,
         slug,
         price: Math.round(price),
         compareAtPrice: compareAtPrice ? Math.round(compareAtPrice) : null,
         tagQuantity: tagQuantity || 1,
         images: images || [],
         sortOrder: (maxSort._max.sortOrder ?? 0) + 1,
+        metaTitle: metaTitle || null,
+        metaDescription: metaDescription || null,
+        metaKeywords: metaKeywords || null,
       },
     });
 
